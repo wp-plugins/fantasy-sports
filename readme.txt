@@ -114,28 +114,31 @@ Get up to the minute reports on deposits and withdrawals. You’ll always know e
 == Installation ==
 
 1. Upload `fanvictor.php` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Sign up at http://fanvictor.com and go to Members Area
-1. Copy and paste license key from Members Area to you Admin CP
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Sign up at http://fanvictor.com and go to Members Area
+4. Copy and paste license key from Members Area to you Admin CP
 
 Using The WordPress Dashboard
+
 1. Navigate to the 'Add New' in the plugins dashboard
-1. Search for ‘Fan Victor Fantasy Sports’
-1. Click 'Install Now'
-1. Activate the plugin on the Plugin dashboard
+2. Search for ‘Fan Victor Fantasy Sports’
+3. Click 'Install Now'
+4. Activate the plugin on the Plugin dashboard
 
 Uploading in WordPress Dashboard
+
 1. Navigate to the 'Add New' in the plugins dashboard
-1. Navigate to the 'Upload' area
-1. Select carsellers.zip from your computer
-1. Click 'Install Now'
+2. Navigate to the 'Upload' area
+3. Select carsellers.zip from your computer
+4. Click 'Install Now'
 
 Activate the plugin in the Plugin dashboard
+
 1. Using FTP
-1. Download fan-victor-fantasy-sports.zip
-1. Extract the carsellers directory to your computer
-1. Upload the carsellers directory to the /wp-content/plugins/ directory
-1. Activate the plugin in the Plugin dashboard
+2. Download fan-victor-fantasy-sports.zip
+3. Extract the carsellers directory to your computer
+4. Upload the carsellers directory to the /wp-content/plugins/ directory
+5. Activate the plugin in the Plugin dashboard
 
 
 == Frequently Asked Questions ==
@@ -186,10 +189,10 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 == Screenshots ==
 
 1. The lobby bock lists the contests a user can join.
-2. Game Summary block indicates you all time stats.
+2. Game Summary block indicates your all time stats.
 3. Create a contest from any major sport.
 4. Create Contest Page has lots of options to configure your contest.
-4. Live, Upoming and Historical game blocks available as well.
+4. Live, Upcoming and Historical game blocks available as well.
 5. Back End administration to create your own pool in any major sport.
 6. Here are all the admin functions available to site admins.
 
