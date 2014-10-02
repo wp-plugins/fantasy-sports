@@ -116,7 +116,7 @@ Get up to the minute reports on deposits and withdrawals. You’ll always know e
 1. Upload `fanvictor.php` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Sign up at http://fanvictor.com and go to Members Area
-4. Copy and paste license key from Members Area to you Admin CP
+4. Copy and paste license key from Members Area to your Admin CP
 
 Using The WordPress Dashboard
 
@@ -129,16 +129,18 @@ Uploading in WordPress Dashboard
 
 1. Navigate to the 'Add New' in the plugins dashboard
 2. Navigate to the 'Upload' area
-3. Select carsellers.zip from your computer
+3. Select fantasy-sports.zip from your computer
 4. Click 'Install Now'
 
 Activate the plugin in the Plugin dashboard
 
 1. Using FTP
-2. Download fan-victor-fantasy-sports.zip
-3. Extract the carsellers directory to your computer
-4. Upload the carsellers directory to the /wp-content/plugins/ directory
+2. Download fantasy-sports.zip
+3. Extract the fanvictor directory to your computer
+4. Upload the fanvictor directory to the /wp-content/plugins/ directory
 5. Activate the plugin in the Plugin dashboard
+6. Sign up at http://fanvictor.com and go to Members Area
+7. Copy and paste license key from Members Area to your Admin CP
 
 
 == Frequently Asked Questions ==
