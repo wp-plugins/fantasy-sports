@@ -1,15 +1,15 @@
 <?php
 /**
  * Plugin Name: Fan Victor
- * Plugin URI: http://plugins.svn.wordpress.org/fantasy-sports/
+ * Plugin URI: http://plugins.svn.wordpress.org/fantasy-sports/ 
  * Description: Fantasy Sports System.
  * Version: 1.0
  * Author: Mega Website Services
- * Author URI: https://profiles.wordpress.org/quarta77/
+ * Author URI: http://fanvictor.com
  * License: GPL2
  */
 
-/*  Copyright 2014  Mega Website Services  (email : victor@megawebsiteservices.com)
+/*  Copyright 2014  Mega Website Services  (email : support@fanvictor.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -75,16 +75,16 @@ if($permalink_structure == '')
 }
 else 
 {
-	define('FANVICTOR_URL_CREATE_CONTEST', site_url().'/fan-victor/create-contest/');
-	define('FANVICTOR_URL_SUBMIT_PICKS', site_url().'/fan-victor/submit-picks/');
-	define('FANVICTOR_URL_ADD_FUNDS', site_url().'/fan-victor/add-funds/');
-	define('FANVICTOR_URL_NOTIFY_ADD_FUNDS', site_url().'/fan-victor/notify-add-funds/');
-	define('FANVICTOR_URL_SUCCESS_ADD_FUNDS', site_url().'/fan-victor/success-add-funds/');
-	define('FANVICTOR_URL_RANKINGS', site_url().'/fan-victor/rankings/');
-	define('FANVICTOR_URL_REQUEST_HISTORY', site_url().'/fan-victor/withdrawal-history/');
-	define('FANVICTOR_URL_TRANSACTIONS', site_url().'/fan-victor/transactions/');
-	define('FANVICTOR_URL_SUCCESS_WITHDRAWLS', site_url().'/fan-victor/success-withdrawls/');
-	define('FANVICTOR_URL_NOTIFY_WITHDRAWLS', site_url().'/fan-victor/notify-withdrawls/');
+	define('FANVICTOR_URL_CREATE_CONTEST', site_url().'/fantasy/create-contest/');
+	define('FANVICTOR_URL_SUBMIT_PICKS', site_url().'/fantasy/submit-picks/');
+	define('FANVICTOR_URL_ADD_FUNDS', site_url().'/fantasy/add-funds/');
+	define('FANVICTOR_URL_NOTIFY_ADD_FUNDS', site_url().'/fantasy/notify-add-funds/');
+	define('FANVICTOR_URL_SUCCESS_ADD_FUNDS', site_url().'/fantasy/success-add-funds/');
+	define('FANVICTOR_URL_RANKINGS', site_url().'/fantasy/rankings/');
+	define('FANVICTOR_URL_REQUEST_HISTORY', site_url().'/fantasy/withdrawal-history/');
+	define('FANVICTOR_URL_TRANSACTIONS', site_url().'/fantasy/transactions/');
+	define('FANVICTOR_URL_SUCCESS_WITHDRAWLS', site_url().'/fantasy/success-withdrawls/');
+	define('FANVICTOR_URL_NOTIFY_WITHDRAWLS', site_url().'/fantasy/notify-withdrawls/');
 }
 
 //create data, frontend pages plugin is actived
