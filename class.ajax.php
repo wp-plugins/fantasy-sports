@@ -39,6 +39,12 @@ class Ajax
         {
             add_action("wp_ajax_$func", array('Ajax', $func));
         }
+		
+		if(get_current_user_id() == 0 && isset($_POST['action']))
+        {
+            $func = $_POST['action'];
+            self::$func();
+        }
     }
 
 	public static function showLeagueDetails()

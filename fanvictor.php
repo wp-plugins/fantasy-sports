@@ -172,12 +172,24 @@ function init_frontend()
     }
     else 
     {
-        if (($page_title != null || pageSegment(1) == "fantasy") && 
-           !in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php')))
-        {
-            redirect(wp_login_url());
-        }
-   }
+		if(pageSegment(2) == 'future-events')
+		{
+			$pagename = $page_title != null ? $page_title : pageSegment(2);
+            call_page($pagename);
+		}
+		else 
+		{
+			if (($page_title != null || pageSegment(1) == "fantasy") && 
+			   !in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php')))
+			{
+				redirect(wp_login_url());
+			}
+		}
+	}
+	if(get_current_user_id() == 0 && pageSegment(1) == "")
+    {
+        add_filter('wp_head', 'home_sidebar');
+    }
 }
 
 function pluginname_ajaxurl() 

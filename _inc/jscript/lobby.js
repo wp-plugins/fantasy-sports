@@ -3,4 +3,4 @@ jQuery('#content').prepend(item.clone());
 item.remove();
 
 updateNewContests();
-setInterval(function() { updateNewContests() }, 5000);
+setInterval(function() { updateNewContests() }, 60000);
