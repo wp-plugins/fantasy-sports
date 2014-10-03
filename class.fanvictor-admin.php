@@ -160,3 +160,4 @@ class Fanvictor_Admin
         add_screen_option( $option, $args );
     }
 }
+?>
