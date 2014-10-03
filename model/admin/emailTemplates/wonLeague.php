@@ -10,3 +10,4 @@ Daily '.$siteTitle.' Leagues<br>
 <br>
 Get back in another game here <a href="'.$website.'">'.$website.'</a>
 <br><br>Good luck and thanks for playing!';
+?>

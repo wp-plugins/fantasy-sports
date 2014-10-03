@@ -128,3 +128,4 @@ class Fanvictor_Teams
         redirect(self::$url);
 	}
 }
+?>

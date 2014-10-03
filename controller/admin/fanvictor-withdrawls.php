@@ -34,3 +34,4 @@ class Fanvictor_Withdrawls
         include FANVICTOR__PLUGIN_DIR_VIEW.'withdrawls/index.php';
     }
 }
+?>

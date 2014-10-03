@@ -33,5 +33,4 @@ class Addfunds
         include FANVICTOR__PLUGIN_DIR_VIEW.'addfunds.php';
     }
 }
-
-?> 
+?>

@@ -38,5 +38,4 @@ class MyHistoryEntries
         include FANVICTOR__PLUGIN_DIR_VIEW.'myhistoryentries.php';
     }
 }
-
-?> 
+?>

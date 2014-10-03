@@ -21,4 +21,4 @@ class Newgamesgrid extends WP_Widget
         require_once(FANVICTOR__PLUGIN_DIR_VIEW."newgamesgrid.php");
 	}
 }
-?> 
+?>

@@ -35,4 +35,4 @@ What is '.$siteTitle.'?
 How does it work?
 Simply register or login,  join a league and make your predictions on the outcome of each game. Earn points for each correct selection or how well your player does. The player with the most points at the end of the night wins!  Its simple and fun!  
 ";
-
+?>

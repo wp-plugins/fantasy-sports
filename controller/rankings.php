@@ -186,3 +186,4 @@ class Rankings
         return true;
     }
 }
+?>

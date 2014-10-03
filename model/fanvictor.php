@@ -372,5 +372,4 @@ class Fanvictor
         return $result;
     }
 }
-
-?> 
+?>

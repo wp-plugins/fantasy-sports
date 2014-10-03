@@ -128,5 +128,4 @@ Class Organizations
         return true;
     }
 }
-
 ?>

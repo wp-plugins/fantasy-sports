@@ -111,5 +111,4 @@ class Statistic
         return $aLeagues;
     }
 }
-
-?> 
+?>

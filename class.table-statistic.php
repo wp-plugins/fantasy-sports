@@ -147,3 +147,4 @@ class TableStatistic extends WP_List_Table
         return $this->poolData;
     }
 }
+?>

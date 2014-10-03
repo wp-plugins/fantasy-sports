@@ -28,5 +28,4 @@ class Createcontest
         include FANVICTOR__PLUGIN_DIR_VIEW.'createcontest.php';
     }
 }
-
-?> 
+?>

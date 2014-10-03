@@ -651,5 +651,4 @@ class Pools
         return true;
     }
 }
-
-?> 
+?>

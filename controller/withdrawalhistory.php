@@ -31,5 +31,4 @@ class WithdrawalHistory
         include FANVICTOR__PLUGIN_DIR_VIEW.'withdrawalhistory.php';
     }
 }
-
-?> 
+?>

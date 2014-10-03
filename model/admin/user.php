@@ -99,5 +99,4 @@ class User
         return $aData->amount;
     }
 }
-
-?> 
+?>

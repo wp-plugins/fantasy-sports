@@ -38,5 +38,4 @@ class MyLiveEntries
         include FANVICTOR__PLUGIN_DIR_VIEW.'myliveentries.php';
     }
 }
-
-?> 
+?>

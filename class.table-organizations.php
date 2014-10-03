@@ -82,3 +82,4 @@ class TableOrganizations extends WP_List_Table
         $this->items = $this->data;
     }
 }
+?>

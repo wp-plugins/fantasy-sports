@@ -444,5 +444,4 @@ class Payment
         return $wpdb->update($wpdb->prefix."withdrawls", $aValues, array('withdrawlID' => (int)$iId));
     }
 }
-
-?> 
+?>

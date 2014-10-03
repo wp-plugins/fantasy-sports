@@ -27,5 +27,4 @@ class GameSummary
         include FANVICTOR__PLUGIN_DIR_VIEW.'gamesummary.php';
     }
 }
-
-?> 
+?>

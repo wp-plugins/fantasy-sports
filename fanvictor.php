@@ -1,15 +1,15 @@
 <?php
 /**
  * Plugin Name: Fan Victor
- * Plugin URI: http://plugins.svn.wordpress.org/fantasy-sports/ 
- * Description: Create a fantasy sports website in minutes. Give your members the chance to compete in daily contests by predicting the outcomes of sporting events.  To get started: 1) Click the "Activate" link to the left of this description, 2) Sign up for a Fan Victor API key, and 3) Go to your FanVictor.com members page, and save your API key.
+ * Plugin URI: http://URI_Of_Page_Describing_Plugin_and_Updates
+ * Description: Fantasy Sports System.
  * Version: 1.0
- * Author: Mega Website Services
- * Author URI: http://fanvictor.com
- * License: GPL2
+ * Author: Tuan Hoang
+ * Author URI: http://URI_Of_The_Plugin_Author
+ * License: A "Slug" license name e.g. GPL2
  */
 
-/*  Copyright 2014  Mega Website Services  (email : support@fanvictor.com)
+/*  Copyright 2014  Tuan Hoang  (email : minhtuan6023@gmail.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License, version 2, as 
@@ -271,4 +271,4 @@ function call_block($name)
     }
     require_once(FANVICTOR__PLUGIN_DIR_VIEW."block/$name.php");
 }
-
+?>

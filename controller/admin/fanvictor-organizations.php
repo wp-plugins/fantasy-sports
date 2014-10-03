@@ -34,3 +34,4 @@ class Fanvictor_Organizations
         include FANVICTOR__PLUGIN_DIR_VIEW.'organizations/index.php';
     }
 }
+?>

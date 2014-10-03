@@ -36,5 +36,4 @@ class FutureEvents
         include FANVICTOR__PLUGIN_DIR_VIEW.'futureevents.php';
     }
 }
-
-?> 
+?>

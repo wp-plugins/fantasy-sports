@@ -6,5 +6,4 @@ class Successaddfunds
         redirect(FANVICTOR_URL_TRANSACTIONS, __('Transaction Complete'), true);
 	}
 }
-
-?> 
+?>

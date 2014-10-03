@@ -133,3 +133,4 @@ class Fanvictor_Fighters
         redirect(self::$url);
 	}
 }
+?>

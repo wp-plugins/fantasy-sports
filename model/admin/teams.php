@@ -229,5 +229,4 @@ class Teams
         return true;
     }
 }
-
-?> 
+?>

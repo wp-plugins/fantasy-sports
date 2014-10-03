@@ -394,3 +394,4 @@ function delete_menu($name)
 }
 
 init_home_sidebar_area();
+?>

@@ -39,5 +39,4 @@ class MyFunds
         include FANVICTOR__PLUGIN_DIR_VIEW.'myfunds.php';
     }
 }
-
-?> 
+?>

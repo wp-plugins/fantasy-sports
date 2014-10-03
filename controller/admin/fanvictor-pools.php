@@ -182,3 +182,4 @@ class Fanvictor_Pools
         redirect(self::$url);
 	}
 }
+?>

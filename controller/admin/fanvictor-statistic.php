@@ -22,3 +22,4 @@ class Fanvictor_Statistic
         include FANVICTOR__PLUGIN_DIR_VIEW.'statistic/index.php';
     }
 }
+?>

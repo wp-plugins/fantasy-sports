@@ -34,3 +34,4 @@ class Fanvictor_Credits
         include FANVICTOR__PLUGIN_DIR_VIEW.'credits/index.php';
     }
 }
+?>

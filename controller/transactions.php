@@ -33,5 +33,4 @@ class Transactions
         include FANVICTOR__PLUGIN_DIR_VIEW.'transactions.php';
     }
 }
-
-?> 
+?>
