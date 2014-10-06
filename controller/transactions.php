@@ -13,7 +13,7 @@ class Transactions
 	public static function process()
 	{
         add_action('wp_enqueue_scripts', array('Transactions', 'theme_name_scripts'));
-        add_filter('template_include', array('Transactions', 'addContent'));
+        add_filter('the_content', array('Transactions', 'addContent'));
         wp_enqueue_style('style.css', FANVICTOR__PLUGIN_URL_CSS.'style.css');
 	}
     

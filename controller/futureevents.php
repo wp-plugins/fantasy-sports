@@ -9,7 +9,7 @@ class FutureEvents
 	public static function process()
 	{       
         add_action('wp_enqueue_scripts', array('FutureEvents', 'theme_name_scripts'));
-        add_filter('template_include', array('FutureEvents', 'addContent'));
+        add_filter('the_content', array('FutureEvents', 'addContent'));
 	}
     
     public static function theme_name_scripts()

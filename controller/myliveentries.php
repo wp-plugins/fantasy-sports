@@ -9,7 +9,7 @@ class MyLiveEntries
 	public static function process()
 	{       
         add_action('wp_enqueue_scripts', array('MyLiveEntries', 'theme_name_scripts'));
-        add_filter('template_include', array('MyLiveEntries', 'addContent'));
+        add_filter('the_content', array('MyLiveEntries', 'addContent'));
 	}
     
     public static function theme_name_scripts()

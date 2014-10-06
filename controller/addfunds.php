@@ -12,7 +12,7 @@ class Addfunds
 	public static function process()
 	{
         add_action('wp_enqueue_scripts', array('Addfunds', 'theme_name_scripts'));
-        add_filter('template_include', array('Addfunds', 'addContent'));
+        add_filter('the_content', array('Addfunds', 'addContent'));
 	}
     
     public static function theme_name_scripts()

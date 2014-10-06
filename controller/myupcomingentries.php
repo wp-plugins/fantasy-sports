@@ -9,7 +9,7 @@ class MyUpcomingEntries
 	public static function process()
 	{       
         add_action('wp_enqueue_scripts', array('MyUpcomingEntries', 'theme_name_scripts'));
-        add_filter('template_include', array('MyUpcomingEntries', 'addContent'));
+        add_filter('the_content', array('MyUpcomingEntries', 'addContent'));
 	}
     
     public static function theme_name_scripts()

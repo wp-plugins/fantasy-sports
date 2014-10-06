@@ -12,7 +12,7 @@ class Submitpicks
 	public static function process() 
 	{     
         add_action( 'wp_enqueue_scripts', array('Submitpicks', 'theme_name_scripts') );
-        add_filter('template_include', array('Submitpicks', 'addContent'));
+        add_filter('the_content', array('Submitpicks', 'addContent'));
 	} 
     
     public static function theme_name_scripts()

@@ -9,7 +9,7 @@ class MyHistoryEntries
 	public static function process()
 	{       
         add_action('wp_enqueue_scripts', array('MyHistoryEntries', 'theme_name_scripts'));
-        add_filter('template_include', array('MyHistoryEntries', 'addContent'));
+        add_filter('the_content', array('MyHistoryEntries', 'addContent'));
 	}
     
     public static function theme_name_scripts()

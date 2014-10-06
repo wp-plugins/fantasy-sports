@@ -10,7 +10,7 @@ class GameSummary
 	public static function process()
 	{       
         add_action('wp_enqueue_scripts', array('GameSummary', 'theme_name_scripts'));
-        add_filter('template_include', array('GameSummary', 'addContent'));
+        add_filter('the_content', array('GameSummary', 'addContent'));
 	}
     
     public static function theme_name_scripts()
