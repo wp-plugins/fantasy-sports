@@ -252,12 +252,12 @@ function create_page()
     $p8 = insert_page("Game Summary", 'publish', 8, $parent_id);
     $p9 = insert_page("Transactions", 'publish', 9, $parent_id);
     $p10 =  insert_page("Withdrawal History", 'publish', 10, $parent_id);
-    insert_page("Submit Picks", 'pending', 7, $parent_id);
-    insert_page("Rankings", 'pending', 8, $parent_id);
-    insert_page("Notify Add Funds", 'pending', 9, $parent_id);
-    insert_page("Success Add Funds", 'pending', 10, $parent_id);
-    insert_page("Notify Withdrawls", 'pending', 11, $parent_id);
-    insert_page("Success Withdrawls", 'pending', 12, $parent_id);
+    insert_page("Submit Picks", 'publish', 7, $parent_id);
+    insert_page("Rankings", 'publish', 8, $parent_id);
+    insert_page("Notify Add Funds", 'publish', 9, $parent_id);
+    insert_page("Success Add Funds", 'publish', 10, $parent_id);
+    insert_page("Notify Withdrawls", 'publish', 11, $parent_id);
+    insert_page("Success Withdrawls", 'publish', 12, $parent_id);
     
     $locations = get_nav_menu_locations();
     $menu_id = $locations['primary'];
