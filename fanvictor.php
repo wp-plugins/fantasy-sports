@@ -141,6 +141,18 @@ function fcs_page_menu_args( $args )
                 . "guid LIKE '%fantasy/success-add-funds%' OR "
                 . "guid LIKE '%fantasy/notify-withdrawls%' OR "
                 . "guid LIKE '%fantasy/success-withdrawls%'";
+    if(get_current_user_id() == 0)
+    {
+        $cond .= " OR guid LIKE '%fantasy/create-contest%' OR "
+               . "guid LIKE '%fantasy/add-funds%' OR "
+               . "guid LIKE '%fantasy/my-live-entries%' OR "
+               . "guid LIKE '%fantasy/my-upcoming-entries%' OR "
+               . "guid LIKE '%fantasy/my-history-entries%' OR "
+               . "guid LIKE '%fantasy/my-funds%' OR "
+               . "guid LIKE '%fantasy/game-summary%' OR "
+               . "guid LIKE '%fantasy/transactions%' OR "
+               . "guid LIKE '%fantasy/withdrawal-history%'";
+    }
     $sql = "SELECT id "
          . "FROM $table_name "
          . $cond;
