@@ -127,41 +127,9 @@ if (is_admin())
 else
 {    
     add_action('wp_enqueue_scripts','pluginname_ajaxurl'); 
-    add_action('init','init_frontend'); 
-    add_filter( 'wp_page_menu_args', 'fcs_page_menu_args');
+    add_action('init','init_frontend'); 	add_filter( 'wp_page_menu_args', 'fcs_page_menu_args');
 }
-
-function fcs_page_menu_args( $args ) 
-{
-    global $wpdb;
-    $table_name = $wpdb->prefix."posts";
-    $cond = "WHERE guid LIKE '%fantasy/submit-picks%' OR "
-                . "guid LIKE '%fantasy/rankings%' OR "
-                . "guid LIKE '%fantasy/notify-add-funds%' OR "
-                . "guid LIKE '%fantasy/success-add-funds%' OR "
-                . "guid LIKE '%fantasy/notify-withdrawls%' OR "
-                . "guid LIKE '%fantasy/success-withdrawls%'";
-    $sql = "SELECT id "
-         . "FROM $table_name "
-         . $cond;
-    $data = $wpdb->get_results($sql);
-    $exclude = array();
-    foreach($data as $item)
-    {
-        $exclude[] = $item->id;
-    }
-    if($exclude != null)
-    {
-        $exclude = implode(',', $exclude);
-    }
-    
-	$args = array(
-	'exclude'      => $exclude,
-	'echo'         => 1,
-    'menu_class' => 'nav-menu nav');
-	return $args;
-}
-
+function fcs_page_menu_args( $args ) {    global $wpdb;    $table_name = $wpdb->prefix."posts";    $cond = "WHERE guid LIKE '%fantasy/submit-picks%' OR "                . "guid LIKE '%fantasy/rankings%' OR "                . "guid LIKE '%fantasy/notify-add-funds%' OR "                . "guid LIKE '%fantasy/success-add-funds%' OR "                . "guid LIKE '%fantasy/notify-withdrawls%' OR "                . "guid LIKE '%fantasy/success-withdrawls%'";    $sql = "SELECT id "         . "FROM $table_name "         . $cond;    $data = $wpdb->get_results($sql);    $exclude = array();    foreach($data as $item)    {        $exclude[] = $item->id;    }    if($exclude != null)    {        $exclude = implode(',', $exclude);    }    	$args = array(	'exclude'      => $exclude,	'echo'         => 1,	'menu_class' => 'nav-menu nav');	return $args;}
 function init_frontend()
 {
     //model
@@ -199,7 +167,7 @@ function init_frontend()
         }
         else if(pageSegment(1) == "")
         {
-            add_filter('wp_head', 'home_sidebar');
+            add_filter('the_content', 'addlobby');
         }
     }
     else 
@@ -220,8 +188,13 @@ function init_frontend()
 	}
 	if(get_current_user_id() == 0 && pageSegment(1) == "")
     {
-        add_filter('wp_head', 'home_sidebar');
+        add_filter('the_content', 'addlobby');
     }
+}
+
+function addlobby($content)
+{
+	return home_sidebar().$content;
 }
 
 function pluginname_ajaxurl() 
