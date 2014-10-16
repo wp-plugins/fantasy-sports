@@ -278,8 +278,10 @@ class Pools
         if($image != null)
         {
             $img = explode('.', $image);
-            $img[count($img) - 1] = $sufix.".".$img[count($img) - 1];
-            $img = implode('', $img);
+            $img[count($img) - 2] = $img[count($img) - 2].$sufix.".".$img[count($img) - 1];
+			unset($img[count($img) - 1]);
+			array_values($img);
+            $img = implode('.', $img);
             return $img;
         }
         return null;
