@@ -420,13 +420,13 @@ function init_frontend()
 
         }
 
-        else if(pageSegment(1) == "")
+        /*else if(pageSegment(1) == "")
 
         {
 
             add_filter('the_content', 'addlobby');
 
-        }
+        }*/
 
     }
 
@@ -462,13 +462,13 @@ function init_frontend()
 
 	}
 
-	if(get_current_user_id() == 0 && pageSegment(1) == "")
+	/*if(get_current_user_id() == 0 && pageSegment(1) == "")
 
     {
 
         add_filter('the_content', 'addlobby');
 
-    }
+    }*/
 
 }
 
