@@ -81,7 +81,7 @@ class RestClient
 		if($this->method=="POST"){
             if(is_array($post))
             {
-                $post = http_build_query($post);
+                $post = http_build_query($post, '', '&');
             }
             curl_setopt($this->ch, CURLOPT_POSTFIELDS, $post);
             curl_setopt($this->ch, CURLOPT_POST, 1);
