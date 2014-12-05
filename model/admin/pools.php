@@ -245,7 +245,7 @@ class Pools
             switch($structure)
             {
                 case "winnertakeall":
-                    $result[] = floor($prize);
+                    $result[] = round($prize, 2);
                     break;
                 case "top3":
                     $result[] = $this->addInsufficientZeroToMoneyFormat(round($prize * $firstPercent / 100, 2));//1st
