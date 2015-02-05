@@ -20,9 +20,8 @@ class GameSummary
     
     public static function addContent()
     {
-        $jsonData = self::$fanvictor->getGamesummary();
-		$jsonObject = json_decode($jsonData);
-		$htmlData = $jsonObject->html;	
+        $aPools = self::$fanvictor->getGamesummary();
+		$htmlData = $aPools['html'];	
  		$sHeader = __("Game summary");
         include FANVICTOR__PLUGIN_DIR_VIEW.'gamesummary.php';
     }

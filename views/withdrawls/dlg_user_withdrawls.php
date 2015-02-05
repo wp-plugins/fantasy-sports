@@ -39,6 +39,7 @@
                     </select>
                 </td>
             </tr>
+            <?php if(get_option('fanvictor_payout_method') == 'paypal'):?>
             <tr>
                 <td>
                     <?=__("Gateway");?>
@@ -54,6 +55,7 @@
                     </select>
                 </td>
             </tr>
+            <?php endif;?>
             <tr>
                 <td><?=__("Response Message");?></td>
             </tr>

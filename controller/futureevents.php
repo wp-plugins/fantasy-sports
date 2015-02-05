@@ -24,15 +24,7 @@ class FutureEvents
     public static function addContent()
     {
         $sHeader = __("Future Events");
-        $futureEvents = "";
-		if ( ($jsonData = self::$fanvictor->getFutureEvents()) && ($jsonObject = json_decode($jsonData, true)) )
-        {
-            $futureEvents = $jsonObject;
-        }
-        else
-        {
-            $errorMessage = __('<br>Error occured error occured could not get future events');
-        }
+        $futureEvents = self::$fanvictor->getFutureEvents();
         include FANVICTOR__PLUGIN_DIR_VIEW.'futureevents.php';
     }
 }

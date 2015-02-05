@@ -28,7 +28,7 @@ class Fanvictor_Withdrawls
         
         $aGateways = self::$payment->viewGateway();
 
-        include FANVICTOR__PLUGIN_DIR.'class.table-withdrawls.php';
+        include FANVICTOR__PLUGIN_DIR_VIEW.'withdrawls/class.table-withdrawls.php';
         $myListTable = new TableWithdrawls();
         $myListTable->prepare_items(isset($_GET['s']) ? $_GET['s'] : null); 
         include FANVICTOR__PLUGIN_DIR_VIEW.'withdrawls/index.php';

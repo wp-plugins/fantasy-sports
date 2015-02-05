@@ -16,7 +16,7 @@ class Fanvictor_Statistic
         wp_enqueue_script('admin.js', FANVICTOR__PLUGIN_URL_JS.'admin/init_statistic.js');
         wp_enqueue_script('ui.js', FANVICTOR__PLUGIN_URL_JS.'ui.js');
 
-        include FANVICTOR__PLUGIN_DIR.'class.table-statistic.php';
+        include FANVICTOR__PLUGIN_DIR_VIEW.'statistic/class.table-statistic.php';
         $myListTable = new TableStatistic();
         $myListTable->prepare_items(isset($_GET['s']) ? $_GET['s'] : null); 
         include FANVICTOR__PLUGIN_DIR_VIEW.'statistic/index.php';

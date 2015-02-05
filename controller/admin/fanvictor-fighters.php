@@ -4,11 +4,13 @@ class Fanvictor_Fighters
 {
     private static $fighters;
     private static $url;
+    private static $urladdnew;
     private static $urladd;
     public function __construct() 
     {
         self::$fighters = new Fighters();
         self::$url = admin_url().'admin.php?page=manage-fighters';
+        self::$urladdnew = admin_url().'admin.php?page=add-fighters';
         self::$urladd = wp_get_referer();
     }
     
@@ -34,7 +36,7 @@ class Fanvictor_Fighters
             }
         }
         
-        include FANVICTOR__PLUGIN_DIR.'class.table-fighters.php';
+        include FANVICTOR__PLUGIN_DIR_VIEW.'fighters/class.table-fighters.php';
         $myListTable = new TableFighters();
         $myListTable->prepare_items(isset($_GET['s']) ? $_GET['s'] : null); 
         include FANVICTOR__PLUGIN_DIR_VIEW.'fighters/index.php';
@@ -107,7 +109,7 @@ class Fanvictor_Fighters
                         redirect(self::$urladd, 'Succesfully added');
                     }
                 }
-                redirect(self::$urladd, 'There is something wrong! Please_try_again.');
+                redirect(self::$urladd, 'Something went wrong! Please try again.');
 			}
 		}
     }

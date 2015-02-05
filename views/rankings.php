@@ -1,97 +1,130 @@
-<?php if($errorMessage):?>
-    <br><br><br><div id="error_message" class="error_message"><?=$errorMessage;?></div>
-<?php else:?>
-    <?=$leagueheader;?>
-    <div id="league_history" >
-        <input type="hidden" id="importleagueID" value="<?=$leagueID;?>" />
-        <div class="leaguesHeader"></div>
-        <br>
-        <div class="bootstrap_grid"></div>
-        <br>
-        <div class="results_caption">Results for:  <span class="competitor_name competitor_name_2"><?=__('Please select a user');?></span></div>
-        <br>
-        <div class="results_grid"></div>
-    </div>
-    <br><br>
-
-    <!-- Modal -->
-    <div id="dlgInviteFriend" style="display: none;z-index: 99" title="Invite your friends to play against you">
-        <form name="inviteForm" id="inviteForm">
-            <input type="hidden" name="val[importleagueID]" value="<?=$leagueID;?>" />
-            <div>
-                <label><?=__('Attach a message');?></label>
-                <br>
-                <textarea rows='3' cols='58' name='val[message_boxinvite]'></textarea>
-            </div>
-            <br>
-            <table class="table table-responsive">
-                <tr>
-                    <td>
-                        <div>
-                            <label><?=__('Who would you like to invite?');?></label>
-                            <div>
-                                <input type="text" name="val[emails][]" placeholder="Enter email address" style="width:200px">
+<table width="100%" border="0" class="table table-condensed table-responsive">
+    <tr>
+        <td valign="top">
+            <h3>Contest ID: <?=$aLeague['leagueID'];?> - <?=$aLeague['name'];?></h3>
+        </td>
+        <td valign="top" align="right"></td>
+    </tr>
+    <tr class="info">
+        <td colspan="2">
+            <table width="100%" border="0" class="table table-responsive">
+                <tbody>
+                    <tr class="info">
+                        <td colspan="2">
+                            <br>&nbsp;&nbsp;<b>Prize structure:</b> <?=$aLeague['prize_structure'];?>
+                            <br>&nbsp;&nbsp;<b>Sport:</b> <?=$aPool['sport_name'];?>
+                            <br>&nbsp;&nbsp;<b>Game Type:</b> <?=$aLeague['gameType'];?>
+                            <br>&nbsp;&nbsp;<b>Start:</b> <?=$aLeague['startDate'];?>
+                            <br>&nbsp;&nbsp;<b>Ends:</b> Prizes paid next day
+                            <br>&nbsp;&nbsp;<b>Creator:</b> <?=$creator->data->user_login;?>
+                            <br>&nbsp;&nbsp;<b>Players:</b> <?=$aLeague['size'];?> player game, <?=$aLeague['entries'];?> entries</td>
+                        <td width="170" align="center">
+                            <br>
+                            <div style="height:40px;-moz-border-radius: 5px;-webkit-border-radius: 5px;border: 1px solid #000;padding: 10px;background-color: #E6E6E6;">
+                                <font size="4"><b>Entry</b> $<?=$aLeague['entry_fee'];?></font>
                             </div>
-                            <div>
-                                <input type="text" name="val[emails][]" placeholder="Enter email address" style="width:200px">
+                        </td>
+                        <td style="width:15px">&nbsp;</td>
+                        <td width="170" align="center">
+                            <br>
+                            <div style=" height:40px;-moz-border-radius: 5px;-webkit-border-radius: 5px;border: 1px solid #000;padding: 10px;background-color: #E6E6E6;">
+                                <font size="4"><b>Prizes</b> $<?=$aLeague['prizes'];?></font>
                             </div>
-                            <div>
-                                <input type="text" name="val[emails][]" placeholder="Enter email address" style="width:200px">
-                            </div>
-                            <div>
-                                <input type="text" name="val[emails][]" placeholder="Enter email address" style="width:200px">
-                            </div>
-                            <div>
-                                <input type="text" name="val[emails][]" placeholder="Enter email address" style="width:200px">
-                            </div>
-                        </div>
-                        <br>
-                        <div>
-                            <input type='submit' class='button' value='Send Invites' onclick='sendInvite(); return false;'>
-                            <span class="inviting" style="display: none"><?=__('Sending...');?></span>
-                        </div>
-                    </td>
-                    <td>
-                        <label><?=__('Select your Friends');?></label>
-                        <div class="Content list_of_users_to_invite" style="width:450px;height:250px;overflow:auto;">
-                            <input type="button" onclick="checkAll()" value="Select All" class="button">
-                            <input type="button" onclick="checkNone()" value="Select None" class="button">
-                            <br/>
-                            <?=$myString;?>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                        <td style="width:15px">&nbsp;</td>
+                    </tr>
+                </tbody>
             </table>
-        </form>
-    </div>
-    <script type="text/javascript">
-        var leagues_ranking = new leaguesClass();
-        var elemToShow = "<?=$elem_to_show;?>";
-        var leagueID = "<?=$leagueID;?>";
-        var showInvite = "<?=$showInvite;?>";
-        var isLive = "<?=$isLive;?>";
-        var myData = "";
-        jQuery("#" + elemToShow).show();
+        </td>
+    </tr>
+</table>
+<input type="hidden" id="dataResult" />
+<div id="league_history" >
+    <input type="hidden" id="importleagueID" value="<?=$leagueID;?>" />
+    <div class="leaguesHeader"></div>
+    <br>
+    <div id="listPlayers"></div>
+    <br>
+    <div class="results_caption">Results for:  <span class="competitor_name competitor_name_2"><?=__('Please select a user');?></span></div>
+    <br>
+    <div id="listFixtures"></div>
+</div>
+<br><br>
 
-        if (isLive ==1 &&  leagueID )
-        {
-            enterLeagueHistory(leagueID,showInvite,1);
-            setInterval(function() { enterLeagueHistory(leagueID,showInvite,1)},60000);
-        }
-
-        <?php if($allowMinutes == 1):?>
-        leagues_ranking.allowMinutes = true;
-        <?php else:;?>
-        leagues_ranking.allowMinutes = false;
-        <?php endif;?>
-
-        if ( leagueID && isLive != 1)
-        {
-            if ( showInvite)
-            {
-                inviteFriends();
-            }
-            enterLeagueHistory(leagueID, showInvite);
-        }
-    </script>
-<?php endif;?>
+<!-- Modal -->
+<div id="dlgInviteFriend" style="display: none;z-index: 99" title="Invite your friends to play against you">
+    <form name="inviteForm" id="inviteForm">
+        <input type="hidden" name="val[importleagueID]" value="<?=$leagueID;?>" />
+        <div>
+            <label><?=__('Attach a message');?></label>
+            <br>
+            <textarea rows='3' cols='58' name='val[message_boxinvite]'></textarea>
+        </div>
+        <br>
+        <table class="table table-responsive">
+            <tr>
+                <td>
+                    <div>
+                        <label><?=__('Who would you like to invite?');?></label>
+                        <div>
+                            <input type="text" name="val[emails][]" placeholder="Enter email address" style="width:200px">
+                        </div>
+                        <div>
+                            <input type="text" name="val[emails][]" placeholder="Enter email address" style="width:200px">
+                        </div>
+                        <div>
+                            <input type="text" name="val[emails][]" placeholder="Enter email address" style="width:200px">
+                        </div>
+                        <div>
+                            <input type="text" name="val[emails][]" placeholder="Enter email address" style="width:200px">
+                        </div>
+                        <div>
+                            <input type="text" name="val[emails][]" placeholder="Enter email address" style="width:200px">
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        <input type='submit' class='button' value='Send Invites' onclick='jQuery.ranking.sendInvite(); return false;'>
+                        <span class="inviting" style="display: none"><?=__('Sending...');?></span>
+                    </div>
+                </td>
+                <td>
+                    <label><?=__('Select your Friends');?></label>
+                    <div class="Content list_of_users_to_invite" style="width:450px;height:250px;overflow:auto;">
+                        <input type="button" onclick="jQuery.ranking.checkAll()" value="Select All" class="button">
+                        <input type="button" onclick="jQuery.ranking.checkNone()" value="Select None" class="button">
+                        <br/>
+                        <?php if($aFriends != null):?>
+                        <?php foreach($aFriends as $buddy):?>
+                            <label>
+                                <input type="checkbox" checked name="val[friend_ids][]" value="<?=$buddy["ID"];?>">
+                                <?=htmlspecialchars($buddy["full_name"]);?>
+                            </label><br>
+                        <?php endforeach;?>
+                        <?php endif;?>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    var isLive = <?=$aLeague['is_live'];?>;
+    var status = '<?=$aPool['status'];?>';
+    var showInviteFriends = '<?=$showInviteFriends;?>';
+    if (isLive == 1 && status == 'NEW')
+    {
+        jQuery.ranking.enterLeagueHistory();
+        setInterval(function(){ 
+            jQuery.ranking.enterLeagueHistory()
+        },10000);
+    }
+    else 
+    {
+        jQuery.ranking.enterLeagueHistory();
+    }
+    if(showInviteFriends)
+    {
+        jQuery.ranking.inviteFriends();
+    }
+</script>

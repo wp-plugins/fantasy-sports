@@ -74,7 +74,7 @@
                 ?>
                 <div class="array-item">
                     <input type="text" name="fanvictor_league_size[]" class="regular-text ltr entry_fee" value="<?=$aSize;?>" />
-                    <a href="#" onclick="return jQuery.option.removeArray(this)">Remove</a>
+                    <a href="#" onclick="return jQuery.option.removeArray(this)"><?=__('Remove');?></a>
                 </div>
                 <?php 
                     endforeach;
@@ -82,7 +82,7 @@
                 ?>
                 <div class="array-item">
                     <input type="text" name="fanvictor_league_size[]" class="regular-text ltr entry_fee"/>
-                    <a href="#" onclick="return jQuery.option.removeArray(this)">Remove</a>
+                    <a href="#" onclick="return jQuery.option.removeArray(this)"><?=__('Remove');?></a>
                 </div>
                 <?php endif;?>
                 <input type="button" data-name="fanvictor_league_size[]" value="Add" class="button button-primary" style="margin-top: 5px" onclick="return jQuery.option.addArray(this)" >
@@ -132,11 +132,31 @@
             </td>
         </tr>
         <tr valign="top">
+            <th scope="row"><?=__('Allow Create Contest');?></th>
+            <td>
+                <select class="postform" name="fanvictor_create_contest">
+                    <option <?php echo get_option('fanvictor_create_contest') == 1 ? 'selected="true"' : '';?> value="1"><?=__('True');?></option>
+                    <option <?php echo get_option('fanvictor_create_contest') == 0 ? 'selected="true"' : '';?> value="0"><?=__('False');?></option>
+                </select>
+                <p class="description"><?=__('Allow user create new contest at frontend.');?></p>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row"><?=__('Payout Method');?></th>
+            <td>
+                <select class="postform" name="fanvictor_payout_method">
+                    <option <?php echo get_option('fanvictor_payout_method') == 'paypal' ? 'selected="true"' : '';?> value="paypal">Paypal</option>
+                    <option <?php echo get_option('fanvictor_payout_method') == 'cheque' ? 'selected="true"' : '';?> value="cheque">Cheque</option>
+                </select>
+                <p class="description"><?=__('Select method to withdraw.');?></p>
+            </td>
+        </tr>
+        <tr valign="top">
             <th scope="row"><?=__('Paypal Sandbox');?></th>
             <td>
                 <select class="postform" name="paypal_test">
-                    <option <?php echo get_option('paypal_test') == 1 ? 'selected="true"' : '';?> value="1" class="level-0">True</option>
-                    <option <?php echo get_option('paypal_test') == 0 ? 'selected="true"' : '';?> value="0" class="level-0">False</option>
+                    <option <?php echo get_option('paypal_test') == 1 ? 'selected="true"' : '';?> value="1"><?=__('True');?></option>
+                    <option <?php echo get_option('paypal_test') == 0 ? 'selected="true"' : '';?> value="0"><?=__('False');?></option>
                 </select>
                 <p class="description"><?=__('If value is True, Paypal will change to testing mode.');?></p>
             </td>

@@ -1,9 +1,9 @@
 === Plugin Name ===
 Contributors: quarta77
 Donate link: http://fanvictor.com/
-Tags: fantasy sports, sports
+Tags: fantasy sports, fantasy football, fantasy baseball, fantasy hockey, fantasy basketball
 Requires at least: 4.0
-Tested up to: 4.0
+Tested up to: 4.1
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -22,18 +22,15 @@ This Fantasy Sports Plugin focuses on the key elements: the product itself, buil
 
 All Professional and Major Sports Supported
 
-Big 6:
-College Basketball, College Football, National Basketball Association (NBA), Football (NFL), Hockey (NHL), Friendly Internationals
+Big 6: College Basketball, College Football, National Basketball Association (NBA), Football (NFL), Hockey (NHL), Friendly Internationals
+Soccer: World Cup, Italian Serie A, Eng. Premier League, Spanish Liga Primera, Champions League, Friendly Internationals, Euro Championship
+MMA: UFC, Bellator, Dream, XFC, One FC, Invicta, Legacy FC, Cage Warriors, MFC, World Series of Fighting, RFA
+Golf: PGA
+Drag Racing: Nascar
+With our plugin you can create any contest for any sport or event.
 
-Soccer:
-World Cup, Italian Serie A, Eng. Premier League, Spanish Liga Primera, Champions League, Friendly Internationals, Euro Championship
 
-MMA:
-UFC, Bellator, Dream, XFC, One FC, Invicta, Legacy FC, Cage Warriors, MFC, World Series of Fighting, RFA
-
-… and many more coming with version 2!
-
-Select one, many or all  organizations to be included in your site.  In the Admin Control Panel of your WordPress or PHPFox site, you can set which organizations you want to have on your site. You have total control.
+Select one, many or all  organizations to be included in your site.  In the Admin Control Panel of your WordPress, you can set which organizations you want to have on your site. You have total control.
 
 Use it for Leagues of all kinds. Create your own custom pools on top of the automated ones too! That is right, you can create custom pools for just about anything using the admin panel.  You are NOT limited to the games supported by the plugin.  You can create your own pools easily. You can allow your Members to create their own contests based on the pools you create!
 Make money by taking a rake per contest and/or set an exchange rate for virtual currency.
@@ -48,7 +45,7 @@ Note:  In the USA it is totally legal to charge members Cash Money Entry Fees to
 
 This Fantasy Sports Module gives your Members the chance to spend their credits competing in Daily Tournaments and Contests involving Predictions of outcomes of Sporting Events. Sports games such as NFL, MLB, NHL, NBA, NCAA Basketball and Football, Soccer and even MMA. Great fun for everyone!  Keep your visitors engaged on your site with an extremely exciting Fantasy Sports game and make money on the biggest sports niche today.
 
-This awesome Fantasy Sports Script is open source, meaning your free to change the code to your own liking. You can modify the template files to get it to look exactly what you want.  Get this Fantasy Sports System as a plugin for WordPress or as a module for PHPFox.
+This awesome Fantasy Sports Script is open source, meaning your free to change the code to your own liking. You can modify the template files to get it to look exactly what you want.  
 
 You are limited only by your own creativity; the Sports Fantasy Engine will keep track of everything and show you stats on deposits and withdraws.  Everything is completely automated when you sign up with the Premium version of the plugin.
 
@@ -62,54 +59,23 @@ All the upcoming game schedules, game scores, game updates and player stats are 
  
 Front End Features
 
-Lobby Block:
-This is a list of games that users can enter. Table headings show entry fee of each game and the total payout. It also displays the amount of players that have entered as well as the size of the pool. Ofc ourse it shows the time and date when the pool starts.
-
-Create Contest Page:
-When a user clicks on Create Contest, they will be presented with a page of options that allow full customization of their league. Leagues last just one day. The user can select the sport, date of pool and even the fixtures they want to be part of their pool. They will select if it is a FREE Praction game or if the game has an entry fee. They can also select the pool size. It can be a size of 2, which makes it head-to-head or a bigger size to allow for more participants. The game type defines what game to play. It can be a game where winners are selected without a spread, or with a spread. A traditional Individual player performance game is currently under development and will be out in Version 2. (Please note, the price will be $200 per month for version 2. Customers who purchase the Version 1 memberhship will be grandfathered in at the $100 price, so order now and get all of version 2’s features at the price of version 1 ).
-
-Pick Selection Page:
-Once a user creates a contest, they are presented with the pick submission page. This is the page where the users enter their picks for their game. Pretty straight forward here.
-
-Live Rankings Page:
-Welcome to Fantasy Sports Heaven. After users have entered their picks, they are sent to the Live Rankings page. This page is a summary of their selections. Once the pool has started, users will NO longer be able to edit their picks and will be allowed to view other users picks. This page is updated in real time. So you can watch along side your faviourite sport and watch yourself climb up the leaderboard and claim victory!
-
-My Contests Page:
-This page lists all the games a users has entered in. This includes past history games, future games and live games. A user can click on any game to view the history if the game is over or view the upcoming game details and picks. Again, very straight forward.
-
-Transaction History:
-End users can always get to their transaction history to view all the payments, withdrawals and games fees they initiated. Always kept up to date in real time.
-
-Add Payment:
-End users will be able to purchase credits via an easy form they fill in using your sites default payment gateway.
-
-Payment Request:
-End users can request a withdrawal at any time. The site admin will be notified via email.
-
-Credit System:
-This ultimate plugin comes with a built in credit system that integrates with your sites payment gateway. So you can define the cost of credits to purchase and the cost of credits to withdrawal. It integrates with your sites default payment gateway seemlessly. Users use credits to play in paid games. These are games that have an entry fee to join. It also includes a fully functional admin reporting section for site administrators so you know exactly just how much money you’re making.
-Back End Features for Version 1:
-
-Settings: Fully customize which sports you want to support on your site. Choose one, some or all of them: Football (Pro and College), Basketball (Pro and College), Soccer, Baseball, Hockey and Mixed Martial Arts (MMA).
-
-Select the site rake percentage. As a site owner, you can make money by defining a cost to purcahse or withdral credits AND/OR you can define what your rake is per pool. Standard rake is 10%.
-But we’ll leave that up to you to decide. Its VERY flexible!
-
-Manage withdrawal requests with a simple table where withdrawal requests are listed. Site admins will be able to approve payments right from the adminCP. How convinient is that?!?!
-
-Get up to the minute reports on deposits and withdrawals. You’ll always know exactly how much money you’re making. We’ll even show you site statistics so you can keep track of how users are playing.
-
+Lobby Block: This is a list of games that users can enter. Table headings show entry fee of each game and the total payout. It also displays the amount of players that have entered as well as the size of the pool. Of course it shows the time and date when the pool starts. There is also a very use to use search tool where users can narrow down their search for a specific contest to play.
+Create Contest Page: When a user clicks on Create Contest, they will be presented with a page of options that allow full customization of their league.  The site admin has complete control on what options are offered to users.  Leagues last just one day.  
+The user can select the sport, date of pool and even the fixtures they want to be part of their pool. They will select if it is a FREE practice game or if the game has an entry fee. They can also select the pool size. It can be a size of 2, which makes it head-to-head or a bigger size to allow for more participants.
+The game type defines what game to play. This is where you can offer Fan Victor's standard game types or have us build you a custom game type.
+Pick Selection Page: Once a user creates a contest, they are presented with the Pick Submission page. This is the page where the users enter their picks or draft their team for their contest.  Games can be based on a salary cap or non-salary cap for Player Draft games.  For custom games, we can create any input page needed for your custom game.
+Live Rankings Page: Welcome to Fantasy Sports Heaven. After users have entered their picks, they are sent to the Live Rankings page. This page is a summary of their selections. Once the pool has started, users will NO longer be able to edit their picks and will be allowed to view other users picks.   So you can watch alongside your favourite sport and watch yourself climb up the leaderboard and claim victory!
+This page is updated according to Fan Victor stats engine technology.  Fan Victor strives try to make it as real-time as possible. However,  you can integrate other statistical vendors to our plugin.  Please contact us for details.
+My Contests Page: This page lists all the games a users has entered. This includes past history games, future games and live games. A user can click on any game to view the history if the game is over or view the upcoming game details and picks.
+Transaction History: End users can always get to their transaction history to view all the payments, withdrawals and games fees they initiated. Always kept up to date in real-time.
+Add Payment: End users will be able to purchase credits via an easy form they fill in using your websites default payment gateway.
+Payment Request: End users can request a withdrawal at any time. The site admin will be notified via email.
+Credit System: This ultimate plugin comes with a built-in credit system that integrates with your website payment gateway. So you can define the cost of credits to purchase and the cost of credits to withdrawal. It integrates with your default payment gateway seamlessly. Users use credits to play in paid games. These are games that have an entry fee to join. It also includes a fully functional admin reporting section for site administrators so you know exactly just how much money you're making.
 Back End Features:
-
-Settings: Fully customize which sports you want to support on your site. Choose one, some or all of them: Football (Pro and College), Basketball (Pro and College), Soccer, Baseball, Hockey and Mixed Martial Arts (MMA).
-
-Select the site rake percentage. As a site owner, you can make money by defining a cost to purcahse or withdral credits AND/OR you can define what your rake is per pool. Standard rake is 10%.
-But we’ll leave that up to you to decide. Its VERY flexible!
-
-Manage withdrawal requests with a simple table where withdrawal requests are listed. Site admins will be able to approve payments right from the adminCP. How convinient is that?!?!
-
-Get up to the minute reports on deposits and withdrawals. You’ll always know exactly how much money you’re making. We’ll even show you site statistics so you can keep track of how users are playing.
-
+Settings: Fully customize which sports you want to support on your site. Choose one, some or all of them: Football (Pro and College), Basketball (Pro and College), Soccer, Baseball, Hockey, Golf, Nascar and Mixed Martial Arts (MMA).
+Select the site rake percentage. As a site owner, you can make money by defining a cost to purchase or withdraw credits AND/OR you can define what your rake is per pool. Standard rake is 10%. But we'll leave that up to you to decide. Its VERY flexible!
+Manage withdrawal requests with a simple table where withdrawal requests are listed. Site admins will be able to approve payments right from the adminCP. How convenient is that?!?!
+Get up to the minute reports on deposits and withdrawals. You'll always know exactly how much money you're making. We'll even show you site statistics so you can keep track of how users are playing.
 
 == Installation ==
 
@@ -168,18 +134,12 @@ Yes. We have 24 hour email support for both levels of licences.  Please email su
 
 = How do pay outs work? =
 
-In the admin panel, all you need to do is input your PayPal email address. Then all deposits that users make will go directly to your PayPal account. When a user makes a withdrawl request, you can use the admin panel to process the transaction via PayPal as well. The users balance will automatically be updated.
+In the admin panel, all you need to do is input your PayPal email address. Then all deposits that users make will go directly to your PayPal account. When a user makes a withdrawal request, you can use the admin panel to process the transaction via PayPal as well. The users balance will automatically be updated.
 
-= Are you planning a version 2? =
-
-Yes. Version 2 will include a player draft game type. Where players can draft players and earn points based on individual player performance. Which is the traditional method of playing Fantasy Sports. This will also make the entire plugin legal in specific states and provinces
 
 = What states and/or provinces is fantasy gaming prohibited in? =
 Due to State and provincial law residents of Arizona, Iowa, Louisiana, Montana, Vermont and Quebec may only play free competitions.
 
-= Will the for a license increase for version 2? =
-
-Yes.  When we release version 2, the monthly fee will increase, however, those who buy in at version 1 will be grandfather in at the version 1 price.
 
 = Is there a trial period? I just want to try before I buy =
 There is a 60 money back guarantee.  100% of your money will be returned. There is no risk to try.
@@ -211,6 +171,6 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 
 == Arbitrary section ==
 
-Although the plugin is free for download, you must obtain a valid license key from FanVictor.com. When registering an account on FanVictor.com, you must submit your website's IP and URL. One license per website. This plugin is a serviceware plugin, explicity allowed by WordPress.org.  FanVictor.com adheres to plugin guidelines set forth by WordPress.org (https://wordpress.org/plugins/about/guidelines). 
+Although the plugin is free for download, you must obtain a valid license key from FanVictor.com. When registering an account on FanVictor.com, you must submit your website's IP and URL. One license per website. This plugin is a serviceware plugin, explicitly allowed by WordPress.org.  FanVictor.com adheres to plugin guidelines set forth by WordPress.org (https://wordpress.org/plugins/about/guidelines). 
 
 All game schedules, game data, game results, fantasy game engine and business logic services are stored on FanVictor.com. Fan Victor automates all major sporting events games and updates its database with game results based on site preferences. The plugin will set/get data on a per site basis to FanVictor.com. Stat keeping and fantasy game engine services are hosted on FanVictor.com.

@@ -1,27 +1,12 @@
 <?php
 require_once("admin/RestClient.php");
-define('DEVELOPMENT', false);
-// for .htpasswd
-define('DEV_USER', 'boss');
-define('DEV_PASS', 'mma');
-
-class Fanvictor 
+class Fanvictor extends Model
 {
     public function __construct() 
     {
-        $this->api_token = get_option('fanvictor_api_token');
-        $this->api_url = get_option('fanvictor_api_url');
-        //$this->view_global = Phpfox::getParam('fanvictor.fanvictor_view_global');
-        $this->view_global = false;
+        $this->pools = new Pools();
+        $this->scoringcategory = new ScoringCategory();
         $this->postUserInfo();
-        //$this->percentCredits();
-    }
-
-	private function getRestClient($method, $url)
-    {
-        $ret = false;
-        $ret = (defined(DEVELOPMENT) && DEVELOPMENT) ? new RestClient($method, $url) : new RestClient($method, $url, DEV_USER, DEV_PASS);
-        return $ret;
     }
     
     private function postUserInfo()
@@ -34,15 +19,8 @@ class Fanvictor
              . $sCond;
         $aUser = $wpdb->get_row($sql, ARRAY_A);
         $aUser = json_decode(json_encode($aUser), true);
-        $url = $this->api_url."/userinfo/".$this->api_token."/".get_current_user_id();
-        $client = $this->getRestClient("POST", $url);
-        $data = $client->send($aUser);
+        $this->sendRequest("userInfo", $aUser, false);
     }
-            
-    function getToken()
-	{
-		return $this->api_token;
-	}
     
     function getUserData($userID = null)
     {
@@ -57,174 +35,56 @@ class Fanvictor
             ->execute('getSlaveRow');
         return $data;
     }
-    
-    function percentCredits()
-    {
-        $_POST["default_winnerpercent"] = Phpfox::getParam('fanvictor.fanvictor_winner_percent');
-        $url = $this->api_url."/percentCredits/".$this->api_token."/".get_current_user_id();
-        $client = $this->getRestClient("POST", $url);
-        $data = $client->send($_POST);
-    }
-
-	public function getTransactionsummary()
-    {
-        $url = $this->api_url."/transactionsummary/".$this->api_token."/".get_current_user_id();
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;
-    }
-
-	public function postWithdrawal()
-    {
-		$_POST["ip"] = $_SERVER['REMOTE_ADDR'];
-        $url = $this->api_url."/withdrawal/".$this->api_token."/".get_current_user_id();
-        $client = $this->getRestClient("POST", $url);
-        $data = $client->send($_POST);
-		return $data;
-    }
-
-	public function getBalance()
-	{
-		$jsonData = $this->getAccountinfo();
-		$jsonObject = json_decode($jsonData);
-                return $jsonObject->balance;
-	}
-
-	public function getAccountinfo()
-    {
-        $url = $this->api_url."/accountInfo/".$this->api_token."/".get_current_user_id()."/".$_SERVER['REMOTE_ADDR'];
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;
-    }
 
 	public function getGamesummary()
 	{
-        $url = $this->api_url."/gamesummary/".$this->api_token."/".get_current_user_id()."/".$_SERVER['REMOTE_ADDR'];
-		$client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;	
+        return $this->sendRequest("gameSummary", null, false);
 	}	
 
 	public function getLeagueHeader($leagueID)
     {
-        $url = $this->api_url."/leagueheader/".$this->api_token."/".$leagueID;
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;
+        return $this->sendRequest("leagueHeader", array('leagueID' => $leagueID), false);
     }
 
-	public function getLiveContests()
-    {
-        $url = $this->api_url."/LiveLeagues/".$this->api_token."/".get_current_user_id();
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;
-    }
-
-	public function getHistoryContests()
-    {
-        $url = $this->api_url."/historyLeagues/".$this->api_token."/".get_current_user_id()."/html";
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;
-    }
-
-	public function getUpcomingContests()
-	{
-        $url = $this->api_url."/upcomingLeagues/".$this->api_token."/".get_current_user_id()."/html";
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;
-	}
-    
     public function getFutureEvents()
 	{
-        $url = $this->api_url."/futureEvents/".$this->api_token."/".get_current_user_id();
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;
+        return $this->sendRequest("futureEvents", null, false);
 	}
-
-	public function leagueResults($leagueID, $isLive = false)
+    
+    public function getNormalGameResult($leagueID)
     {
-        $url = $this->api_url."/leagueResults/".$this->api_token."/".get_current_user_id()."/".$leagueID."?isLive=$isLive";
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;
-    }	
+        $aDatas = $this->sendRequest("getNormalGameResult", array('leagueID' => $leagueID), false);
+        if($aDatas["users"] != null)
+        {
+            foreach($aDatas["users"] as $k => $user)
+            {
+                $info = get_user_by("id", $user["userID"]);
+                $aDatas["users"][$k]["user_login"] = $info->data->user_login;
+            }
+        }
+        return $aDatas;
+    }
     
     public function getLeagueDetail($leagueID)
     {
-        $url = $this->api_url."/leagueDetail/".$this->api_token."/".get_current_user_id()."/".$leagueID;
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return json_decode($data, true);
+        return $this->sendRequest("leagueDetail", array('leagueID' => $leagueID), false);
     }	
     
 	public function postUserPicks($post="")
     {
-        $imgSuf = get_option('fanvictor_image_thumb_size');
-        $url = $this->api_url."/userpicks/".$this->api_token."/".get_current_user_id()."?imgurl=".FANVICTOR_IMAGE_URL."&imgsuf=".$imgSuf;
-        $client = $this->getRestClient("POST", $url);
-        $data = $client->send($post);
-        return $data;
+        return $this->sendRequest("userpicks", $post, false);
     }
     
     public function getUserPicks($leagueID)
     {
-        $url = $this->api_url."/userpicks/".$this->api_token."/".get_current_user_id()."?fields=winnerID,methodID,minuteID,roundID,fightID&where=leagueID:".(int)$leagueID;
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;
+        return $this->sendRequest("getuserpicks", array('leagueID' => $leagueID), false);
     }
     
-	public function getFights($poolID,$leagueID)
+	public function getFights($leagueID)
     {
-        $imgSuf = get_option('fanvictor_image_thumb_size');
-        $url = $this->api_url."/fights/".$this->api_token. "/".get_current_user_id()."/".$leagueID."?mode=html&imgurl=".FANVICTOR_IMAGE_URL."&imgsuf=".$imgSuf;
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-		return $data;
+        return $this->sendRequest("fights", array('leagueID' => $leagueID, 'mode' => 'html'), false, false);
 	}
-    
-	public function getNewgames()
-    {
-        $url = $this->api_url."/leaguesinfo/".$this->api_token."/".get_current_user_id();
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;
-    }
-    
-    public function showLeagueDetails($iLeagueId)
-    {
-        $url = $this->api_url."/LeagueDetails/".$this->api_token."/?leagueID=".(int)$iLeagueId;
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;
-    }
 
-    public function getFixtures()
-    {
-        $url = $this->api_url."/fixtures/".$this->api_token."/";
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        return $data;
-    }
-	
-	public function postLeague($post)
-    {
-        $post['ip'] = $_SERVER['REMOTE_ADDR'];
-        $post['winner_percent'] = get_option('fanvictor_winner_percent');
-        $post['first_percent'] = get_option('fanvictor_first_place_percent');
-        $post['second_percent'] = get_option('fanvictor_second_place_percent');
-        $post['third_percent'] = get_option('fanvictor_third_place_percent');
-        $url = $this->api_url."/league/".$this->api_token."/".get_current_user_id();
-        $client = $this->getRestClient("POST", $url);
-        $data = $client->send($post);
-        return $data;
-    }
-    
     public function inviteFriend($data)
     {
         if (!empty($data['message_boxinvite']))
@@ -288,7 +148,11 @@ class Fanvictor
 			
 		$trueContacts = array_unique($trueContacts);
 		$playerInfo = $this->getPlayerInfo(get_current_user_id());
-		$leagueInfo = $this->getLeagueInfo($importleagueID);
+        
+        //league
+        $this->selectField(array('name', 'size', 'entry_fee', 'poolID'));
+		$leagueInfo = $this->getLeagueDetail($importleagueID);
+        $leagueInfo = $leagueInfo[0];
         $website = 'http://'.$_SERVER['SERVER_NAME'];
         $siteTitle = get_option('blogname');
 
@@ -304,12 +168,19 @@ class Fanvictor
 		$message_body = $message['body'] . $message_footer;
 		$headers="From: ".$myEmail;
         $success = true;
-        
+
 		foreach ($trueContacts as $email)
 		{
-			if(!mail($email,$message_subject,$message_body,$headers))
+            try 
             {
-                $success = false;
+                if(!mail($email,$message_subject,$message_body,$headers))
+                {
+                    $success = false;
+                }
+            } 
+            catch (Exception $ex) 
+            {
+                
             }
 		}
         $message= "Invites Sent!";
@@ -333,15 +204,6 @@ class Fanvictor
         }
         return null;
 	}
-    
-    private function getLeagueInfo($leagueID)
-    {
-        $url = $this->api_url."/leagueInfo/".$this->api_token."/".get_current_user_id()."?leagueID=".$leagueID;
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        $data = json_decode($data, true);
-        return $data;
-    }
     
     private function getPlayerInfo($user_id)
     {
@@ -370,6 +232,242 @@ class Fanvictor
         $result = json_decode(json_encode($result), true);
 
         return $result;
+    }
+    
+    ////////////////////////////////v2////////////////////////////////////
+    public function isLeagueExist($leagueID)
+    {
+        if($this->sendRequest("isLeagueExist", array('leagueID' => $leagueID), false, false) == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    public function isNormalLeagueExist($leagueID)
+    {
+        if($this->sendRequest("isNormalLeagueExist", array('leagueID' => $leagueID), false, false) == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    public function isPlayerDraftLeagueExist($leagueID)
+    {
+        if($this->sendRequest("isPlayerDraftLeagueExist", array('leagueID' => $leagueID), false, false) == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    public function isPlayerDraftLeagueFull($leagueID)
+    {
+        if($this->sendRequest("isPlayerDraftLeagueFull", array('leagueID' => $leagueID), false, false) == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    public function getListSports()
+    {
+        return $this->sendRequest("getListSports", null, false);
+    }
+    
+    public function getLeagueLobby()
+    {
+        return $this->sendRequest("getLeagueLobby", null, false);
+    }
+    
+    public function getUpcomingEntries()
+    {
+        return $this->sendRequest("getUpcomingEntries", null, false);
+    }
+    
+    public function getHistoryEntries()
+    {
+        return $this->sendRequest("getHistoryEntries", null, false);
+    }
+    
+    public function getLiveEntries()
+    {
+        return $this->sendRequest("getLiveEntries", null, false);
+    }
+    
+    public function liveEntriesResult($poolID)
+    {
+        echo $this->sendRequest("liveEntriesResult", array('poolID' => $poolID), null, false);exit;
+    }
+
+    public function parseLeagueData($aLeagues)
+    {
+        if($aLeagues != null)
+        {
+            foreach($aLeagues as $k => $aLeague)
+            {
+                $aLeagues[$k]['today'] = false;
+                if(isset($aLeague['startDate']) && strtotime(date('Y-m-d')) == strtotime($aLeague['startDate']))
+                {
+                    $aLeagues[$k]['today'] = true;
+                }
+                
+                //icon
+                if(!empty($aLeague['sport_siteID']) && $aLeague['sport_siteID'] > 0 && !empty($aLeagues[$k]['icon']))
+                {
+                    $aLeagues[$k]['icon'] = FANVICTOR_IMAGE_URL.$aLeague['icon'];
+                }
+                
+                //creator
+                $user = get_userdata($aLeague['creator_userID']);
+                $aLeagues[$k]['creator_name'] = $user != null ? $user->user_login : null;
+                
+                //total prize for winners
+                $structure = '';
+                if($aLeague['prize_structure'] == 'WINNER')
+                {
+                    $structure = 'winnertakeall';
+                }
+                else 
+                {
+                    $structure = 'top3';
+                }
+                $prizes = $this->pools->calculatePrizes('' , $structure, $aLeague['size'], $aLeague['entry_fee']);
+                $aLeagues[$k]['prizes'] = 0;
+                foreach($prizes as $prize)
+                {
+                    $aLeagues[$k]['prizes'] += $prize;
+                }
+            }
+        }
+        return $aLeagues;
+    }
+
+    public function insertPlayerPicks($data)
+    {
+        if($this->sendRequest("insertPlayerPicks", $data, false, false))
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    public function deletePlayerPicks($leagueID)
+    {
+        if($this->sendRequest("deletePlayerPicks", array('leagueID' => $leagueID), false, false))
+        {
+            return true;
+        }
+        return false;
+    }
+    
+    public function getPlayerPicks($leagueID)
+    {
+        $data = $this->sendRequest("getPlayerPicks", array('leagueID' => $leagueID), false);
+        return $data;
+    }
+    
+    public function getPlayerPickEntries($leagueID)
+    {
+        $aDatas = $this->sendRequest("getPlayerPickEntries", array('leagueID' => $leagueID), false);
+        return $this->parseUserData($aDatas);
+    }
+    
+    public function getEntries($leagueID)
+    {
+        $aDatas = $this->sendRequest("getEntries", array('leagueID' => $leagueID), false);
+        return $this->parseUserData($aDatas);
+    }
+    
+    public function getScores($leagueID)
+    {
+        $aDatas = $this->sendRequest("getScores", array('leagueID' => $leagueID), false);
+        return $this->parseUserData($aDatas);
+    }
+    
+    private function parseUserData($aDatas = null)
+    {
+        if($aDatas != null)
+        {
+            foreach($aDatas as $k => $aData)
+            {
+                $user = get_userdata($aData['userID']);
+                if($user != null)
+                {
+                    $aDatas[$k]['username'] = $user->user_login;
+                    $aDatas[$k]['avatar'] = $this->get_avatar_url(get_avatar($aData['userID']));
+                }
+            }
+        }
+        return $aDatas;
+    }
+    
+    public function get_avatar_url($get_avatar)
+    {
+        preg_match("/src=['\"](.*?)['\"]/i", $get_avatar, $matches);
+		return $matches[1];
+    }
+    
+    public function getPlayerPicksResult($leagueID, $userID)
+    {
+        return $this->sendRequest("getPlayerPicksResult", array('leagueID' => $leagueID, 'userID' => $userID), false);
+    }
+    
+    public function getPlayerStatistics($orgID, $playerID)
+    {
+        return $this->sendRequest("getPlayerStatistics", array("orgID" => $orgID, "playerID" => $playerID), false);
+    }
+
+    public function getPoolInfo($leagueID)
+    {
+        $aDatas = $this->sendRequest("getPoolInfo", array('leagueID' => $leagueID), false);
+        $aDatas['scoringcats']['playerdraft'] = $this->scoringcategory->groupScoringCategory($aDatas['scoringcats']['playerdraft']);
+        $aDatas['entries'] = $this->parseUserData($aDatas['entries']);
+        return $aDatas;
+    }
+
+    public function getNewPools()
+    {
+        return $this->sendRequest("getNewPools", null, false);
+    }
+    
+    public function validCreateLeague($orgID, $poolID, $game_type, $name, $fightID)
+    {
+        return $this->sendRequest("validCreateLeague", array("orgID" => $orgID, 
+                                                             "poolID" => $poolID, 
+                                                             "game_type" => $game_type,
+                                                             "name" => $name,
+                                                             "fightID" => $fightID), false, false);
+    }
+    
+    public function createLeague($data)
+    {
+        $data['winner_percent'] = get_option('fanvictor_winner_percent');
+        $data['first_percent'] = get_option('fanvictor_first_place_percent');
+        $data['second_percent'] = get_option('fanvictor_second_place_percent');
+        $data['third_percent'] = get_option('fanvictor_third_place_percent');
+        return $this->sendRequest("createLeague", $data, false, false);
+    }
+    
+    public function getEnterGameData($leagueID)
+    {
+        return $this->sendRequest("getEnterGameData", array("leagueID" => $leagueID), false);
+    }
+    
+    public function getEnterNormalGameData($leagueID)
+    {
+        return $this->sendRequest("getEnterNormalGameData", array("leagueID" => $leagueID), false);
+    }
+    
+    public function getGameEntryData($leagueID)
+    {
+        return $this->sendRequest("getGameEntryData", array("leagueID" => $leagueID), false);
+    }
+    
+    public function validEnterPlayerdraft($leagueID, $playerIDs)
+    {
+        return $this->sendRequest("validEnterPlayerdraft", array("leagueID" => $leagueID, "playerIDs" => $playerIDs), false, false);
     }
 }
 ?>

@@ -1,44 +1,22 @@
 var nonRoundValues = new Array(2,4,6,7,8,9,15,17,18,19,20);
-function importPicks(leagueID,t,p)
+function importPicks(picks, methods, rounds, minutes)
 {
-    var data = {
-        action: 'userpicks',
-        leagueId : leagueID
-    };
-    jQuery.post(ajaxurl, data, function(result) {
-        data = JSON.parse(result);
-        if ( !data )
+    picks = picks.split(",");
+    methods =  methods.split(",");
+    rounds =  rounds.split(",");
+    minutes =  minutes.split(",");
+    jQuery(".fightID").each(function(){
+        var index = picks.indexOf(jQuery(this).val());
+        if(index > -1)
         {
-            alert("Sorry, error occured.");
-            return;
+            var fightID = jQuery(this).attr("data-fightid");
+            jQuery(this).attr("checked", "checked");
+            jQuery("#method" + fightID).val(methods[index]);
+            jQuery("#round" + fightID).val(rounds[index]);
+            jQuery("#minute" + fightID).val(minutes[index]);
+            checkMethod(methods[index], fightID);
         }
-        jQuery.each(data, function (index, value) {
-            var fightID = value.fightID;	
-            var fighterElement = '#fighter' + value.winnerID;	
-            var methodElement = '#method' + fightID;
-            var roundElement = '#round' + fightID;
-            var minuteElement = '#minute' + fightID;
-            if ( jQuery(fighterElement).length )
-            {
-                    jQuery(fighterElement).attr( "checked", "checked" );
-                    //jQuery(fighterElement).iCheck('check');
-                    //enableDetails(fightID);
-            }
-            if ( jQuery(methodElement).length  )
-            {
-                    jQuery(methodElement).val(value.methodID);
-            }
-            if ( jQuery(roundElement).length  )
-            {
-            jQuery(roundElement).val(value.roundID);
-            }
-            if ( jQuery(roundElement).length )  //check if element exists
-            {
-                    jQuery(minuteElement).val(value.minuteID);
-            }
-            //console.log(value);
-        });
-    })
+    });
 }
 function pickSelected(leagueID)
 {
@@ -66,7 +44,7 @@ function pickSelected(leagueID)
         }
         return true;
 }
-function checkMethod(value,fightID,champFight)
+function checkMethod(value,fightID)
 {
         var roundSelectName = "#round" + fightID;
         var minuteSelectName = "#minute" + fightID;
@@ -85,3 +63,9 @@ function checkMethod(value,fightID,champFight)
         jQuery(minuteSelectName).removeAttr('disabled');
         return true;
 }
+
+jQuery(window).load(function(){
+    jQuery(".method").each(function(){
+        checkMethod(jQuery(this).val(), jQuery(this).attr("data-id"));
+    })
+})

@@ -21,22 +21,8 @@ class MyUpcomingEntries
 
     public static function addContent()
     {
-		$jsonData = self::$fanvictor->getUpcomingContests();
-       
-		if (($jsonData = self::$fanvictor->getUpcomingContests()) && ($jsonObject = json_decode($jsonData)) )
-        {
-            if ( isset($jsonObject->success) && $jsonObject->success )
-			{
-                $upcomingContests = $jsonObject->html;
-                $sHeader = __("My Upcoming Entries");
-			}
-            else 
-                $errorMessage = __('<br>Error getting my upcoming entries');
-        }
-        else
-        {
-            $errorMessage = __('<br>Error occured could not get my upcoming entries');
-        }
+        $aLeagues = self::$fanvictor->getUpcomingEntries();
+        $aLeagues = self::$fanvictor->parseLeagueData($aLeagues);
         include FANVICTOR__PLUGIN_DIR_VIEW.'myupcomingentries.php';
     }
 }

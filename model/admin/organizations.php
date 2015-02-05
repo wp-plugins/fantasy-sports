@@ -1,6 +1,5 @@
 <?php
-require_once("RestClient.php");
-Class Organizations
+Class Organizations extends Model
 {
 	public function __construct()
 	{	
@@ -10,54 +9,51 @@ Class Organizations
         $this->urladd = 'admincp.fanvictor.organizations.add';
 	}
     
-    private function getRestClient($method, $url)
-    {
-        $ret = false;
-        $ret = new RestClient($method, $url);
-        return $ret;
-    }
-    
     public function isOrgsExist($orgID)
     {
-        $url = $this->api_url."/isOrganizationExist/".$this->api_token."?orgID=".$orgID;
-        $client = $this->getRestClient("GET", $url);
-        return $client->send(false);
+        return $this->sendRequest("isOrganizationExist", array("orgID" => $orgID));
+    }
+    
+    public function isGameTypeExist($value)
+    {
+        return $this->sendRequest("isGameTypeExist", array("value" => $value));
     }
     
     public function isSportExist($type)
     {
-        $url = $this->api_url."/isSportExist/".$this->api_token."?type=".$type;
-        $client = $this->getRestClient("GET", $url);
-        return $client->send(false);
+        return $this->sendRequest("isSportExist", array("type" => $type));
     }
     
-    public function getOrgs($orgID = null, $sport = null, $setting = false)
+    public function getOrgs($orgID = null, $sport = null, $setting = false, $playerdraft = false)
     {
-        $url = $this->api_url."/organization/".$this->api_token."?orgID=".$orgID;
+        $params = array();
+        if((int)$orgID > 0)
+        {
+            $params['orgID'] = $orgID;
+        }
         if($sport != null)
         {
-            $url .= "&sport=".$sport;
+            $params['sport'] = $sport;
         }
         if($setting)
         {
-            $url .= "&setting=true";
+            $params['setting'] = true;
         }
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        $data = json_decode($data, true);
-        return $data;
+        if($playerdraft)
+        {
+            $params['playerdraft'] = true;
+        }
+        return $this->sendRequest("organization", $params);
     }
     
     public function getSport($orgID = null, $setting = false)
     {
-        $url = $this->api_url."/sport/".$this->api_token;
+        $params = array();
         if($setting)
         {
-            $url .= "?setting=true";
+            $params['setting'] = true;
         }
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        $data = json_decode($data, true);
+        $data = $this->sendRequest("sport", $params);
         return $data;
     }
     
@@ -116,15 +112,17 @@ Class Organizations
         }
         return 0;
     }
-
+    
+    public function getGameType()
+    {
+        return $this->sendRequest("getGameType");
+    }
 
     public function updateOrgsActive($orgID, $is_active)
     {
         $data = array('organizationID' => $orgID,
                       'is_active' => $is_active);
-        $url = $this->api_url."/updateOrgsActive/".$this->api_token;
-        $client = $this->getRestClient("POST", $url);
-        $client->send($data);
+        $this->sendRequest("updateOrgsActive", $data);
         return true;
     }
 }

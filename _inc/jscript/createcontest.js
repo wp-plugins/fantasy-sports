@@ -1,38 +1,5 @@
 var lastPID = "";
 var activeID = new Array();
-jQuery(window).load(function(){
-    jQuery('.sportRadio:enabled:first').trigger('click');
-    setOptions(jQuery('#typeRadios7').val());
-    jQuery(document).on('click', '.radio input', function(event){
-        setOptions(this.value);
-    });
-})
-
-function setOptions(matchWith)
-{
-    if ( ! isNaN(matchWith) )
-    {
-            return true;
-    }
-    switch ( matchWith ) 
-    {
-            case "head2head":
-            {
-                    jQuery('#leagueDiv').hide();
-            }break;
-            case "league":
-            {
-                    jQuery('#leagueDiv').show();
-            }break;
-            case "winnertakeall":
-            case "top3":
-            case "public":
-            case "private":
-            case "on":
-            break;
-    }
-    resumPrize();
-}
 
 function validateContest()
 {
@@ -75,52 +42,240 @@ function validateContest()
 	return  oneChecked;
 } 
 
-function resumPrize()
+function setOptions(matchWith)
 {
-    var poolID = jQuery('#poolDates').val();
-    var size = jQuery('#leagueSize').val();
-    var entry_fee = jQuery('#entry_fee').val();
-    var structure = jQuery('input:radio[name=structure]:checked').val();
-    var type = jQuery('input:radio[name=type]:checked').val();
-    var data = 'poolID=' + poolID + '&type=' + type + '&structure=' + structure + '&size=' + size + '&entry_fee=' + entry_fee;
-    
-    jQuery.post(ajaxurl, "action=calculatePrizes&" + data, function(result) {
-        jQuery("#prizesum").empty().append(result);	
-    })
+    if ( ! isNaN(matchWith) )
+    {
+            return true;
+    }
+    switch ( matchWith ) 
+    {
+        case "head2head":
+        {
+                jQuery('.leagueDiv').hide();
+        }break;
+        case "league":
+        {
+                jQuery('.leagueDiv').show();
+        }break;
+        case "winnertakeall":
+        case "top3":
+        case "public":
+        case "private":
+        case "on":
+        break;
+    }
+    jQuery.createcontest.calculatePrizes();
 }
 
-jQuery(document).on('click', '.sportRadio', function(){
-    if(!jQuery(this).is('checked'))
+jQuery.createcontest =
+{
+    setData : function(aPools, aFights)
     {
-        var id = jQuery(this).val();
-        var data = {
-            action: 'loadPoolsByOrg',
-            orgID : id
-        };
-        jQuery.post(ajaxurl, data, function(result) {
-            result = JSON.parse(result);
-            jQuery('#poolDates').empty().append(result.resultPools);
-            if(result.sport == 'MMA')
+        this.aPools = aPools;
+        this.aFights = aFights;
+        jQuery.parseJSON(this.aPools);
+    },
+    
+    init: function()
+    {
+        var aPools = jQuery.parseJSON(this.aPools);
+        if(aPools != null)
+        {
+            for(var i = 0; i < aPools.length; i++)
             {
-                jQuery('.minutes').show();
+                jQuery('#sportRadios' + aPools[i].organization).removeAttr('disabled');
             }
-            else
+        }
+    },
+    
+    loadPools: function(org_id, is_playerdraft, only_playerdraft)
+    {
+        var aPools = jQuery.parseJSON(this.aPools);
+        var selectPool = jQuery('#selectPool').val();
+        if(aPools != null)
+        {
+            var html = '<select class="form-control" name="poolID" onchange="jQuery.createcontest.loadFights(jQuery(this).val())">';
+            for(var i = 0; i < aPools.length; i++)
             {
-                jQuery('.minutes').hide();
+                var aPool = aPools[i];
+                var selected = '';
+                if(selectPool == aPool.poolID)
+                {
+                    selected = 'selected="true"';
+                }
+                if(aPool.organization == org_id)
+                {
+                    html += '<option value="' + aPool.poolID + '" ' + selected + '>' + aPool.poolName + '</option>';
+                    if(aPool.type == 'MMA')
+                    {
+                        jQuery('.minutes').show();
+                    }
+                    else
+                    {
+                        jQuery('.minutes').hide();
+                    }
+                }
             }
-            loadFights();
-        })
+            html += '</select>';
+            jQuery('#poolDates').empty().append(html);
+            this.loadFights(jQuery('#poolDates select').val())
+        }
+        
+        if(only_playerdraft == 0)
+        {
+            jQuery('#game_type option').show();
+            jQuery('#wrapFixtures').show();
+            if(is_playerdraft == 1)
+            {
+                jQuery('#playerdraftType').show();
+            }
+            else 
+            {
+                jQuery('#playerdraftType').hide();
+                if(jQuery("#game_type").val() == "playerdraft")
+                {
+                    jQuery('#game_type>option:selected').next().attr('selected', 'true');
+                }
+            }
+        }
+        else 
+        {
+            jQuery('#wrapFixtures').hide();
+            jQuery('#game_type option:not(#playerdraftType)').hide();
+        }
+        jQuery('#selectPool').val('');
+    },
+    
+    loadFights: function(poolID)
+    {
+        var aFights = jQuery.parseJSON(this.aFights);
+        var selectFight = '';
+        if(jQuery('#selectFight').length > 0 && jQuery('#selectFight').val() != '')
+        {
+            selectFight = jQuery.parseJSON(jQuery('#selectFight').val());
+        }
+        var result = '';
+        if(aFights != null)
+        {
+            for(var i = 0; i < aFights.length; i++)
+            {
+                var aFight = aFights[i];
+                var selected = '';
+                if((selectFight != null && selectFight.indexOf(aFight.fightID) > -1) || selectFight == '' || selectFight == null)
+                {
+                    selected = 'checked="true"';
+                }
+                if(aFight.poolID == poolID)
+                {
+                    result += '<input type="checkbox" ' + selected + ' id="fixture_' + poolID + '_' + aFight.fightID + '" name="fightID[]" value="' + aFight.fightID + '">';
+                    result += '<label for="fixture_' + poolID + '_' + aFight.fightID + '">' + aFight.name + '</label><br/>';
+                }
+            }
+        }
+        jQuery('#selectFight').val('');
+        jQuery('#fixtureDiv').empty().append(result);
+    },
+    
+    gameTypeAttr: function()
+    {
+        var gametype = jQuery('#game_type').val();
+        switch (gametype)
+        {
+            case 'playerdraft':
+                jQuery('.for_playerdraft').show();
+                break;
+            default :
+                jQuery('.for_playerdraft').hide();
+        }
+    },
+    
+    calculatePrizes: function()
+    {
+        var winnerPercent = jQuery('#winnerPercent').val();
+        var firstPercent = jQuery('#firstPercent').val();
+        var secondPercent = jQuery('#secondPercent').val();
+        var thirdPercent = jQuery('#thirdPercent').val();
+        var size = jQuery('#leagueSize').val();
+        var entryFee = jQuery('#entry_fee').val();
+        var structure = jQuery('input:radio[name=structure]:checked').val();
+        var type = jQuery('input:radio[name=type]:checked').val();
+        
+        //calculate
+        var prizes = [];
+        if(type == 'head2head')
+        {
+            size = 2;
+            structure = "winnertakeall";
+        }
+        if(parseInt(entryFee) > 0)
+        {
+            prize = size * entryFee * winnerPercent / 100;
+            switch(structure)
+            {
+                case "winnertakeall":
+                    prizes.push(prize.toFixed(2));
+                    break;
+                case "top3":
+                    prizes.push((prize * firstPercent / 100).toFixed(2));//1st
+                    prizes.push((prize * secondPercent / 100).toFixed(2));//2nd
+                    prizes.push((prize * thirdPercent / 100).toFixed(2));//3th
+                    break;
+                /*default :
+                    break;*/
+            }
+        }
+        
+        //view result
+        var html = 
+            '<table style="width:100%">\n\
+                <tr><td style="text-align:left">Pos</td><td style="text-align:right">Prize</td></tr>';
+        var count = 0;
+        for(var i in prizes)
+        {
+            var prize = prizes[i];
+            count++;
+            place = null;
+            switch (count)
+            {
+                case 1:
+                    place = '1st';
+                    break;
+                case 2:
+                    place = '2nd';
+                    break;
+                case 3:
+                    place = '3rd';
+                    break;
+            }
+            html += '<tr><td style="text-align:left">' + place + '</td><td style="text-align:right">' + prize + '</td></tr>';
+        }
+        html += '</table>';
+        jQuery("#prizesum").empty().append(html);	
+    },
+    
+    addInsufficientZeroToMoneyFormat: function(str)
+    {
+        str = str.toFixed(2);
+        if(str.substring(-2, 1) == '.' )
+        {
+            str += '0';
+        }
+        return str;
+    }
+}
+
+jQuery(window).load(function(){
+    jQuery.createcontest.setData(jQuery("#poolData").val(), jQuery("#fightData").val());
+    jQuery.createcontest.init();
+    jQuery.createcontest.loadPools(jQuery("#sports").val(), jQuery('#sports option:selected').attr('playerdraft'), jQuery('#sports option:selected').attr('only_playerdraft'));
+    jQuery.createcontest.gameTypeAttr();
+    if(jQuery("#leagueID").val != '')
+    {
+        jQuery.createcontest.calculatePrizes();
     }
 })
 
-function loadFights()
-{
-    var id = jQuery('#poolDates').val();
-    var data = {
-        action: 'loadFights',
-        poolID : id
-    };
-    jQuery.post(ajaxurl, data, function(result) {
-        jQuery('#fixtureDiv').empty().append(result);
-    })
-}
+jQuery(document).on('click', '.radio input', function(event){
+    setOptions(this.value);
+});

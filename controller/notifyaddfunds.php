@@ -9,7 +9,7 @@ class Notifyaddfunds
         self::$paypal = new Paypal();
     }
     
-	public function process()
+	public static function process()
 	{
         $status = self::$paypal->callback();
         $fundshistoryID = null;
@@ -23,7 +23,7 @@ class Notifyaddfunds
         if(($status == 'completed' || $status == "pending") && !self::$payment->isPaypalCompleted($fundshistoryID))
 		{
             self::$payment->updateUserBalance($custom[2], null, 0, $custom[0]);
-            self::$payment->updateFundhistory($fundshistoryID, array('transactionID' => $_POST['txn_id'], 'is_checkout' => 1), $custom[0]);
+            self::$payment->updateFundhistory($fundshistoryID, array('transactionID' => $_POST['txn_id'], 'is_checkout' => 1), $custom[0], $status);
         }
 		else
 		{

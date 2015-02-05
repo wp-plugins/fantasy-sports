@@ -1,17 +1,28 @@
 <script type="text/javascript">
-    updateLiveContests();
-    setInterval(function() { updateLiveContests() }, 60000);
+    jQuery.league.loadLiveEntries('<?=FANVICTOR_URL_RANKINGS;?>');
+    setInterval(function() { jQuery.league.loadLiveEntries('<?=FANVICTOR_URL_RANKINGS;?>') }, 60000);
 </script>
 
 <h3 class="widget-title">
-    <?=$sHeader;?>
+    <?=__("My Live Entries");?>
 </h3>
 <div class="content">
-    <div id="popup_leagues_details" class="popup_block"></div>
-    <form action="<?=FANVICTOR_URL_RANKINGS;?>" method="POST">
-        <input type="hidden" name="live" value="1" />
-        <input type="hidden" class="leagueID" name="leagueID" />
-        <input type="hidden" class="poolID" name="poolID" />
-        <div id="leagues_live_games_grid"></div>
-    </form>
+    <div class="wrap_content">
+        <table class="table table-striped table-bordered table-responsive table-condensed" id="tableLiveEntries">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Entries</th>
+                    <th>Entry Fee</th>
+                    <th>Prizes</th>
+                    <th>Rank</th>
+                    <th>&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>

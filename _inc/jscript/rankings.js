@@ -1,177 +1,277 @@
-function cancelBubble(e)
-{
-    if (!e)
-      e = window.event;
-
-    if (e.cancelBubble)
-      e.cancelBubble = true;
-    else
-      e.stopPropagation();
-}
-function setValueN(id,x,value,compare)
-{
-        if (x.value == compare)
+jQuery.ranking = {
+    enterLeagueHistory:function()
+    {
+        var leagueID = jQuery("#importleagueID").val()
+        var data = {
+            action: 'getNormalGameResult',
+            leagueID : leagueID,
+        };
+        jQuery.ajaxSetup({async:false});
+        jQuery.post(ajaxurl, data, function(result) {
+            jQuery("#dataResult").val(result);
+            result = jQuery.parseJSON(result);
+            var league = result.league;
+            var pool = result.pool;
+            
+            //list players
+            var users = result.users;
+            var current_user = '';
+            var htmlForMethod = '';
+            if(pool.allow_method == 1)
+            {
+                htmlForMethod = 
+                    '<th>Methods</th>\n\
+                    <th>Rounds</th>\n\
+                    <th>Minutes</th>\n\
+                    <th>Bonuses</th>';
+            }
+            var htmlPlayers = 
+                '<table class="table table-bordered table-responsive table-condensed">\n\
+                    <tr>\n\
+                        <th>User</th>\n\
+                        <th>Rank</th>\n\
+                        <th>Points</th>\n\
+                        <th>Winners</th>\n\
+                        ' + htmlForMethod + '\n\
+                        <th>Winnings</th>\n\
+                    </tr>';
+            if(users != null)
+            {
+                for(var i in users)
+                {
+                    user = users[i];
+                    var htmlSelect = '';
+                    if(!user.current)
+                    {
+                        htmlSelect = '<input type="radio" id="userinfo' + user.userID + '" name="user" onclick="jQuery.ranking.selectUser(' + user.userID + ');">';
+                    }
+                    if(pool.allow_method == 1)
+                    {
+                        htmlForMethod = 
+                            '<td>' + user.methods + '</td>\n\
+                            <td>' + user.rounds + '</td>\n\
+                            <td>' + user.minutes + '</td>\n\
+                            <td>' + user.bonuses + '</td>';
+                    }
+                    htmlPlayers += 
+                        '<tr>\n\
+                            <td>\n\
+                                ' + htmlSelect + '\n\
+                                <label for="userinfo' + user.userID + '">' + user.user_login + '</label>\n\
+                            </td>\n\
+                            <td>' + user.rank + '</td>\n\
+                            <td>' + user.points + '</td>\n\
+                            <td>' + user.winners + '</td>\n\
+                            ' + htmlForMethod + '\n\
+                            <td>' + user.winnings + '</td>\n\
+                        </tr>';
+                    if(user.current == 1)
+                    {
+                        current_user = user;
+                    }
+                }
+            }
+            htmlPlayers += '</table>';
+            jQuery("#listPlayers").empty().append(htmlPlayers);
+            
+            //fixtures
+            var fights = result.fights;
+            var htmlFixtures = 
+                '<table class="table table-bordered table-responsive table-condensed">\n\
+                    <tr>\n\
+                        <th>Fixture</th>\n\
+                        <th style="width:25%" id="myResultHeader">My Pick (' + current_user.user_login + ')</th>\n\
+                        <th style="width:25%" id="yourResultHeader">Competitor Pick</th>\n\
+                        <th style="width:25%">Actual Result</th>\n\
+                    </tr>';
+            if(fights != null)
+            {
+                for(var i in fights)
+                {
+                    fight = fights[i];
+                    var styleTeam1Win = styleTeam2Win = 'style="color:red"';
+                    var htmlComplete = '';
+                    if(fight.winnerID == fight.fighterID1)
+                    {
+                        styleTeam1Win = 'style="color:green"';
+                    }
+                    if(fight.winnerID == fight.fighterID2)
+                    {
+                        styleTeam2Win = 'style="color:green"';
+                    }
+                    if(league.is_complete)
+                    {
+                        htmlComplete = 
+                            '<div ' + styleTeam1Win + '>' + fight.name1 + ' ' + fight.team1score + '</div>\n\
+                            <div ' + styleTeam2Win + '>' + fight.name2 + ' ' + fight.team2score + '&nbsp;</div>\n\
+                            <div>&nbsp;</div>\n\
+                            <div>&nbsp;</div>\n\
+                            <div>&nbsp;</div>';
+                    }
+                    htmlFixtures += 
+                        '<tr>\n\
+                            <td>' + fight.name1 + '\n\
+                                <div>VS</div>' + fight.name2 + '</td>\n\
+                            <td id="myresult_' + fight.fightID + '">\n\
+                            </td>\n\
+                            <td id="yourresult_' + fight.fightID + '"></td>\n\
+                            <td>\n\
+                                <div class="h_column actual_result">\n\
+                                    ' + htmlComplete + '\n\
+                                </div>\n\
+                            </td>\n\
+                        </tr>';
+                }
+                htmlFixtures += 
+                    '<tr>\n\
+                        <td>&nbsp;</td>\n\
+                        <td>\n\
+                            <div id="myTotalPoints"></div>\n\
+                        </td>\n\
+                        <td>\n\
+                            <div class="YourTotalPoints"></div>\n\
+                        </td>\n\
+                        <td>&nbsp;</td>\n\
+                    </tr>';
+            }
+            htmlFixtures += '</table>';
+            jQuery("#listFixtures").empty().append(htmlFixtures);
+            
+            jQuery.ranking.showUserResult(current_user, 1);
+        })
+        jQuery.ajaxSetup({async:true});
+    },
+    
+    selectUser: function(selID)
+    {
+        var result = jQuery("#dataResult").val();
+        result = jQuery.parseJSON(result);
+        var league = result.league;
+        var users = result.users;
+        if(!league.can_view_user)
         {
-                x.value = value;
-                if(compare=="")
-                        jQuery('#' + id + ' input[name="'+x.name + '"]').css("color", "#666");
-                else
-                        jQuery('#' + id + ' input[name="'+x.name + '"]').css("color", "black");
+            alert("You can see another users' picks after league start only.");
         }
-}
-function sendInvite()
-{
-    jQuery('#inviteForm').find('.inviting').show();
-    var dataSring = jQuery('#inviteForm').serialize();
-    jQuery.post(ajaxurl, 'action=sendInviteFriend&' + dataSring, function(result) {
-        var data = JSON.parse(result);
-        if(data.notice)
+        else 
         {
-            alert(data.notice);
+            if(users != null)
+            {
+                for(var i in users)
+                {
+                    if(users[i].userID == selID)
+                    {
+                        jQuery.ranking.showUserResult(users[i], 0);
+                    }
+                }
+            }
         }
-        else
+    },
+    
+    showUserResult: function(user, mypick)
+    {
+        var result = jQuery("#dataResult").val();
+        result = jQuery.parseJSON(result);
+        var league = result.league;
+        var header = headerName = body = totalPoints = '';
+        if(mypick == 1)
         {
-            alert(data.message);
-            jQuery("#dlgInviteFriend").dialog('close');
-            jQuery('#inviteForm').find('.inviting').hide();
+            header = jQuery("#myResultHeader");
+            headerName = "My Pick";
+            body = "myresult_";
+            totalPoints = "myTotalPoints";
         }
-    })
-    return false;
-}
-
-jQuery(document).on('submit', "#inviteForm", function(e){
-    e.preventDefault();
-});
-
-function checkAll()
-{
-    jQuery("input[name='val[friend_ids][]']").attr('checked', true);
-}
-
-function checkNone()
-{
-    jQuery("input[name='val[friend_ids][]']").removeAttr('checked');
-}
-
-function toggleAll(element)
-{
-	//var form = document.forms.openinviter, z = 0;
-	var z = 0;
-	var form = jQuery('#popup_block_show form[name="openinviter"]')[0];
-	for(z=0; z<form.length;z++)
-	{
-		if(form[z].type == 'checkbox')
-			form[z].checked = element.checked;
-	}
-}
-function toggleAllFriends(element)
-{
-	jQuery('#popup_block_show .list_of_users_to_invite input[name="username"]').each(function(){
-	//	jQuery(this).attr('checked', element.checked);
-		jQuery(this).iCheck('check');
-	});
-}
-function importFriends()
-{
-	showPopup('inviterForm', 500);
-}
-function inviteFriends()
-{
-	//jQuery("#myModal").show();
-    var dialog = jQuery("#dlgInviteFriend").dialog({
-        maxHeight: 600,
-        width:800,
-        minWidth:600,
-        modal:true,
-        open: function() {
-            jQuery('.ui-widget-overlay').addClass('custom-overlay');
+        else 
+        {
+            header = jQuery("#yourResultHeader");
+            headerName = "Competitor Pick";
+            body = "yourresult_";
+            totalPoints = "YourTotalPoints";
         }
-    });
-}
-function selectRankingsRowCheck(userID)
-{
-	var leagues_ranking = new leaguesClass();
-	leagues_ranking.lastSelectedUserID = userID;
-	jQuery("#leagues_history_ranking_grid table tr").removeClass('trSelected');
-	jQuery("#rowuser_" + userID).addClass('trSelected');
-	leagues_ranking.putCompetitorIntoRankingGrid(userID, 'click');
-}
+        header.empty().append(headerName + ' (' + user.user_login + ')');
+        if(user.picks != null)
+        {
+            var html = '';
+            var fixture = '';
+            for(var i in user.picks)
+            {
+                fixture = user.picks[i];
+                var styleWinner = styleMethod = styleMinute = styleRound = 'style="color:red"';
+                var htmlPoint = "No points";
+                if(league.is_complete)
+                {
+                    if(fixture.matchWinner)
+                    {
+                        styleWinner = 'style="color:green"';
+                    }
+                    if(fixture.matchMethod)
+                    {
+                        styleMethod = 'style="color:green"';
+                    }
+                    if(fixture.matchMinute)
+                    {
+                        styleMinute = 'style="color:green"';
+                    }
+                    if(fixture.styleRound)
+                    {
+                        styleRound = 'style="color:green"';
+                    }
+                    if(fixture.points != '')
+                    {
+                        htmlPoint = 'Points: ' + fixture.points;
+                    }
+                }
+                html = 
+                    '<div ' + styleWinner + '>' + fixture.name + '</div>\n\
+                    <div ' + styleMethod + '>' + fixture.method + '&nbsp;</div>\n\
+                    <div ' + styleRound + '>' + fixture.round + '&nbsp;</div>\n\
+                    <div ' + styleMinute + '>' + fixture.minute + '&nbsp;</div>\n\
+                    <div>' + htmlPoint + '</div>';
+                jQuery("#" + body + fixture.fightID).empty().append(html);
+                jQuery("#" + totalPoints).empty().append("Total points " + user.points);
+            }
+        }
+    },
+    
+    inviteFriends: function()
+    {
+        var dialog = jQuery("#dlgInviteFriend").dialog({
+            maxHeight: 600,
+            width:800,
+            minWidth:600,
+            modal:true,
+            open: function() {
+                jQuery('.ui-widget-overlay').addClass('custom-overlay');
+            }
+        });
+    },
+    
+    checkAll: function()
+    {
+        jQuery("input[name='val[friend_ids][]']").attr('checked', true);
+    },
 
-function selectHistoryRankingGridRow(celDiv, rowID)
-{
-	jQuery(celDiv).click
-	(
-		function ()
-		{
-			var userID = rowID.substring(5);	// id="rowID_<id>";
-			leagues_ranking.lastSelectedUserID = userID;
-			jQuery("#league_history .radio_rank_flexigrid_row_" + userID).attr("checked", "checked");
-			leagues_ranking.putCompetitorIntoRankingGrid(userID, 'click');
-		}
-	);
-}
-function setprovider_box(provider)
-{
-	jQuery('#popup_block_show select[name="provider_box"]').val(provider);
-}
-function getOIAuth()
-{
-	//jQuery('a.close_popup, #fade').click();
-	var username = encodeURIComponent(jQuery('#popup_block_show input[name="emailauth_username"]').val());
-	var password = encodeURIComponent(jQuery('#popup_block_show input[name="emailauth_password"]').val());
-	var provider = encodeURIComponent(jQuery('#popup_block_show select[name="provider_box"]').val());
-	var importleagueID = jQuery('#importleagueID').val();
-	if ( importleagueID == "" )
-	{
-		alert("Sorry, the system detected a spam attempt. Please contact support");
-		return false;
-	}
-	if ( username == "" || password == "" )
-	{
-		alert("Please fill out all fields");
-		//jQuery('#emailauth_username').focus();
-		//document.getElementById('emailauth_username').focus();
-		return false;
-	}
-
-	//alert(provider);
-
-	jQuery.ajax({
-		type: "GET",
-		url: "/api/authOI/" + username + "/" + password,
-		dataType: 'json',
-		data: "provider_box="+provider+"&importleagueID="+importleagueID + "&phpfoxsess=1",
-		cache: false,
-		success: function(msg){
-			//Login failed
-			if ( msg )
-			{
-				//if ( msg.message == "Login failed" )
-				if ( msg.message )
-				{
-					alert(msg.message);
-				}
-				else
-				{
-					//jQuery('a.close_popup, #fade').click();
-					closePopup(true);
-					var html = jQuery('#contactDiv form[name="openinviter"]').html();
-					jQuery('#contactDiv form[name="openinviter"]').html(html + '<div style="height:500px;overflow-y:auto;overflow-x:none">' + msg.contacts + '<\/div>');
-					showPopup('contactDiv', 600);
-				}
-			}
-			else
-			{
-				alert('Error occured.');
-			}
-		}
-	});
-
-	return false;
-}
-
-function updateLiveGamesDynamic_ranking()
-{
-	//jQuery("#leagues_history_ranking_grid").flexReload();
-	leagues_ranking.enterLeagueHistory(leagues_ranking.currentLeagueID, leagues_ranking.currentPoolID, true);
+    checkNone: function()
+    {
+        jQuery("input[name='val[friend_ids][]']").removeAttr('checked');
+    },
+    
+    sendInvite: function()
+    {
+        jQuery('#inviteForm').find('.inviting').show();
+        var dataSring = jQuery('#inviteForm').serialize();
+        jQuery.post(ajaxurl, 'action=sendInviteFriend&' + dataSring, function(result) {
+            var data = JSON.parse(result);
+            if(data.notice)
+            {
+                alert(data.notice);
+            }
+            else
+            {
+                alert(data.message);
+                jQuery("#dlgInviteFriend").dialog('close');
+                jQuery('#inviteForm').find('.inviting').hide();
+            }
+        })
+        return false;
+    }
 }

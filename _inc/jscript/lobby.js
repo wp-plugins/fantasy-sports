@@ -1,6 +1,4 @@
-/*var item = jQuery('#fanvictor_home_sidebar');
-jQuery('#content').prepend(item.clone());
-item.remove();*/
-
-updateNewContests();
-setInterval(function() { updateNewContests() }, 60000);
+jQuery(window).load(function(){
+    jQuery.league.lobby();
+})
+setInterval(function() { jQuery.league.lobby() }, 60000);

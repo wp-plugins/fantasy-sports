@@ -18,9 +18,4 @@
     <div class="table_right"><?=$withdrawPending;?>&nbsp;</div>
 </div>
 <a href="<?=FANVICTOR_URL_ADD_FUNDS;?>"><?=__('Add funds');?></a> | 
-<a href="#" onclick="jQuery.payment.requestPayment('Request payment')"><?=__('Request payment');?></a> |
-<?php if($aUserPayment != null):?>
-    <a href="#" onclick="jQuery.payment.accountInfo('Edit information')"><?=__('Edit information');?></a>
-<?php else:?>
-    <a href="#" onclick="jQuery.payment.accountInfo('Add information')"><?=__('Add information');?></a>
-<?php endif;?>
+<a href="#" onclick="return jQuery.payment.requestPayment('Request payment')"><?=__('Request payment');?></a>

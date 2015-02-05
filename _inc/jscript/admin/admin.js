@@ -108,7 +108,7 @@ jQuery.admin =
             active: active
         };
         jQuery.post(ajaxurl, data, function(result) {
-            var result = JSON.parse(result);
+            result = JSON.parse(result);
             if(result.notice)
             {
                 alert(result.notice);
@@ -125,6 +125,37 @@ jQuery.admin =
                 {
                     item.find('.active').show();
                     item.find('.unactive').hide();
+                }
+            }
+	});
+    },
+    
+    activeScoringCategorySetting: function(id, active)
+    {
+        var data = {
+            action: 'activeScoringCategory',
+            id : id,
+            active: active
+        };
+        jQuery.post(ajaxurl, data, function(result) {
+            result = JSON.parse(result);
+            if(result.notice)
+            {
+                alert(result.notice);
+            }
+            else
+            {
+                var itemActive = jQuery('#active' + id);
+                var itemUnActive = jQuery('#unactive' + id);
+                if(itemActive.is(':visible'))
+                {
+                    itemUnActive.show();
+                    itemActive.hide();
+                }
+                else
+                {
+                    itemActive.show();
+                    itemUnActive.hide();
                 }
             }
 	});
@@ -187,18 +218,9 @@ jQuery.admin =
             {
                 jQuery('#msgUserWithdrawls').empty().append(data.notice).show();
             }
-            else if(data.online)
+            else if(data.redirect)
             {
-                var form = jQuery('#paypalCheckout');
-                form.attr('action', data.paypal_url);
-                form.find('input[name=business]').val(data.email);
-                form.find('input[name=item_name]').val(data.name);
-                form.find('input[name=amount]').val(data.amount);
-                form.find('input[name=return]').val(data.return_url);
-                form.find('input[name=cancel_return]').val(data.cancel_url);
-                form.find('input[name=notify_url]').val(data.notify_url);
-                form.find('input[name=custom]').val(data.custom);
-                form.submit();
+                window.location = data.redirect;
             }
             else if(data.result)
             {

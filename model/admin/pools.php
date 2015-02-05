@@ -1,20 +1,13 @@
 <?php
-require_once("RestClient.php");
-class Pools
+class Pools extends Model
 {
+    private static $teams;
+    private static $fighters;
     public function __construct() 
     {
-        $this->api_token = get_option('fanvictor_api_token');
-        $this->api_url = get_option('fanvictor_api_url_admin');
-        $this->urladd = 'admincp.fanvictor.pools.add';
         $this->payment = new Payment();
-    }
-    
-    private function getRestClient($method, $url)
-    {
-        $ret = false;
-        $ret = new RestClient($method, $url);
-        return $ret;
+        self::$teams = new Teams();
+        self::$fighters = new Fighters();
     }
     
     //////////////////////////////////////////view//////////////////////////////////////////
@@ -62,7 +55,7 @@ class Pools
     {
         if((int)$iPoolId > 0)
         {
-            $data = $this->getPools((int)$iPoolId);
+            $data = $this->getPools((int)$iPoolId, null, false, true);
             if($data != null)
             {
                 return true;
@@ -90,11 +83,14 @@ class Pools
     public function isPoolResultsUpdated($iPoolId)
     {
         $aFights = $this->getFights($iPoolId, null, true);
-        foreach($aFights as $aFight)
+        if(!empty($aFights))
         {
-            if($aFight['winnerID'] != $aFight['fighterID1'] && $aFight['winnerID'] != $aFight['fighterID2'])
+            foreach($aFights as $aFight)
             {
-                return false;
+                if($aFight['winnerID'] != $aFight['fighterID1'] && $aFight['winnerID'] != $aFight['fighterID2'])
+                {
+                    return false;
+                }
             }
         }
         return true;
@@ -102,22 +98,20 @@ class Pools
 
     public function getPools($iPoolId = null, $orgID = null, $isNew = false, $all = false)
     {
-        $url = $this->api_url."/pools/".$this->api_token."?poolID=".$iPoolId;
+        $params = array('all' => $all);
+        if((int)$iPoolId > 0)
+        {
+            $params['poolID'] = $iPoolId;
+        }
         if((int)$orgID > 0)
         {
-            $url .= '&orgID='.$orgID;
+            $params['orgID'] = $orgID;
         }
         if($isNew)
         {
-            $url .= '&isNew=true';
+            $params['isNew'] = true;
         }
-        if($all)
-        {
-            $url .= '&all=true';
-        }
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        $data = json_decode($data, true);
+        $data = $this->sendRequest("pools", $params);
         if((int)$iPoolId > 0)
         {
             $data = $this->parsePoolsData($data);
@@ -128,23 +122,16 @@ class Pools
     
     public function getTotalCurrentPools($orgID = null, $all = false)
     {
-        $url = $this->api_url."/totalCurrentPools/".$this->api_token;
-        $cond = null;
+        $params = array();
         if((int)$orgID > 0)
         {
-            $cond[] = 'orgID='.$orgID;
+            $params['orgID'] = $orgID;
         }
         if($all)
         {
-            $cond[] = 'all=true';
+            $params['all'] = true;
         }
-        if($cond != null)
-        {
-            $url .= '?'.implode('&', $cond);
-        }
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        $data = json_decode($data, true);
+        $data = $this->sendRequest("totalCurrentPools", $params);
         return $data;
     }
     
@@ -160,34 +147,35 @@ class Pools
     
     public function getPoolsByFilter($aConds, $sSort = 'poolID DESC', $iPage = '', $iLimit = '')
     {
-        $url = $this->api_url."/poolsByFilter/".$this->api_token;
-        $client = $this->getRestClient("POST", $url);
-        $data = $client->send(array('aConds' => $aConds, 'sSort' => $sSort, 'iPage' => $iPage, 'iLimit' => $iLimit));
-        $data = json_decode($data, true);
+        $params = array('aConds' => $aConds, 'sSort' => $sSort, 'iPage' => $iPage, 'iLimit' => $iLimit);
+        $data = $this->sendRequest("poolsByFilter", $params);
         return array($data['iCnt'], $data['aRows']);
     }
 
-    public function getFights($poolID, $fightID = null, $all = false)
+    public function getFights($poolID, $fightID = null)
     {
-        $url = $this->api_url."/fights/".$this->api_token."?poolID=".$poolID."&fightID=".$fightID;
-        if($all)
+        $params = array();
+        if($poolID != null)
         {
-            $url .= '&all=true';
+            $params['poolID'] = $poolID;
         }
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        $data = json_decode($data, true);
+        if($fightID != null)
+        {
+            $params['fightID'] = $fightID;
+        }
+        $data = $this->sendRequest("fights", $params);
         $data = $this->parseFightsData($data);
         return $data;
     }
     
     public function getLeagues($poolID)
     {
-        $url = $this->api_url."/leagues/".$this->api_token."?poolID=".$poolID;
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send(false);
-        $data = json_decode($data, true);
-        return $data;
+        $params = array();
+        if((int)$poolID > 0)
+        {
+            $params['poolID'] = $poolID;
+        }
+        return $this->sendRequest("leagues", $params);
     }
     
     public function parsePoolsData($data = null)
@@ -196,16 +184,17 @@ class Pools
         {
             foreach($data as $k => $v)
             {
-                $data[$k]['full_image_path'] = FANVICTOR_IMAGE_URL.$this->replaceSuffix($v['image']);
+                $data[$k]['full_image_path'] = isset($v['full_image_path']) ? FANVICTOR_IMAGE_URL.$this->replaceSuffix($v['image']) : null;
                 $data[$k]['result'] = null;
 
                 //parse time
-                $data[$k]['startHour'] = date('H', strtotime($v['startDate'])); 
-                $data[$k]['startMinute'] = date('i', strtotime($v['startDate'])); 
-                $data[$k]['cutHour'] = date('H', strtotime($v['cutDate'])); 
-                $data[$k]['cutMinute'] = date('i', strtotime($v['cutDate'])); 
-                $data[$k]['startDate'] = date('Y-m-d', strtotime($v['startDate'])); 
-                $data[$k]['cutDate'] = date('Y-m-d', strtotime($v['cutDate'])); 
+                $data[$k]['startHour'] = isset($v['startDate']) ? date('H', strtotime($v['startDate'])) : null; 
+                $data[$k]['startMinute'] = isset($v['startDate']) ? date('i', strtotime($v['startDate'])) : null;
+                $data[$k]['startDateOnly'] = isset($v['startDate']) ? date('Y-m-d', strtotime($v['startDate'])) : null; 
+                
+                $data[$k]['cutHour'] = isset($v['cutDate']) ? date('H', strtotime($v['cutDate'])) : null; 
+                $data[$k]['cutMinute'] = isset($v['cutDate']) ? date('i', strtotime($v['cutDate'])) : null; 
+                $data[$k]['cutDateOnly'] = isset($v['cutDate']) ? date('Y-m-d', strtotime($v['cutDate'])) : null; 
             }
         }
         return $data;
@@ -220,12 +209,81 @@ class Pools
             {
                 $count++;
                 $data[$k]['count'] = $count;
+                
+                //parse time
+                $data[$k]['startHour'] = isset($v['startDate']) ? date('H', strtotime($v['startDate'])) : null; 
+                $data[$k]['startMinute'] = isset($v['startDate']) ? date('i', strtotime($v['startDate'])) : null;
+                $data[$k]['startDateOnly'] = isset($v['startDate']) ? date('Y-m-d', strtotime($v['startDate'])) : null; 
             }
         }
         return $data;
     }
     
-    public function calculatePrizes($poolID, $type, $structure, $size, $entryFee)
+    public function parseFightsDataDetail($aFights = null, $poolType = '')
+    {
+        if($aFights != null)
+        {
+            $teamFighterIds = array();
+            foreach($aFights as $k => $aFight)
+            {
+                $teamFighterIds[] = $aFight['fighterID1'];
+                $teamFighterIds[] = $aFight['fighterID2'];
+            }
+
+            $aTeams = $aFighters = null;
+            if(strtolower($poolType) == 'mma' || strtolower($poolType) == 'boxing')
+            {
+                //fighters
+                self::$fighters->selectField(array('fighterID', 'name', 'nickName'));
+                $aFighters = self::$fighters->getFighters($teamFighterIds);
+            }
+            else 
+            {
+                //teams
+                self::$teams->selectField(array('teamID', 'name', 'nickName'));
+                $aTeams = self::$teams->getTeams($teamFighterIds);
+            }
+            
+            foreach($aFights as $k => $aFight)
+            {
+                if($aTeams != null)
+                {
+                    foreach($aTeams as $aTeam)
+                    {
+                        if($aTeam['teamID'] == $aFight['fighterID1'])
+                        {
+                            $aFights[$k]['nickName1'] = $aTeam['nickName'] != null ? $aTeam['nickName'] : $aTeam['name'];
+                            $aFights[$k]['name1'] = $aTeam['name'];
+                        }
+                        if($aTeam['teamID'] == $aFight['fighterID2'])
+                        {
+                            $aFights[$k]['nickName2'] = $aTeam['nickName'] != null ? $aTeam['nickName'] : $aTeam['name'];
+                            $aFights[$k]['name2'] = $aTeam['name'];
+                        }
+                    }
+                }
+                else if($aFighters != null)
+                {
+                    foreach($aFighters as $aFighter)
+                    {
+                        if($aFighter['fighterID'] == $aFight['fighterID1'])
+                        {
+                            $aFights[$k]['nickName1'] = $aFighter['nickName'] != null ? $aFighter['nickName'] : $aFighter['name'];
+                            $aFights[$k]['name1'] = $aFighter['name'];
+                        }
+                        if($aFighter['fighterID'] == $aFight['fighterID2'])
+                        {
+                            $aFights[$k]['nickName2'] = $aFighter['nickName'] != null ? $aFighter['nickName'] : $aFighter['name'];
+                            $aFights[$k]['name2'] = $aFighter['name'];
+                        }
+                    }
+                }
+            }
+        }
+        return $aFights;
+    }
+    
+    public function calculatePrizes($type, $structure, $size, $entryFee)
     {
         //default percent
         $winnerPercent = get_option('fanvictor_winner_percent');
@@ -268,48 +326,28 @@ class Pools
         return $str;
     }
     
-    public static function parseImageSuffix($image = null, $suf = null)
+    public function loadPlayerPoints($poolID, $fightID, $playerID, $scoring_category_id)
     {
-        $sufix = '-'.get_option('fanvictor_image_thumb_size');
-        if($suf != null)
-        {
-            $sufix = $suf;
-        }
-        if($image != null)
-        {
-            $img = explode('.', $image);
-            $img[count($img) - 2] = $img[count($img) - 2].$sufix.".".$img[count($img) - 1];
-			unset($img[count($img) - 1]);
-			array_values($img);
-            $img = implode('.', $img);
-            return $img;
-        }
-        return null;
+        $params = array('poolID' => $poolID,
+                        'fightID' => $fightID,
+                        'playerID' => $playerID,
+                        'scoring_category_id' => $scoring_category_id);
+        echo $this->sendRequest("loadPlayerPoints", $params, true, false);exit;
     }
     
-    public static function replaceSuffix($image = null, $suf = 'suf')
+    public function viewPlayerDraftResult($iPoolID)
     {
-        $suffix = '_'.get_option('fanvictor_image_thumb_size');
-        if($suf != 'suf')
-        {
-            $suffix = $suf;
-        }
-        if($image != null)
-        {
-            $image = sprintf($image, $suffix);
-        }
-        return $image;
+        return $this->sendRequest("viewPlayerDraftResult", array('poolID' => $iPoolID));
     }
-    
+
     //////////////////////////////////////////add, update, delete pools//////////////////////////////////////////
     public function add($aVals)
     {
-        $url = $this->api_url."/addPools/".$this->api_token;
-        $client = $this->getRestClient("POST", $url);
-        $poolID = $client->send($this->parsePoolsDataForModify($aVals));
-
+        $poolID = $this->sendRequest("addPools", $this->parsePoolsDataForModify($aVals));
+        
         //upload new image
-        $this->uploadImage($poolID);
+        $image = $this->uploadImage();
+        $this->updatePoolsImage($poolID, $image);
         
         //add livepool
         if(isset($aVals['live_pool']) && $aVals['live_pool'] == 1)
@@ -332,16 +370,12 @@ class Pools
     
     public function addLivePool($poolID)
     {
-        $url = $this->api_url."/addLivePool/".$this->api_token;
-        $client = $this->getRestClient("POST", $url);
-        return $client->send(array('poolID' => $poolID));
+        return $this->sendRequest("addLivePool", array('poolID' => $poolID));
     }
     
     public function deleteLivePool($poolID)
     {
-        $url = $this->api_url."/deleteLivePool/".$this->api_token;
-        $client = $this->getRestClient("POST", $url);
-        return $client->send(array('poolID' => $poolID));
+        return $this->sendRequest("deleteLivePool", array('poolID' => $poolID));
     }
     
     public function addFights($aVals, $poolID)
@@ -349,18 +383,14 @@ class Pools
         foreach($aVals['fight'] as $index)
         {
             $data = $this->parseFightsDataForModify($aVals, $index, $poolID);
-            $url = $this->api_url."/addFights/".$this->api_token;
-            $client = $this->getRestClient("POST", $url);
-            $client->send($data);
+            $this->sendRequest("addFights", $data);
         }
     }
     
     public function update($aVals)
     {
-        $url = $this->api_url."/updatePools/".$this->api_token;
-        $client = $this->getRestClient("POST", $url);
-        $result = $client->send($this->parsePoolsDataForModify($aVals, true));
-        
+        $result = $this->sendRequest("updatePools", $this->parsePoolsDataForModify($aVals, true));
+
         //add livepool
         if(isset($aVals['live_pool']) && $aVals['live_pool'] == 1)
         {
@@ -381,7 +411,8 @@ class Pools
             $this->deleteImage($sFileName);
             
             //upload new image
-            $this->uploadImage($aVals['poolID']);
+            $image = $this->uploadImage();
+            $this->updatePoolsImage($aVals['poolID'], $image);
         }
 
         //update fights
@@ -395,39 +426,33 @@ class Pools
     
     public function updatePoolsImage($poolID, $image)
     {
-        $url = $this->api_url."/updatePools/".$this->api_token;
-        $client = $this->getRestClient("POST", $url);
-        $client->send(array('poolID' => $poolID, 'image' => $image));
+        $this->sendRequest("updatePools", array('poolID' => $poolID, 'image' => $image));
     }
 
     public function updatePoolStatus($poolID, $status = 'NEW')
     {
         $data = array('poolID' => $poolID,
                       'status' => $status);
-        $url = $this->api_url."/updatePools/".$this->api_token;
-        $client = $this->getRestClient("POST", $url);
-        return $client->send($data);
+        return $this->sendRequest("updatePools", $data);
     }
     
     public function updatePoolComplete($poolID)
     {
-        $data = array('poolID' => $poolID);
-        $url = $this->api_url."/updatePoolComplete/".$this->api_token;
-        $client = $this->getRestClient("POST", $url);
-        $data = $client->send($data);
-        
-        //update money for winners
-        $this->updateUserMoneyWon();
-        
-        return true;
+        if($this->sendRequest("updatePoolComplete", array('poolID' => $poolID), true, false))
+        {
+            $this->updatePoolStatus($poolID, 'COMPLETE');
+            
+            //update money for winners
+            $this->updateUserMoneyWon();
+
+            return true;
+        }
+        return false;
     }
     
     public function updateUserMoneyWon()
     {
-        $url = $this->api_url."/userWonHistory/".$this->api_token;
-        $client = $this->getRestClient("GET", $url);
-        $data = $client->send();
-        $aDatas = json_decode($data, true);
+        $aDatas = $this->sendRequest("userWonHistory");
         
         if($aDatas != null)
         {
@@ -476,8 +501,14 @@ class Pools
                     {
                         include 'emailTemplates/leagueNotFilledNotice.php';
                     }
-                    mail($email, $message_subject, $message_body, $headers);
-                    exit('aaaaa');
+                    try 
+                    {
+                        mail($email, $message_subject, $message_body, $headers);
+                    } 
+                    catch (Exception $ex) 
+                    {
+
+                    }
                 }
                 else
                 {
@@ -489,92 +520,108 @@ class Pools
 
     public function updateFights($aVals, $poolID)
     {
-        $newFightIds = array();
-        //load current fight
-        $curFight = $this->getFights($poolID);
-        $curFightID = array();
-        if($curFight != null)
+        if(isset($aVals['fight']))
         {
-            foreach($curFight as $item)
+            $newFightIds = array();
+            //load current fight
+            $curFight = $this->getFights($poolID);
+            $curFightID = array();
+            if($curFight != null)
             {
-                $curFightID[] = $item['fightID'];
+                foreach($curFight as $item)
+                {
+                    $curFightID[] = $item['fightID'];
+                }
             }
-        }
 
-        //parse fight to update, add new or delete
-        foreach($aVals['fight'] as $index)
-        {
-            $fightID = $aVals['fightID'][$index];
-            if((int)$fightID > 0 && in_array($fightID, $curFightID)) //update
+            //parse fight to update, add new or delete
+            foreach($aVals['fight'] as $index)
             {
-                $data = $this->parseFightsDataForModify($aVals, $index, $poolID, true);
-                $url = $this->api_url."/updateFights/".$this->api_token;
-                $client = $this->getRestClient("POST", $url);
-                $client->send($data);
-                
-                //clear updated fight
-                if(($key = array_search($fightID, $curFightID)) !== false)
+                $fightID = $aVals['fightID'][$index];
+                if((int)$fightID > 0 && in_array($fightID, $curFightID)) //update
                 {
-                    unset($curFightID[$key]);
-                    array_values($curFightID);
+                    $data = $this->parseFightsDataForModify($aVals, $index, $poolID, true);
+                    $this->sendRequest("updateFights", $data);
+
+                    //clear updated fight
+                    if(($key = array_search($fightID, $curFightID)) !== false)
+                    {
+                        unset($curFightID[$key]);
+                        array_values($curFightID);
+                    }
+                }
+                else //add
+                {
+                    $data = $this->parseFightsDataForModify($aVals, $index, $poolID);
+                    $newFightIds[] = $this->sendRequest("addFights", $data);
                 }
             }
-            else //add
+
+            //update new fixture for league
+            if($newFightIds != null)
             {
-                $data = $this->parseFightsDataForModify($aVals, $index, $poolID);
-                $url = $this->api_url."/addFights/".$this->api_token;
-                $client = $this->getRestClient("POST", $url);
-                $newFightIds[] = $client->send($data);
-            }
-        }
-        
-        //update new fixture for league
-        if($newFightIds != null)
-        {
-            $newFightIds = implode(',', $newFightIds);
-            $aLeagues = $this->getLeagues($poolID);
-            if($aLeagues != null)
-            {
-                foreach($aLeagues as $aLeague)
+                $newFightIds = implode(',', $newFightIds);
+                $aLeagues = $this->getLeagues($poolID);
+                if($aLeagues != null)
                 {
-                    $fixtures = $aLeague['fixtures'].','.$newFightIds;
-                    $data = array('leagueID' => $aLeague['leagueID'], 'fixtures' => $fixtures); 
-                    $url = $this->api_url."/updateLeague/".$this->api_token;
-                    $client = $this->getRestClient("POST", $url);
-                    $data = $client->send($data);
+                    foreach($aLeagues as $aLeague)
+                    {
+                        $fixtures = $aLeague['fixtures'].','.$newFightIds;
+                        $data = array('leagueID' => $aLeague['leagueID'], 'fixtures' => $fixtures); 
+                        $data = $this->sendRequest("updateLeague", $data);
+                    }
                 }
             }
-        }
-        
-        //delete
-        foreach($curFightID as $item)
-        {
-            $data = array('poolID' => $poolID, 'fightID' => $item);
-            $url = $this->api_url."/deleteFights/".$this->api_token;
-            $client = $this->getRestClient("POST", $url);
-            $client->send($data);
+
+            //delete
+            foreach($curFightID as $item)
+            {
+                $data = array('poolID' => $poolID, 'fightID' => $item);
+                $this->sendRequest("deleteFights", $data);
+            }
         }
     }
     
     public function updateFightResult($data)
     {
-        $url = $this->api_url."/updateFights/".$this->api_token;
-        $client = $this->getRestClient("POST", $url);
-        $result = $client->send($data);
-        if($result)
+        if($this->sendRequest("updateFights", $data))
         {
             return true;
         }
         return false;
     }
     
+    public function updatePlayerDraftResult($data)
+    {
+        if($this->sendRequest("addPlayerStats", $data))
+        {
+            return true;
+        }
+        return false;
+    }
+
     private function parsePoolsDataForModify($aVals, $isUpdate = false)
     {
+        $lineup = '';
+        
+        if(isset($aVals['lineup']) && $aVals['lineup'] != null)
+        {
+            foreach($aVals['lineup'] as $k => $v)
+            {
+                $lineup[] = array('id' => $k, 
+                                  'total' => $v['total'], 
+                                  'enable' => isset($v['enable']) ? 1 : 0);
+            }
+            $lineup = json_encode($lineup);
+        }
+
         $data = array('poolName' => str_replace("\'", "'", $aVals['poolName']),
                       'startDate' => $aVals['startDate'].' '.$aVals['startHour'].':'.$aVals['startMinute'].':00',
                       'cutDate' => $aVals['cutDate'].' '.$aVals['cutHour'].':'.$aVals['cutMinute'].':00',
                       'organization' => $aVals['organization'],
-                      'type' => $aVals['type']);
+                      'type' => isset($aVals['type']) ? $aVals['type'] : '',
+                      'salary_remaining' => str_replace(',', '', $aVals['salary_remaining']),
+                      'lineup' => $lineup);
         if($isUpdate)
         {
             $data['poolID'] = $aVals['poolID'];
@@ -588,6 +635,7 @@ class Pools
                     'fighterID1' => $aVals['fighterID1'][$index],
                     'fighterID2' => $aVals['fighterID2'][$index],
                     'name' => $aVals['fight_name'][$index],
+                    'startDate' => $aVals['fight_startDate'][$index].' '.$aVals['fight_startHour'][$index].':'.$aVals['fight_startMinute'][$index].':00',
                     'champFight' => isset($aVals['champFight'][$index]) && $aVals['champFight'][$index] == 1 ? 'YES' : 'NO',
                     'amateurFight' => isset($aVals['amateurFight'][$index]) && $aVals['amateurFight'][$index] == 1 ? 'YES' : 'NO',
                     'mainFight' => isset($aVals['mainFight'][$index]) && $aVals['mainFight'][$index] == 1 ? 'YES' : 'NO',
@@ -604,53 +652,13 @@ class Pools
     public function delete($poolId)
     {
         $sFileName = $this->getPoolImageName($poolId);
-        $url = $this->api_url."/deletePools/".$this->api_token."?poolID = ".$poolId;
-        $client = $this->getRestClient("POST", $url);
-        $result = $client->send(array('poolID' => $poolId));
+        $result = $this->sendRequest("deletePools", array('poolID' => $poolId));
         if($result)
         {
             $this->deleteImage($sFileName);
             return true;
         }
         return false;
-    }
-    
-    private function uploadImage($iId)
-    {
-        if (!function_exists('wp_handle_upload')) 
-            require_once( ABSPATH . 'wp-admin/includes/file.php' );
-        $uploadedfile = $_FILES['image'];
-        $upload_overrides = array( 'test_form' => false );
-        $movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
-        if($movefile) 
-        {
-            $image = str_replace(FANVICTOR_IMAGE_URL, '', $this->parseImageSuffix($movefile['url'], '%s'));
-            $this->updatePoolsImage($iId, $image);
-            
-            //resize 
-            image_resize($movefile['file'], 
-                        get_option('fanvictor_image_thumb_size'), 
-                        get_option('fanvictor_image_thumb_size'), 
-                        true, 
-                        get_option('fanvictor_image_thumb_size'), 
-                        FANVICTOR_IMAGE_URL, 
-                        100);
-            $newname = $this->parseImageSuffix($movefile['file'], '%s');
-            rename(sprintf($newname, '-'.get_option('fanvictor_image_thumb_size')), sprintf($newname, '_'.get_option('fanvictor_image_thumb_size')));
-        } 
-    }
-    
-    public function deleteImage($sFileName = null)
-    {
-        if (!empty($sFileName))
-        {
-            $originalImagePath = FANVICTOR_IMAGE_DIR.$this->replaceSuffix($sFileName, '');
-            $thumbImagePath = FANVICTOR_IMAGE_DIR.$this->replaceSuffix($sFileName);
-            
-            unlink($originalImagePath);
-            unlink($thumbImagePath);
-        }
-        return true;
     }
 }
 ?>

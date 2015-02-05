@@ -31,15 +31,16 @@ class Payment
     function changeCashToCredit($iCash)
     {
         $money = 1;
-        $credit = (int)get_option('fanvictor_credit_to_cash') < 1 ? 1 : get_option('fanvictor_credit_to_cash');
-        return floor($iCash * $money / $credit);
+        $credit = get_option('fanvictor_credit_to_cash');
+        return $iCash * $credit;
     }
     
     function changeCreditToCash($iCredit)
     {
         $money = 1;
-        $credit = (int)get_option('fanvictor_cash_to_credit') < 1 ? 1 : get_option('fanvictor_cash_to_credit');
-        return floor($iCredit * $money / $credit);
+        $credit = get_option('fanvictor_cash_to_credit');
+        
+        return $iCredit * $credit;
     }
     
     function onlineTransaction($gateway = PAYPAL, $aSettings)
@@ -183,7 +184,7 @@ class Payment
     public function isUserPaymentInfoExist($aVals)
     {
         global $wpdb;
-        $sCond = "WHERE user_id = ".get_current_user_id()." AND gateway = '".$aVals['gateway']."'";
+        $sCond = "WHERE user_id = ".get_current_user_id();
         $table_name = $wpdb->prefix."user_payment";
         $sql = "SELECT user_id "
              . "FROM $table_name "
@@ -339,7 +340,7 @@ class Payment
         return 0;
     }
     
-    public function updateFundhistory($iId, $aValues, $user_id = null)
+    public function updateFundhistory($iId, $aValues, $user_id = null, $status = '')
     {
         global $wpdb;
         $iUserId = get_current_user_id();
@@ -349,6 +350,7 @@ class Payment
         }
         $user = $this->getUserData($iUserId);
         $aValues['new_balance'] = $user['balance'];
+        $aValues['status'] = $status;
         return $wpdb->update($wpdb->prefix.'fundhistory', $aValues, array('fundshistoryID' => (int)$iId));
     }
     
@@ -362,9 +364,9 @@ class Payment
 	#       WITHDRAWLS
 	#
 	###########################
-    public function isAllowWithdraw($amount = 0)
+    public function isAllowWithdraw($amount = 0, $user_id = null)
     {
-        $aUser = $this->getUserData();
+        $aUser = $this->getUserData($user_id);
         if($aUser['balance'] >= $amount)
         {
             return true;
@@ -435,7 +437,8 @@ class Payment
                         'new_balance' => $new_balance,
                         'reason' => $reson,
                         'requestDate' => date('Y-m-d H:i:s'));
-        return $wpdb->insert($wpdb->prefix.'withdrawls', $values);
+        $wpdb->insert($wpdb->prefix.'withdrawls', $values);
+        return mysql_insert_id();
     }
     
     public function updateWithdraw($iId, $aValues)

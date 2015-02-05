@@ -28,7 +28,7 @@ class Fanvictor_Credits
             }
         }
 
-        include FANVICTOR__PLUGIN_DIR.'class.table-credits.php';
+        include FANVICTOR__PLUGIN_DIR_VIEW.'credits/class.table-credits.php';
         $myListTable = new TableCredits();
         $myListTable->prepare_items(isset($_GET['s']) ? $_GET['s'] : null); 
         include FANVICTOR__PLUGIN_DIR_VIEW.'credits/index.php';

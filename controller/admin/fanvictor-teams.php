@@ -2,15 +2,17 @@
 $Fanvictor_Teams = new Fanvictor_Teams();
 class Fanvictor_Teams
 {
-    private static $orgs;
+    private static $fanvictor;
     private static $teams;
     private static $url;
+    private static $urladdnew;
     private static $urladd;
     public function __construct() 
     {
-        self::$orgs = new Organizations();
+        self::$fanvictor = new Fanvictor();
         self::$teams = new Teams();
         self::$url = admin_url().'admin.php?page=manage-teams';
+        self::$urladdnew = admin_url().'admin.php?page=add-teams';
         self::$urladd = wp_get_referer();
     }
     
@@ -36,7 +38,7 @@ class Fanvictor_Teams
             }
         }
 
-        include FANVICTOR__PLUGIN_DIR.'class.table-teams.php';
+        include FANVICTOR__PLUGIN_DIR_VIEW.'teams/class.table-teams.php';
         $myListTable = new TableTeams();
         $myListTable->prepare_items(isset($_GET['s']) ? $_GET['s'] : null);
         include FANVICTOR__PLUGIN_DIR_VIEW.'teams/index.php';
@@ -69,7 +71,7 @@ class Fanvictor_Teams
         //add or update
 		self::modify($bIsEdit);
 
-        $aOrgs = self::$orgs->getOrgs(null, null, true);
+        $aSports = self::$fanvictor->getListSports();
         include FANVICTOR__PLUGIN_DIR_VIEW.'teams/add.php';
     }
 
@@ -102,7 +104,7 @@ class Fanvictor_Teams
                         redirect(self::$urladd, 'Succesfully added');
                     }
                 }
-                redirect(self::$urladd, 'There is something wrong! Please_try_again.');
+                redirect(self::$urladd, 'Something went wrong! Please try again.');
 			}
 		}
     }

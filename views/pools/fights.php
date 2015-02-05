@@ -18,8 +18,8 @@
                 <span class="for_team"><?=__("Team");?> 1</span>
             </th>
             <th>
-                <span class="for_fighter"><?=__("Fighter");?> 2<?=__("Name");?></span>
-                <span class="for_team"><?=__("Team");?> 2<?=__("Name");?></span>
+                <span class="for_fighter"><?=__("Fighter");?> 2</span>
+                <span class="for_team"><?=__("Team");?> 2</span>
             </th>
         </tr>
         <tr>
@@ -40,6 +40,31 @@
                     </div>
                     <div class="table_right">
                         <input type="text" data-name="fight_name" value="<?=$aFight['name'];?>" size="40"/>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="6">
+                <div class="table">
+                    <div class="table_left">
+                        <?=__("Start Date");?>  <span class="description">(<?=__("required");?>)</span>:
+                    </div>
+                    <div class="table_right">
+                        <input type="text" class="fightDatePicker" data-name="fight_startDate" value="<?=$aFight['startDateOnly'];?>" size="40"/>
+                        <?=__("Hour");?>:
+                        <select data-name="fight_startHour">
+                            <?php foreach($aPoolHours as $aPoolHour):?>
+                            <option value="<?=$aPoolHour;?>" <?=$aFight['startHour'] == $aPoolHour ? 'selected="true"' : '';?>><?=$aPoolHour;?></option>
+                            <?php endforeach;?>
+                        </select>
+                        <?=__("Minute");?>:
+                        <select data-name="fight_startMinute">
+                            <?php foreach($aPoolMinutes as $aPoolMinute):?>
+                            <option value="<?=$aPoolMinute;?>" <?=$aFight['startMinute'] == $aPoolMinute ? 'selected="true"' : '';?>><?=$aPoolMinute;?></option>
+                            <?php endforeach;?>
+                        </select>
                     </div>
                     <div class="clear"></div>
                 </div>

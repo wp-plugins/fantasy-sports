@@ -10,6 +10,9 @@ class Ajax
     private static $payment;
     private static $user;
     private static $statistic;
+    private static $scoringcategory;
+    private static $playerposition;
+    private static $players;
     
     public function __construct() 
     {
@@ -27,14 +30,20 @@ class Ajax
         self::$payment = new Payment();
         self::$user = new User();
         self::$statistic = new Statistic();
+        self::$scoringcategory = new ScoringCategory();
+        self::$playerposition = new PlayerPosition();
+        self::$players = new Players();
         
         $funcs = array('loadCbOrgs', 'loadCbFighters', 'loadCbTeams', 'viewResult',
                        'updateResult', 'updatePoolComplete', 'activeOrgs', 'sendUserCredits',
                        'sendUserWithdrawls', 'loadPoolsByOrg', 'calculatePrizes', 'loadFights',
-                       'LeagueResults', 'userpicks', 'LiveLeagues', 'sendInviteFriend',
-                       'addCredits', 'loadUserBalance', 'requestPayment', 'accountInfo',
-                       'updateNewContests', 'showLeagueDetails', 'showPoolStatisticDetail', 'viewPoolFixture',
-                       'loadUser');
+                       'LeagueResults', 'userpicks', 'sendInviteFriend', 'getNormalGameResult',
+                       'addCredits', 'loadUserBalance', 'requestPayment',
+                       'updateNewContests', 'showPoolStatisticDetail', 'viewPoolFixture',
+                       'loadUser', 'loadPoolInfo', 'viewPlayerDraftResult', 'updatePlayerDraftResult',
+                       'loadUserResult', 'loadLeagueLobby', 'loadLeagueEntries', 'loadLeaguePrizes',
+                       'loadLiveEntries', 'liveEntriesResult', 'loadContestScores', 'loadPlayerPoints',
+                       'loadPlayerStatistics', 'loadPlayerNews', 'activeScoringCategory');
         foreach($funcs as $func)
         {
             add_action("wp_ajax_$func", array('Ajax', $func));
@@ -46,56 +55,34 @@ class Ajax
             self::$func();
         }
     }
-
-	public static function showLeagueDetails()
-	{
-        $iLeagueId = $_POST['leagueId'];
-        $sData = self::$fanvictor->showLeagueDetails($iLeagueId);
-
-        exit($sData);
-	}
     
     public static function updateNewContests()
     {
-        $aGameGrids = self::$fanvictor->getNewgames();
-        $aGameGrids = json_decode($aGameGrids);
-        $sResult = null;
-        if(isset($aGameGrids->flexgrid_leagues->rows))
-        {
-            $aGameGrids = $aGameGrids->flexgrid_leagues->rows;
-            foreach($aGameGrids as $aGameGrid)
-            {
-                $img = null;
-                if($aGameGrid->cell[11] != null)
-                {
-                    $img = Pools::replaceSuffix($aGameGrid->cell[11]);
-                    $img = '<img src="'.FANVICTOR_IMAGE_URL.$img.'" width="30" />&nbsp;';
-                }
-                $sResult .= '<tr>
-                                <td>'.$img.' '.$aGameGrid->cell[1].'</td>
-                                <td>'.$aGameGrid->cell[10].'</td>
-                                <td>'.$aGameGrid->cell[3].' / '.$aGameGrid->cell[4].'</td>
-                                <td>'.$aGameGrid->cell[5].' / '.$aGameGrid->cell[6].'</td>
-                                <td>'.$aGameGrid->cell[7].'</td>
-                                <td style="text-align:center">'.$aGameGrid->cell[8].'</td>
-                            </tr>';
-            }
-        }
-        exit($sResult);
+        //leagues
+        $aLeagues = self::$fanvictor->getLeagueLobby();
+        $aLeagues = self::$fanvictor->parseLeagueData($aLeagues);
+        exit(json_encode($aLeagues));
     }
-    
+
     public static function LeagueResults()
     {
         $iLeagueId = $_POST['leagueId'];
         $isLive = isset($_POST['isLive']) ? $_POST['isLive'] : '';
         $sData = self::$fanvictor->leagueResults($iLeagueId, $isLive);
-        exit($sData);
+        exit(json_encode($sData));
     }
     
-    public static function LiveLeagues()
+    public static function getNormalGameResult()
     {
-        $sData = self::$fanvictor->getLiveContests();
-        exit($sData);
+        $sData = self::$fanvictor->getNormalGameResult($_POST['leagueID']);
+        exit(json_encode($sData));
+    }
+    
+    public static function loadLiveEntries()
+    {
+        $aLeagues = self::$fanvictor->getLiveEntries();
+        $aLeagues = self::$fanvictor->parseLeagueData($aLeagues);
+        exit(json_encode($aLeagues));
     }
     
     public static function userpicks()
@@ -184,12 +171,11 @@ class Ajax
     
     public static function calculatePrizes()
     {
-        $poolID = $_POST['poolID'];
         $type = $_POST['type'];
         $structure = $_POST['structure'];
         $size = $_POST['size'];
         $entryFee = $_POST['entry_fee'];
-        $prizes = self::$pools->calculatePrizes($poolID, $type , $structure, $size, $entryFee);
+        $prizes = self::$pools->calculatePrizes($type , $structure, $size, $entryFee);
         
         $result = '<table style="width:100%">'
                 . '<tr><td style="text-align:left">Pos</td><td style="text-align:right">Prize</td></tr>';
@@ -224,7 +210,7 @@ class Ajax
         $count = 0;
         if($aFights != null)
         {
-            $aPool = self::$pools->getPools($iPoolID);
+            $aPool = self::$pools->getPools($iPoolID, null, false, true);
             if($aPool['type'] == 'MMA' || $aPool['type'] == 'BOXING')
             {
                 $teamOrFighterHeader = __("Fighter");
@@ -251,6 +237,130 @@ class Ajax
         exit($sResult);
     }
     
+    //////////////////////////////v2//////////////////////////////
+    public static function loadPoolInfo()
+    {
+        $aInfos = self::$fanvictor->getPoolInfo($_POST['leagueID']);
+        exit(json_encode(array('league' => $aInfos['league'], 
+                               'scorings' => $aInfos['scoringcats'], 
+                               'fights' => $aInfos['fights'], 
+                               'entries' => $aInfos['entries'], 
+                               'startDate' => $aInfos['pool']['startDate'])));
+    }
+    
+    public static function loadLeagueEntries()
+    {
+        $leagueID = $_POST['leagueID'];
+        $aDatas = self::$fanvictor->getEntries($leagueID);
+        exit(json_encode($aDatas));
+    }
+    
+    public static function loadLeaguePrizes()
+    {
+        $league = self::$fanvictor->getLeagueDetail($_POST['leagueID']);
+        $league = $league[0];
+        
+        $structure = '';
+        if($league['prize_structure'] == 'WINNER')
+        {
+            $structure = 'winnertakeall';
+        }
+        else 
+        {
+            $structure = 'top3';
+        }
+        $prizes = self::$pools->calculatePrizes('' , $structure, $league['size'], $league['entry_fee']);
+        $aDatas = array();
+        if($prizes != null)
+        {
+            $count = 0;
+            foreach($prizes as $prize)
+            {
+                $count++;
+                $place = null;
+                switch ($count)
+                {
+                    case 1:
+                        $aDatas[] = array('place' => '1st', 'prize' => $prize);
+                        break;
+                    case 2:
+                        $aDatas[] = array('place' => '2nd', 'prize' => $prize);
+                        break;
+                    case 3:
+                        $aDatas[] = array('place' => '3rd', 'prize' => $prize);
+                        break;
+                }
+            }
+        }
+        else 
+        {
+            $aDatas[] = array('place' => '1st', 'prize' => 0);
+        }
+        exit(json_encode($aDatas));
+    }
+    
+    public static function updatePlayerDraftResult()
+    {
+        if(!self::$pools->updatePlayerDraftResult($_POST))
+        {
+            exit('<div class=\"error_message\">'.__('Something went wrong! Please try again').'</div>');
+        }
+        exit('Successfully updated');
+    }
+    
+    public static function loadUserResult()
+    {
+        $aResults = self::$fanvictor->getPlayerPicksResult($_POST['leagueID'], $_POST['userID']);
+        exit(json_encode($aResults));
+    }
+    
+    public static function loadLeagueLobby()
+    {
+        //leagues
+        $aLeagues = self::$fanvictor->getLeagueLobby();
+        $aLeagues = self::$fanvictor->parseLeagueData($aLeagues);
+        exit(json_encode($aLeagues));
+    }
+    
+    public static function liveEntriesResult()
+    {
+        self::$fanvictor->liveEntriesResult($_POST['poolID']);
+    }
+    
+    public static function loadContestScores()
+    {
+        //scores
+        $aScores = self::$fanvictor->getScores($_POST['leagueID']);
+
+        //cur user scores
+        $currUserScore = null;
+        if($aScores != null)
+        {
+            foreach($aScores as $k => $aScore)
+            {
+                $aScore[$k]['current'] = false;
+                if($aScore['userID'] == get_current_user_id())
+                {
+                    $aScores[$k]['current'] = true;
+                }
+            }
+        }
+        exit(json_encode($aScores));
+    }
+    
+    public static function loadPlayerStatistics()
+    {
+        $aStatistics = self::$fanvictor->getPlayerStatistics($_POST['orgID'], $_POST['playerID']);
+        exit(json_encode($aStatistics));
+    }
+    
+    public static function loadPlayerNews()
+    {
+        self::$players->selectField(array('player_news_brief', 'player_news'));
+        $news = self::$players->getPlayers($_POST['playerID']);
+        exit(json_encode($news[0]));
+    }
+
     //////////////////
     ///   payment   //
     /////////////////
@@ -279,11 +389,11 @@ class Ajax
                                        'business' => get_option('paypal_email_account'),
                                        'item_name' => "Deposit ".$iFundHitoryId,
                                        'item_number' => 1,
-                                       'amount' => $money,
+                                       'amount' => $credits,
                                        'notify_url' => FANVICTOR_URL_NOTIFY_ADD_FUNDS,
                                        'return' => FANVICTOR_URL_SUCCESS_ADD_FUNDS,
                                        'cancel_return' => FANVICTOR_URL_ADD_FUNDS,
-									   'custom' => get_current_user_id().'|'.$iFundHitoryId.'|'.$credits);
+									   'custom' => get_current_user_id().'|'.$iFundHitoryId.'|'.$money);
                     $sUrl = self::$payment->onlineTransaction($gateway, $aSettings);
                     if($sUrl)
                     {
@@ -310,8 +420,14 @@ class Ajax
     
     public static function requestPayment()
     {
-        $credits = $_POST['credits'];
-        $reason = $_POST['reason'];
+        $aVals = $_POST['val'];
+        $online = false;
+        if(get_option('fanvictor_payout_method') == 'paypal')
+        {
+            $online = true;
+        }
+        $credits = $aVals['credits'];
+        $reason = $aVals['reason'];
         if(!is_numeric($credits) || (int)$credits < 1)
         {
             exit(json_encode(array('notice' => 'Credits not valid')));
@@ -320,10 +436,61 @@ class Ajax
         {
             exit(json_encode(array('notice' => __('Credits must not exceed your available balance'))));
         }
+        else if($online && !self::$payment->isGatewayExist($aVals['gateway']))
+        {
+            exit(json_encode(array('notice' => __('Please select gateway'))));
+        }
+        else if($online && empty($aVals['email']))
+        {
+            exit(json_encode(array('notice' => __('Please provide your email'))));
+        }
+        else if(!$online && empty($aVals['name']))
+        {
+            exit(json_encode(array('notice' => __('Please provide your name'))));
+        }
+        else if(!$online && empty($aVals['house']))
+        {
+            exit(json_encode(array('notice' => __('Please provide House/Deparment'))));
+        }
+        else if(!$online && empty($aVals['street']))
+        {
+            exit(json_encode(array('notice' => __('Please provide street'))));
+        }
+        else if(!$online && empty($aVals['city']))
+        {
+            exit(json_encode(array('notice' => __('Please provide city'))));
+        }
+        else if(!$online && empty($aVals['state']))
+        {
+            exit(json_encode(array('notice' => __('Please provide state'))));
+        }
+        else if(!$online && empty($aVals['country']))
+        {
+            exit(json_encode(array('notice' => __('Please provide country'))));
+        }
         else if(self::$payment->updateUserBalance($credits, true, 0))
         {
+            //add withdrawl
             $aUser = self::$payment->getUserData();
-            self::$payment->addWithdraw($credits, $reason, $aUser['ID'], $aUser['balance']);
+            $withdrawlId = self::$payment->addWithdraw($credits, $reason, $aUser['ID'], $aUser['balance']);
+            
+            //update user info
+            unset($aVals['credits']);
+            unset($aVals['reason']);
+            if(!self::$payment->isUserPaymentInfoExist($aVals))
+            {
+                self::$payment->addUserPaymentInfo($aVals);
+            }
+            else 
+            {
+                self::$payment->updateUserPaymentInfo($aVals);
+            }
+            
+            //send email
+            if(!$online)
+            {
+                self::sendRequestPaymentEmail($withdrawlId, $credits, $aVals);
+            }
             exit(json_encode(array('result' => __('Your request has been sent'), 'redirect' => FANVICTOR_URL_REQUEST_HISTORY)));
         }
         else
@@ -332,46 +499,22 @@ class Ajax
         }
     }
     
-    public static function accountInfo()
+    private static function sendRequestPaymentEmail($id, $credits, $aVal)
     {
-        $aVals = $_POST['val'];
-
-        //check valid
-        if(!self::$payment->isGatewayExist($aVals['gateway']))
+        
+        $current_user = wp_get_current_user();
+        $to      = get_option('admin_email');
+        $subject = 'Rquest Payment';
+        $headers = 'From: '.get_option('blogname');
+        require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/emailTemplates/withdrawl.php');
+        try 
         {
-            exit(json_encode(array('notice' => __('Please select gateway'))));
-        }
-        else if(empty($aVals['email']))
-        {
-            exit(json_encode(array('notice' => __('Provide your email'))));
-        }
-        else
-        {
-            if(!self::$payment->isUserPaymentInfoExist($aVals))
-            {
-                if(self::$payment->addUserPaymentInfo($aVals) === false)
-                {
-                    exit(json_encode(array('notice' => __('Something went wrong! Please try again.'))));
-                }
-                else
-                {
-                    exit(json_encode(array('result' => __('Successfully added'))));
-                }
-            }
-            else 
-            {
-                if(self::$payment->updateUserPaymentInfo($aVals) === false)
-                {
-                    exit(json_encode(array('notice' => __('Something went wrong! Please try again.'))));
-                }
-                else
-                {
-                    exit(json_encode(array('result' => __('Successfully updated'))));
-                }
-            }
+            mail($to, $subject, $message, $headers);
+        } catch (Exception $ex) {
+            exit($ex->getMessage());
         }
     }
-    
+
     public static function loadUserBalance()
     {
         $aUser = self::$payment->getUserData();
@@ -386,6 +529,17 @@ class Ajax
         $orgID = $_POST['id'];
         $active = $_POST['active'];
         if(self::$orgs->updateOrgsActive($orgID, $active))
+        {
+            exit(json_encode(array('result' => 'true')));
+        }
+        exit(json_encode(array('notice' => __('Something went wrong! Please try again.'))));
+    }
+    
+    public static function activeScoringCategory()
+    {
+        $id = $_POST['id'];
+        $active = $_POST['active'];
+        if(self::$scoringcategory->updateScoringCategoryActive($id, $active))
         {
             exit(json_encode(array('result' => 'true')));
         }
@@ -461,7 +615,7 @@ class Ajax
         {
             exit(json_encode(array('notice' => __('Credits not valid'))));
         }
-        else if($task == 'remove' && !self::$payment->isAllowWithdraw($credits))
+        else if($task == 'remove' && !self::$payment->isAllowWithdraw($credits, $user_id))
         {
             exit(json_encode(array('notice' => __('Credits must not exceed your available balance'))));
         }
@@ -497,7 +651,7 @@ class Ajax
     {
         $withdrawlID = $_POST['withdrawlID'];
         $action = isset($_POST['status']) ? $_POST['status'] : '';
-        $gateway = $_POST['gateway'];
+        $gateway = isset($_POST['gateway']) ? $_POST['gateway'] : '';
         $response_message = $_POST['response_message'];
         if($action != 'APPROVED' && $action != 'DECLINED')
         {
@@ -523,23 +677,43 @@ class Ajax
             }
             else if($action == 'APPROVED' && $aWithdrawl['status'] != 'APPROVED')
             {
-                $aUserPaymentInfo = self::$payment->getUserPaymentInfo($gateway, $aWithdrawl['userID']);
-                if(isset($aUserPaymentInfo['email']) && $aUserPaymentInfo['email'] != null)
+                if(get_option('fanvictor_payout_method') == 'paypal')
                 {
-                    $paypal = new MyPayPal(null, null, null, get_option('paypal_test'));
-                    $aUserPaymentInfo['online'] = true;
-                    $aUserPaymentInfo['name'] = "withdraw ".$withdrawlID;
-                    $aUserPaymentInfo['amount'] = $aWithdrawl['real_amount'];
-                    $aUserPaymentInfo['paypal_url'] = $paypal->getPaypalUrl();
-                    $aUserPaymentInfo['cancel_url'] = admin_url().'admin.php?page=withdrawls';
-                    $aUserPaymentInfo['return_url'] = FANVICTOR_URL_SUCCESS_WITHDRAWLS;
-                    $aUserPaymentInfo['notify_url'] = FANVICTOR_URL_NOTIFY_WITHDRAWLS;
-					$aUserPaymentInfo['custom'] = $withdrawlID.'|'.$response_message;
-                    exit(json_encode($aUserPaymentInfo));
+                    $aUserPaymentInfo = self::$payment->getUserPaymentInfo($gateway, $aWithdrawl['userID']);
+                    if(isset($aUserPaymentInfo['email']) && $aUserPaymentInfo['email'] != null)
+                    {
+                        $aSettings = array(
+                            'paypal_email' => $aUserPaymentInfo['email'],
+                            'business' => $aUserPaymentInfo['email'],
+                            'item_name' => "withdraw ".$withdrawlID,
+                            'item_number' => 1,
+                            'amount' => $aWithdrawl['real_amount'],
+                            'notify_url' => FANVICTOR_URL_NOTIFY_WITHDRAWLS,
+                            'return' => FANVICTOR_URL_SUCCESS_WITHDRAWLS,
+                            'cancel_return' => admin_url().'admin.php?page=withdrawls',
+                            'custom' => $withdrawlID.'|'.$response_message);
+                        $paypal = new Paypal();
+                        $url = $paypal->parseData($aSettings);
+                        exit(json_encode(array('redirect' => $url)));
+                    }
+                    else 
+                    {
+                        exit(json_encode(array('notice' => __('This user does not provide email for online transaction'))));
+                    }
                 }
                 else 
                 {
-                    exit(json_encode(array('notice' => __('This user does not provide email for online transaction'))));
+                    $aVals = array('status' => 'APPROVED', 
+                                    'response_message' => $response_message,
+                                    'processedDate' => date('Y-m-d H:i:s'));
+                    if(self::$payment->updateWithdraw($withdrawlID, $aVals))
+                    {
+                        exit(json_encode(array('result' => __('Successfully updated'))));
+                    }
+                    else
+                    {
+                        exit(json_encode(array('result' => __('Something went wrong! Please try again.'))));
+                    }
                 }
             }
             else
@@ -565,8 +739,8 @@ class Ajax
             foreach($aFights as $aFight)
             {
                 $count++;
-                $aPool = self::$pools->getPools($aFight['poolID']);
-                if($aPool['type'] == 'MMA' || $aPool['type'] == 'BOXING')
+                $aPool = self::$pools->getPools($aFight['poolID'], null, false, true);
+                if($aPool['is_team'] == 0)
                 {
                     $sFighterName1 = self::$fighters->getFighterName($aFight['fighterID1'], true);
                     $sFighterName2 = self::$fighters->getFighterName($aFight['fighterID2'], true);
@@ -621,7 +795,7 @@ class Ajax
         }
         exit($sResult);
     }
-
+    
     private static function viewFighterHtmlType($fightID, $methodID = null, $roundID = null, $minuteID = null)
     {
         $sResult =  self::viewMethodOfVictoryHtml($fightID, $methodID).
@@ -773,7 +947,7 @@ class Ajax
         }
         if(!$success)
         {
-            exit('<div class=\"error_message\">'.__('There are something wrong! Please try again').'</div>');
+            exit('<div class=\"error_message\">'.__('Something went wrong! Please try again').'</div>');
         }
         exit('Successfully updated');
     }
@@ -798,12 +972,11 @@ class Ajax
         {
             if(self::$pools->updatePoolComplete($iPoolID))
             {
-                self::$pools->updatePoolStatus($iPoolID, 'COMPLETE');
                 exit(json_encode(array('result' => 'Successfully updated')));
             }
             else 
             {
-                exit(json_encode(array('notice' => __('There are something wrong! Please try again'))));
+                exit(json_encode(array('notice' => __('Something went wrong! Please try again'))));
             }
         }
         else 
@@ -875,6 +1048,35 @@ class Ajax
             $result .= '</tbody></table>';
             exit(json_encode(array('result' => $result)));
         }
+    }
+    
+    /////////////////////////////////v2/////////////////////////////////
+    public static function viewPlayerDraftResult()
+    {
+        $iPoolID = $_POST['iPoolID'];
+        $data = self::$pools->viewPlayerDraftResult($iPoolID);
+        exit(json_encode($data));
+    }
+    
+    public static function loadPlayerPoints()
+    {
+        $poolID = $_POST['poolID'];
+        $fightID = $_POST['fightID'];
+        $playerID = $_POST['playerID'];
+        $page = $_POST['page'];
+        
+        //scoring category
+        $item_per_page = 10;
+        $aScorings = self::$scoringcategory->getPlayerStatsScoring($poolID, $fightID, $playerID, $item_per_page, $page);
+        $big = 999999999;
+        $paging = paginate_links( array(
+            'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+            'format' => '#',
+            'current' => max($page, get_query_var('paged') ),
+            'total' => floor($aScorings['total'] / $item_per_page)
+        ));
+        $aScorings['paging'] = $paging;
+        exit(json_encode($aScorings));
     }
 }
 ?>

@@ -21,20 +21,8 @@ class MyHistoryEntries
 
     public static function addContent()
     {
-		if ( ($jsonData = self::$fanvictor->getHistoryContests()) && ($jsonObject = json_decode($jsonData)) )
-        {
-            if ( isset($jsonObject->success) && $jsonObject->success )
-			{
-                $historyContests = $jsonObject->html;
-                $sHeader = __("My History Entries");
-			}
-            else 
-                $errorMessage = __('<br>Error getting my history entries');
-        }
-        else
-        {
-            $errorMessage = __('<br>Error occured error occured could not get my history entries');
-        }
+        $aLeagues = self::$fanvictor->getHistoryEntries();
+        $aLeagues = self::$fanvictor->parseLeagueData($aLeagues);
         include FANVICTOR__PLUGIN_DIR_VIEW.'myhistoryentries.php';
     }
 }

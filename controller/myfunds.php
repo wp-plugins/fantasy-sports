@@ -33,7 +33,7 @@ class MyFunds
         unset($_SESSION['totalMoney']);
         
         $aGateways = self::$payment->viewGateway();
-        $aUserPayment = self::$payment->getUserPaymentInfo();
+        $aUserPayment = self::$payment->getUserPaymentInfo(PAYPAL, get_current_user_id());
         $aUser = self::$payment->getUserData();
         $withdrawPending = self::$user->getWithdrawlsTotal(get_current_user_id());
         include FANVICTOR__PLUGIN_DIR_VIEW.'myfunds.php';
