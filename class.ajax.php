@@ -1073,7 +1073,7 @@ class Ajax
             'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
             'format' => '#',
             'current' => max($page, get_query_var('paged') ),
-            'total' => floor($aScorings['total'] / $item_per_page)
+            'total' => ceil($aScorings['total'] / $item_per_page)
         ));
         $aScorings['paging'] = $paging;
         exit(json_encode($aScorings));
