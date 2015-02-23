@@ -121,8 +121,8 @@ jQuery.ranking = {
                     }
                     htmlFixtures += 
                         '<tr>\n\
-                            <td>' + fight.name1 + '\n\
-                                <div>VS</div>' + fight.name2 + '</td>\n\
+                            <td>' + fight.name1 + team1_spread_points + '\n\
+                                <div>VS</div>' + fight.name2 + team2_spread_points + '</td>\n\
                             <td id="myresult_' + fight.fightID + '">\n\
                             </td>\n\
                             <td id="yourresult_' + fight.fightID + '"></td>\n\
