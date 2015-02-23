@@ -95,7 +95,8 @@
             <?php foreach($aFights as $aFight):?>
             <tr>
                 <td style="text-align:center">
-                    <?=$aFight['allow_spread'] ? $aFight['team1_spread'] : '';?>
+                    <?=$aFight['allow_spread'] ? $aFight['team1_spread_points'] : '';?>
+                    <?=$aFight['allow_moneyline'] ? $aFight['team1_moneyline'] : '';?>
                     <br><?=$aFight['name1'];?>
                     <br>&nbsp;
                     <br>
@@ -103,11 +104,14 @@
                     <br>
                 </td>
                 <td style="text-align:center">
+                    <?=$aFight['allow_spread'] ? __('Spread') : '';?>
+                    <?=$aFight['allow_moneyline'] ? __('Money Line') : '';?>
                     <br>
                     <br>
                     <br>VS</td>
                 <td style="text-align:center">
-                    <?=$aFight['allow_spread'] ? $aFight['team2_spread'] : '';?>
+                    <?=$aFight['allow_spread'] ? $aFight['team2_spread_points'] : '';?>
+                    <?=$aFight['allow_moneyline'] ? $aFight['team2_moneyline'] : '';?>
                     <br><?=$aFight['name2'];?>
                     <br>&nbsp;
                     <br>

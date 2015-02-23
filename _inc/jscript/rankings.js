@@ -108,6 +108,17 @@ jQuery.ranking = {
                             <div>&nbsp;</div>\n\
                             <div>&nbsp;</div>';
                     }
+					var team1_spread_points = team2_spread_points = '';
+                    if(league.gameType == "PICKSPREAD")
+                    {
+                        team1_spread_points = ' ' + fight.team1_spread_points;
+                        team2_spread_points = ' ' + fight.team2_spread_points;
+                    }
+                    else if(league.gameType == "PICKMONEY")
+                    {
+                        team1_spread_points = ' ' + fight.team1_moneyline;
+                        team2_spread_points = ' ' + fight.team2_moneyline;
+                    }
                     htmlFixtures += 
                         '<tr>\n\
                             <td>' + fight.name1 + '\n\
