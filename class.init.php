@@ -88,7 +88,7 @@ class FanvictorInit
             foreach($xml->version as $version)
             {
                 $version = (string)$version->number;
-                if($version != $curVersion)
+                if($version > $curVersion)
                 {
 					if(file_exists(FANVICTOR__PLUGIN_DIR.'class.table-credits.php'))
 					{
