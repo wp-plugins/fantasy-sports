@@ -70,10 +70,11 @@ function setOptions(matchWith)
 
 jQuery.createcontest =
 {
-    setData : function(aPools, aFights)
+    setData : function(aPools, aFights, aRounds)
     {
         this.aPools = aPools;
         this.aFights = aFights;
+        this.aRounds = aRounds;
         jQuery.parseJSON(this.aPools);
     },
     
@@ -89,13 +90,13 @@ jQuery.createcontest =
         }
     },
     
-    loadPools: function(org_id, is_playerdraft, only_playerdraft)
+    loadPools: function(org_id, is_playerdraft, only_playerdraft, is_round)
     {
         var aPools = jQuery.parseJSON(this.aPools);
         var selectPool = jQuery('#selectPool').val();
         if(aPools != null)
         {
-            var html = '<select class="form-control" name="poolID" onchange="jQuery.createcontest.loadFights(jQuery(this).val())">';
+            var html = '<select class="form-control" name="poolID" onchange="jQuery.createcontest.loadFights(jQuery(this).val());jQuery.createcontest.loadRounds(jQuery(this).val());">';
             for(var i = 0; i < aPools.length; i++)
             {
                 var aPool = aPools[i];
@@ -119,7 +120,8 @@ jQuery.createcontest =
             }
             html += '</select>';
             jQuery('#poolDates').empty().append(html);
-            this.loadFights(jQuery('#poolDates select').val())
+            this.loadFights(jQuery('#poolDates select').val());
+            this.loadRounds(jQuery('#poolDates select').val())
         }
         
         if(only_playerdraft == 0)
@@ -143,6 +145,14 @@ jQuery.createcontest =
         {
             jQuery('#wrapFixtures').hide();
             jQuery('#game_type option:not(#playerdraftType)').hide();
+        }
+        if(is_round == 0)
+        {
+            jQuery('#wrapRounds').hide();
+        }
+        else 
+        {
+            jQuery('#wrapRounds').show();
         }
         jQuery('#selectPool').val('');
     },
@@ -175,6 +185,36 @@ jQuery.createcontest =
         }
         jQuery('#selectFight').val('');
         jQuery('#fixtureDiv').empty().append(result);
+    },
+    
+    loadRounds: function(poolID)
+    {
+        var aRounds = jQuery.parseJSON(this.aRounds);
+        var selectRound = '';
+        if(jQuery('#selectRound').length > 0 && jQuery('#selectRound').val() != '')
+        {
+            selectRound = jQuery.parseJSON(jQuery('#selectRound').val());
+        }
+        var result = '';
+        if(aRounds != null)
+        {
+            for(var i in aRounds)
+            {
+                var aRound = aRounds[i];
+                var selected = '';
+                if((selectRound != null && selectRound.indexOf(aRound.id) > -1) || selectRound == '' || selectRound == null)
+                {
+                    selected = 'checked="true"';
+                }
+                if(aRound.poolID == poolID)
+                {
+                    result += '<input type="checkbox" ' + selected + ' id="round_' + poolID + '_' + aRound.id + '" name="roundID[]" value="' + aRound.id + '">';
+                    result += '<label for="round_' + poolID + '_' + aRound.id + '">' + aRound.name + '</label><br/>';
+                }
+            }
+        }
+        jQuery('#selectRound').val('');
+        jQuery('#roundDiv').empty().append(result);
     },
     
     gameTypeAttr: function()
@@ -266,9 +306,9 @@ jQuery.createcontest =
 }
 
 jQuery(window).load(function(){
-    jQuery.createcontest.setData(jQuery("#poolData").val(), jQuery("#fightData").val());
+    jQuery.createcontest.setData(jQuery("#poolData").val(), jQuery("#fightData").val(), jQuery("#roundData").val());
     jQuery.createcontest.init();
-    jQuery.createcontest.loadPools(jQuery("#sports").val(), jQuery('#sports option:selected').attr('playerdraft'), jQuery('#sports option:selected').attr('only_playerdraft'));
+    jQuery.createcontest.loadPools(jQuery("#sports").val(), jQuery('#sports option:selected').attr('playerdraft'), jQuery('#sports option:selected').attr('only_playerdraft'), jQuery('#sports option:selected').attr('is_round'));
     jQuery.createcontest.gameTypeAttr();
     if(jQuery("#leagueID").val != '')
     {

@@ -36,7 +36,11 @@
                     <ul class="f-fixture-card-live-status f-pending">
                         <li class="f-fixture-card-away"><?=$aFight['nickName1'];?> <?=$aFight['team1score'];?></li>
                         <li class="f-fixture-card-home"><?=$aFight['nickName2'];?> <?=$aFight['team2score'];?></li>
-                        <li class="f-fixture-card-time">FINAL</li>
+                        <li class="f-fixture-card-time">
+                            <?php if($aFight['is_final']):?>
+                            <?=__('FINAL');?>
+                            <?php endif;?>&nbsp;
+                        </li>
                     </ul>
                 </li>
                 <?php endforeach;?>

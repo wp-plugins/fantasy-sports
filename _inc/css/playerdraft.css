@@ -8258,6 +8258,7 @@ html.f-lt-ie10 .f-featured-content section {
 }
 .f-quickfire-lightbox .f-tab-game-info {
     padding: 20px;
+    color: #000000;
 }
 @media (max-width: 640px) {
 .f-quickfire-lightbox .f-tab-game-info {

@@ -4266,6 +4266,7 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
 	display: inline-block;
 	margin: 0 2.08334% 0 0;
 	padding: 0;
+        color: #000000;
 }
 @media (max-width: 640px) {
 #f-table-meta-information ul li {
@@ -4645,6 +4646,7 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
 }
 #f-live-scoring-leaderboard table.f-condensed tbody tr td {
     padding: 3px 8px 4px;
+    color:#000000 !important;
 }
 @media (max-width: 500px) {
 #f-live-scoring-leaderboard table.f-condensed tbody tr td {
@@ -4681,6 +4683,7 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
 }
 #f-live-scoring-leaderboard table.f-condensed .f-truncate {
     vertical-align: middle;
+    color: #000000;
 }
 #f-live-scoring-leaderboard table.f-condensed .f-ppr-container {
     background: none repeat scroll 0 0 blue;
@@ -5020,7 +5023,7 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
     color: #f-b83717;
     font-family: "Eund-Regular",Helvetica,Arial,sans-serif;
     font-size: 20px;
-    height: 50px;
+    height: 100%;
     line-height: 50px;
     padding: 0 5px;
     position: absolute;
@@ -5163,10 +5166,8 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
     top: 5px;
 }
 .f-roster-row .f-player-score-breakdown {
-    display: none;
 }
 .f-roster-row .f-score {
-    height: 42px;
     line-height: 44px;
 }
 .f-roster-row.f-is-expanded {

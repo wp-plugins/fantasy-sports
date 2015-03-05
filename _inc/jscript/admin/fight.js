@@ -80,6 +80,10 @@ jQuery.fight =
         {
             jQuery('.for_playerdraft').show();
         }
+        if(jQuery('option:selected', "#poolOrgs").attr('only_playerdraft') == 1)
+        {
+            jQuery('.salary_cap').show();
+        }
         jQuery('#lineupResult').empty().append(result);
     },
     
@@ -167,6 +171,17 @@ jQuery.fight =
             jQuery('select.for_team').removeAttr('disabled');
             jQuery('select.for_fighter').attr('disabled', 'true');
         }
+        
+        var is_round = jQuery('option:selected', "#poolOrgs").attr('is_round');
+        if(is_round == 1)
+        {
+            jQuery('.for_round').show();
+        }
+        else
+        {
+            jQuery('.for_round').hide();
+        }
+        
         return false;
     },
     
@@ -274,7 +289,7 @@ jQuery.fight =
     },
     
     updatePoolStatus: function(iPoolID, oObj, curValue){
-        if(confirm('Are you sure? This is not reversible'))
+        if(confirm('Are you sure?'))
         {
             var data = {
                 action: 'updatePoolComplete',
@@ -294,9 +309,10 @@ jQuery.fight =
                     if(jQuery(oObj).val().toLowerCase() == 'complete')
                     {
                         jQuery(oObj).attr('disabled', true);
-                        jQuery(oObj).parents('tr').find('.column-result').empty();
-                        jQuery(oObj).parents('tr').find('.column-playerdraft_result').empty();
-                        jQuery(oObj).parents('tr').find('.column-edit').empty();
+                        jQuery(oObj).parents('tr').find('.column-result a').hide();
+                        jQuery(oObj).parents('tr').find('.column-playerdraft_result a').hide();
+                        jQuery(oObj).parents('tr').find('.column-edit a').hide();
+                        jQuery(oObj).parents('tr').find('.btn-reverse').show();
                     }
                 }
             })
@@ -327,7 +343,7 @@ jQuery.fight =
         };
         jQuery.post(ajaxurl, data, function(result){
             result = jQuery.parseJSON(result);
-            jQuery.fight.loadPlayerDraftResult(result.pool, result.fights);
+            jQuery.fight.loadPlayerDraftResult(result.pool, result.fights, result.rounds);
             jQuery.fight.loadPlayerPoints(result.scoring_cat, 1);
             jQuery("#resultDialog").dialog({
                 buttons: {
@@ -343,10 +359,12 @@ jQuery.fight =
         return false;
     },
     
-    loadPlayerDraftResult: function(aPool, aFights)
+    loadPlayerDraftResult: function(aPool, aFights, aRounds)
     {
         this.aFights = aFights;
+        this.aRounds = aRounds;
         this.aPool = aPool;
+        var html = '';
         
         //fight
         var htmlCbFight = '<select name="fightID" id="cbFight" onchange="jQuery.fight.loadPlayerPoints(null, 1)">';
@@ -370,19 +388,55 @@ jQuery.fight =
                     </div>\n\
                     <div class="clear"></div>\n\
                 </div>';
+            html = '<div id="resultMessage"></div>\n\
+                        <form id="formResult">\n\
+                        <input type="hidden" name="poolID" value="' + aPool.poolID + '" />\n\
+                        ' + htmlFight + '\n\
+                        <div class="table">\n\
+                            <div class="table_left" style="width:100px;">Scoring: </div>\n\
+                            <div class="table_right" id="resultScoring" style="margin-left:100px;">\n\
+                            </div>\n\
+                            <div class="clear"></div>\n\
+                        </div>\n\
+                    </div>';
+        }
+        
+        //round
+        var htmlCbRound = '<select name="roundID" id="cbRound" onchange="jQuery.fight.loadPlayerPoints(null, 1)">';
+        if(aRounds != null && aRounds.length > 0)
+        {
+            for(var i in aRounds)
+            {
+                var aRound = aRounds[i];
+                htmlCbRound += '<option value="' + aRound.id + '">' + aRound.name + '</option>';
+            }
+        }
+        htmlCbRound += '</select>';
+        var htmlRound = '';
+        if(aPool.is_round == 1)
+        {
+            htmlRound  = 
+                '<div class="table">\n\
+                    <div class="table_left">Round: </div>\n\
+                    <div class="table_right">\n\
+                        ' + htmlCbRound + '\n\
+                    </div>\n\
+                    <div class="clear"></div>\n\
+                </div>';
+            html = '<div id="resultMessage"></div>\n\
+                        <form id="formResult">\n\
+                        <input type="hidden" name="poolID" value="' + aPool.poolID + '" />\n\
+                        ' + htmlRound + '\n\
+                        <div class="table">\n\
+                            <div class="table_left" style="width:100px;">Scoring: </div>\n\
+                            <div class="table_right" id="resultScoring" style="margin-left:100px;">\n\
+                            </div>\n\
+                            <div class="clear"></div>\n\
+                        </div>\n\
+                    </div>';
         }
        
-        var html =    '<div id="resultMessage"></div>\n\
-                            <form id="formResult">\n\
-                            <input type="hidden" name="poolID" value="' + aPool.poolID + '" />\n\
-                            ' + htmlFight + '\n\
-                            <div class="table">\n\
-                                <div class="table_left" style="width:100px;">Scoring: </div>\n\
-                                <div class="table_right" id="resultScoring" style="margin-left:100px;">\n\
-                                </div>\n\
-                                <div class="clear"></div>\n\
-                            </div>\n\
-                        </div>';
+        
         jQuery("#resultDialog").empty().append(html);
     },
     
@@ -430,10 +484,11 @@ jQuery.fight =
             this.resultScoringCat = resultScoringCat;
         }
         var fightID = jQuery('#cbFight').val();
+        var roundID = jQuery('#cbRound').val();
         var playerID = jQuery('#cbPlayers').val();
         var aPool = this.aPool;
         var aScoringCats = this.resultScoringCat;
-        var data = 'action=loadPlayerPoints&poolID=' + aPool.poolID + '&fightID=' + fightID + '&playerID=' + playerID + '&page=' + page;
+        var data = 'action=loadPlayerPoints&poolID=' + aPool.poolID + '&fightID=' + fightID + '&roundID=' + roundID + '&playerID=' + playerID + '&page=' + page;
         jQuery.post(ajaxurl, data, function(result){
             result = jQuery.parseJSON(result);
             var aPlayers = result.players;
@@ -509,6 +564,32 @@ jQuery.fight =
             alert(result);
         })
     },
+    
+    reverseResult: function(poolID, oObj)
+    {
+        if(confirm("Are you sure?"))
+        {
+            jQuery(oObj).parents('tr').find('.btn-reverse').attr('disabled', 'true');
+            var data = 'action=reverseResult&poolID=' + poolID;
+            jQuery.post(ajaxurl, data, function(result){
+                var data = JSON.parse(result);
+                if(data.notice)
+                {
+                    alert(data.notice);
+                }
+                else
+                {
+                    alert(data.result);
+                    jQuery(oObj).parents('tr').find('.btn-reverse').removeAttr('disabled');
+                    jQuery(oObj).parents('tr').find('.btn-reverse').hide();
+                    jQuery(oObj).parents('tr').find('select').removeAttr('disabled').val('NEW');
+                    jQuery(oObj).parents('tr').find('.column-result a').show();
+                    jQuery(oObj).parents('tr').find('.column-playerdraft_result a').show();
+                    jQuery(oObj).parents('tr').find('.column-edit a').show();
+                }
+            })
+        }
+    }
 }
 
 

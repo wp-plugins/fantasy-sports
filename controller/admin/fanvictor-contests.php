@@ -79,6 +79,7 @@ class Fanvictor_Contests
         $aDatas = self::$fanvictor->getNewPools();
         $aPools = htmlentities(json_encode($aDatas['pools']), ENT_QUOTES);
         $aFights = htmlentities(json_encode($aDatas['fights']), ENT_QUOTES);
+        $aRounds = htmlentities(json_encode($aDatas['rounds']), ENT_QUOTES);
         
         //sports
         $aSports = self::$fanvictor->getListSports();

@@ -45,6 +45,7 @@ class Createcontest
         {
             $aPools = htmlentities(json_encode($aDatas['pools']), ENT_QUOTES);
             $aFights = htmlentities(json_encode($aDatas['fights']), ENT_QUOTES);
+            $aRounds = htmlentities(json_encode($aDatas['rounds']), ENT_QUOTES);
 
             //sports
             $aSports = self::$fanvictor->getListSports();
@@ -140,6 +141,12 @@ class Createcontest
                 break;
             case 8;
                 redirect(FANVICTOR_URL_CREATE_CONTEST, __('Please enter league name'), true);
+                break;
+            case 9;
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Round does not exist. Please try again'), true);
+                break;
+            case 10;
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Please select at least a round'), true);
                 break;
         }
 
