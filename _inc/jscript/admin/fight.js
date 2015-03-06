@@ -388,18 +388,19 @@ jQuery.fight =
                     </div>\n\
                     <div class="clear"></div>\n\
                 </div>';
-            html = '<div id="resultMessage"></div>\n\
-                        <form id="formResult">\n\
-                        <input type="hidden" name="poolID" value="' + aPool.poolID + '" />\n\
-                        ' + htmlFight + '\n\
-                        <div class="table">\n\
-                            <div class="table_left" style="width:100px;">Scoring: </div>\n\
-                            <div class="table_right" id="resultScoring" style="margin-left:100px;">\n\
-                            </div>\n\
-                            <div class="clear"></div>\n\
-                        </div>\n\
-                    </div>';
         }
+        html = '<div id="resultMessage"></div>\n\
+                    <form id="formResult">\n\
+                    <input type="hidden" name="poolID" value="' + aPool.poolID + '" />\n\
+                    ' + htmlFight + '\n\
+                    <div class="table">\n\
+                        <div class="table_left" style="width:100px;">Scoring: </div>\n\
+                        <div class="table_right" id="resultScoring" style="margin-left:100px;">\n\
+                        </div>\n\
+                        <div class="clear"></div>\n\
+                    </div>\n\
+                </div>';
+        
         
         //round
         var htmlCbRound = '<select name="roundID" id="cbRound" onchange="jQuery.fight.loadPlayerPoints(null, 1)">';
