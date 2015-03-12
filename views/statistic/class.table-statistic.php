@@ -1,14 +1,14 @@
 <?php
 class TableStatistic extends WP_List_Table
 {
-    private static $pools;
+    private static $leagues;
     private static $statistic;
     function __construct()
     {
-        self::$pools= new Pools();
+        self::$leagues = new Leagues();
         self::$statistic = new Statistic();
         global $status, $page;
-        $this->data = $this->poolData = null;
+        $this->data = null;
         parent::__construct( array(
             'singular'  => __( 'book', 'mylisttable' ),     //singular name of the listed records
             'plural'    => __( 'books', 'mylisttable' ),   //plural name of the listed records
@@ -21,15 +21,21 @@ class TableStatistic extends WP_List_Table
         switch( $column_name ) 
         { 
             case 'ID':
-                return $item['poolID'];
-            case 'name':
-                return $item['poolName'];
+                return $item['leagueID'];
+            case 'contest':
+                return $item[ 'name' ];
+            case 'gameType':
+                return $item[ $column_name ];
+            case 'poolName':
+                return $item[ $column_name ];
             case 'startDate':
-                return $item['startDate'];
+                return $item[ $column_name ];
+            case 'creator':
+                return $item[ $column_name ];
             case 'status':
-                return $item['status'];
+                return $item[ $column_name ];
             case 'detail':
-                return '<a onclick="jQuery.admin.showPoolStatisticDetail('.$item['poolID'].', \'Event Statistics\')" href="#">View</a>';
+                return '<a onclick="return jQuery.statistic.showPoolStatisticDetail('.$item['leagueID'].', \''.$item['name'].'\')" href="#">View</a>';
             default:
                 return print_r( $item, true ) ; //Show the whole array for troubleshooting purposes
         }
@@ -39,8 +45,11 @@ class TableStatistic extends WP_List_Table
     {
         $columns = array(
             'ID' => __('ID', 'mylisttable'),
-            'name' => __('Name', 'mylisttable'),
+            'contest' => __('Name', 'mylisttable'),
+            'gameType' => __('Game Type', 'mylisttable'),
+            'poolName' => __('Event', 'mylisttable'),
             'startDate' => __('Start Date', 'mylisttable'),
+            'creator' => __('Creator', 'mylisttable'),
             'status' => __('Status', 'mylisttable'),
             'detail' => __('Detail', 'mylisttable'),
         );		
@@ -50,10 +59,7 @@ class TableStatistic extends WP_List_Table
     function get_sortable_columns() 
     {
         $sortable_columns = array(
-            'ID'  => array('ID',false),
-            'name'  => array('poolName',false),
-            'startDate'  => array('startDate',false),
-            'status'  => array('status',false),
+            'name'  => array('name',false),
         );
         return $sortable_columns;
     }
@@ -61,7 +67,7 @@ class TableStatistic extends WP_List_Table
     function usort_reorder( $a, $b ) 
     {
         // If no sort, default to title
-        $orderby = ( ! empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : 'poolID';
+        $orderby = ( ! empty( $_GET['orderby'] ) ) ? $_GET['orderby'] : 'leagueID';
         // If no order, default to asc
         $order = ( ! empty($_GET['order'] ) ) ? $_GET['order'] : 'ASC';
         // Determine sort order
@@ -119,10 +125,9 @@ class TableStatistic extends WP_List_Table
         }
         
         //get data
-        list($total_items, $aPools) = self::$pools->getPoolsByFilter($aCond, 'poolID DESC', ($this->get_pagenum() - 1) * $item_per_page, $item_per_page);
-        $aPools = self::$statistic->parseListEvents($aPools);
-        $this->poolData = $aPools;
-        $this->data = $aPools['pools'];
+        list($total_items, $this->data) = self::$leagues->getLeaguesByFilter($aCond, 'leagueID DESC', ($this->get_pagenum() - 1) * $item_per_page, $item_per_page);
+        $this->data = self::$leagues->parseLeagueData($this->data);
+                
         $columns  = $this->get_columns();
         $hidden   = array();
         
@@ -144,7 +149,7 @@ class TableStatistic extends WP_List_Table
     
     function getData()
     {
-        return $this->poolData;
+        return self::$statistic->getProfit($this->data);
     }
 }
 ?>

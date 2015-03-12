@@ -70,8 +70,13 @@ jQuery.playerdraft =
                                     htmlIndicator = '<span class="f-player-badge f-player-badge-injured-out">NA</span>';
                                     break;
                             }
+                            var positionName = aPlayer.position;
+                            if(aPool.no_position == 1)
+                            {
+                                positionName = '&nbsp;';
+                            }
                             html += '<tr class="f-pR" data-role="player">\n\
-                                        <td class="f-player-position">' + aPlayer.position + '</td>\n\
+                                        <td class="f-player-position">' + positionName + '</td>\n\
                                         <td class="f-player-name">\n\
                                             <div onclick="jQuery.playerdraft.playerInfo(' + aPlayer.id + ')">' + aPlayer.name + htmlIndicator + '</div>\n\
                                         </td>';
@@ -190,7 +195,13 @@ jQuery.playerdraft =
         var player = this.findPlayer(id);
         if(typeof player != 'undefined')
         {
-            var item = jQuery('.player-position-' + player.position_id + ':not(.f-has-player)').first();
+            var position_id = player.position_id;
+            if(aPool.no_position == 1)
+            {
+                position_id = 0;
+            }
+
+            var item = jQuery('.player-position-' + position_id + ':not(.f-has-player)').first();
             if(item.length == 1)
             {
                 jQuery('#buttonAdd' + id).hide();
@@ -225,7 +236,12 @@ jQuery.playerdraft =
             {
                 if(!jQuery('.f-errorMessage').is(':visible'))
                 {
-                    jQuery('.f-errorMessage').empty().append("Player cannot be added - all '" + player.position + "' positions are filled").slideToggle().delay(4000).fadeOut();
+                    var positionName = "'" + player.position + "'";
+                    if(aPool.no_position == 1)
+                    {
+                        positionName = '';
+                    }
+                    jQuery('.f-errorMessage').empty().append("Player cannot be added - all" + positionName + " positions are filled").slideToggle().delay(4000).fadeOut();
                 }
             }
         }
@@ -385,7 +401,7 @@ jQuery.playerdraft =
         jQuery.post(ajaxurl, "action=loadUserResult&" + data, function(data) {
             data = jQuery.parseJSON(data);
             html = '';
-            if(data.length > 0)
+            if(data)
             {
                 for(var i = 0; i < data.length; i++)
                 {
@@ -405,7 +421,7 @@ jQuery.playerdraft =
                         }
                     }
                     var resultFight = fights = '';
-                    if(aResult.fights.length > 0)
+                    if(aResult.fights != null && typeof aResult.fights[0] != 'undefined')
                     {
                         fights = aResult.fights;
                         resultFight += '<div class="f-fixture-info">\n\
@@ -422,12 +438,19 @@ jQuery.playerdraft =
                                             </div>\n\
                                         </div>';
                     }
+                    
+                    var htmlPosition = '';
+                    if(typeof aResult.player_position != 'undefined')
+                    {
+                        htmlPosition = 
+                            '<div class="f-pos">\n\
+                                <span title="Point Guard">' + aResult.player_position + '</span>\n\
+                            </div>';
+                    }
                     html += 
                         '<div class="f-roster-row f-finished">\n\
                             <div class="f-roster-row-summary">\n\
-                                <div class="f-pos">\n\
-                                    <span title="Point Guard">' + aResult.player_position + '</span>\n\
-                                </div>\n\
+                                ' + htmlPosition + '\n\
                                 <div class="f-name">' + aResult.player_name + '</div>\n\
                                 ' + resultFight + '\n\
                                 <div class="f-player-secondary-information">\n\
@@ -590,6 +613,11 @@ jQuery.playerdraft =
         }
         
         //html
+        var positionName = player.position;
+        if(pool.no_position == 1)
+        {
+            positionName = '';
+        }
         var html = '<div>\n\
                         <div class="f-player-stats-lightbox">\n\
                             <div class="f-player-chunk">\n\
@@ -598,7 +626,7 @@ jQuery.playerdraft =
                                 </div>\n\
                                 <div class="f-player-container">\n\
                                     <div class="f-player-info">\n\
-                                        <span class="f-player-pos">' + player.position + '</span>\n\
+                                        <span class="f-player-pos">' + positionName + '</span>\n\
                                         <h1 class="f-player-name">' + player.name + '</h1>';
         if(pool.only_playerdraft == 0)
         {

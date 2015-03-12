@@ -24,7 +24,7 @@ class Leagues extends Model
             foreach($datas as $k => $data)
             {
                 $user = get_userdata($data['creator_userID']);
-                $datas[$k]['creator'] = $user->user_login;
+                $datas[$k]['creator'] = $user != null ? $user->user_login : null;
             }
         }
         return $datas;

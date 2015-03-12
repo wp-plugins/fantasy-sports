@@ -9,7 +9,7 @@ class FanvictorInit
             self::installOptions();
             self::installPages();
 
-            self::install_widget();
+            //self::install_widget();
             add_option('fanvictor_version', FANVICTOR_VERSION);
             update_option('fanvictor_done_installed',true);
 			self::sendUserInfo();
@@ -103,6 +103,7 @@ class FanvictorInit
                     self::upgradeDb($version);
                     self::upgradeOptions($version);
                     self::upgradePages($version);
+                    self::uninstall_widget();
                     update_option('fanvictor_version', $version);
                 }
             }
@@ -191,7 +192,7 @@ User login: ".$user->user_login;
         echo "</div>";
     }
 
-    static function init_home_sidebar_area()
+    /*static function init_home_sidebar_area()
     {
         require_once(FANVICTOR__PLUGIN_DIR_MODEL.'model.php');
         require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/fighters.php');
@@ -209,7 +210,7 @@ User login: ".$user->user_login;
             ));
             register_widget( 'Lobby' );
         });
-    }
+    }*/
 
     ////////////////////////////data tables////////////////////////////
     static function installDb()
@@ -370,7 +371,12 @@ User login: ".$user->user_login;
             foreach($xml->pages->page as $page)
             {
                 $count += 1;
-                $id = self::insert_page((string)$page->name, 'publish', $count, $parent_id);
+                $post_parent = $parent_id;
+                if(isset($page->parent) && (string)$page->parent == 0)
+                {
+                    $post_parent = 0;
+                }
+                $id = self::insert_page((string)$page->name, 'publish', $count, $post_parent, (string)$page->content);
                 /*if((string)$page->menu == 1)
                 {
                     $post_id = insert_primary_menu(1, $parent_id);
@@ -405,9 +411,22 @@ User login: ".$user->user_login;
                         $count += 1;
 						$name = (string)$page->name;
 						$post_name = strtolower($name);
-						$query = "INSERT INTO ".$wpdb->prefix."posts(post_title,post_status, post_type, post_parent,post_author, menu_order, post_name)
-							VALUES('$name', 'publish', 'page', '$parent_id', '".get_current_user_id()."', '$count', '$post_name')";
-						$wpdb->query($query);
+                        $post_parent = $parent_id;
+                        $post_content = '';
+                        if(isset($page->parent) && (string)$page->parent == 0)
+                        {
+                            $post_parent = 0;
+                        }
+                        if(isset($page->content))
+                        {
+                            $post_content = (string)$page->content;
+                        }
+                        if (!get_page_by_title($title, 'OBJECT', $post_name))
+                        {
+                            $query = "INSERT INTO ".$wpdb->prefix."posts(post_title,post_status, post_type, post_parent,post_author, menu_order, post_name, post_content)
+                                VALUES('$name', 'publish', 'page', '$post_parent', '".get_current_user_id()."', '$count', '$post_name', '$post_content')";
+                            $wpdb->query($query);
+                        }
                     }
                     break;
                 }
@@ -561,10 +580,10 @@ User login: ".$user->user_login;
             }
         }
 
-        if(pageSegment(1) == "")
+        /*if(pageSegment(1) == "")
         {
             add_filter('the_content', array('FanvictorInit', 'addlobby'));
-        }
+        }*/
         
         //set top menu no link
         add_action('wp_enqueue_scripts',array('FanvictorInit', 'top_menu_no_link'));
@@ -609,7 +628,7 @@ User login: ".$user->user_login;
         return self::home_sidebar().$content;
     }
 
-    static function insert_page($name, $status, $menu_order = 0, $parent = null)
+    static function insert_page($name, $status, $menu_order = 0, $parent = null, $post_content= '')
     {
         if(!get_page_by_title($name))
         {
@@ -620,6 +639,7 @@ User login: ".$user->user_login;
                 'post_parent'   => $parent,
                 'post_author'   => get_current_user_id(),
                 'menu_order'    => $menu_order,
+                'post_content'  => $post_content
             );
             $id = wp_insert_post( $my_post );
             if($status == 'pending')
@@ -746,6 +766,7 @@ if (is_admin())
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-scoringcategory.php');
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-players.php');
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-playerposition.php');
+    require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-transactions.php');
     
     //admin page
     require_once(FANVICTOR__PLUGIN_DIR.'class.fanvictor-admin.php');
@@ -757,6 +778,15 @@ if (is_admin())
 }
 else
 {    
+    require_once(FANVICTOR__PLUGIN_DIR_MODEL.'model.php');
+    require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/fighters.php');
+    require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/teams.php');
+    require_once(FANVICTOR__PLUGIN_DIR_MODEL.'payment.php');
+    require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/pools.php');
+    require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/sports.php');
+    require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/scoringcategory.php');
+    require_once(FANVICTOR__PLUGIN_DIR_MODEL.'fanvictor.php');
+    require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER."lobby.php");
     add_action('wp_enqueue_scripts','pluginname_ajaxurl'); 
     
     //request page

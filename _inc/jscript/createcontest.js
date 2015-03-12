@@ -70,11 +70,13 @@ function setOptions(matchWith)
 
 jQuery.createcontest =
 {
-    setData : function(aPools, aFights, aRounds)
+    setData : function(aPools, aFights, aRounds, aPositions, lineup)
     {
         this.aPools = aPools;
         this.aFights = aFights;
         this.aRounds = aRounds;
+        this.aPositions = aPositions;
+        this.lineup = lineup;
         jQuery.parseJSON(this.aPools);
     },
     
@@ -90,7 +92,7 @@ jQuery.createcontest =
         }
     },
     
-    loadPools: function(org_id, is_playerdraft, only_playerdraft, is_round)
+    loadPools: function(org_id, is_playerdraft, only_playerdraft, is_round, is_team)
     {
         var aPools = jQuery.parseJSON(this.aPools);
         var selectPool = jQuery('#selectPool').val();
@@ -153,6 +155,24 @@ jQuery.createcontest =
         else 
         {
             jQuery('#wrapRounds').show();
+        }
+        if(is_team == 1)
+        {
+            jQuery('.for_team').show();
+        }
+        else 
+        {
+            jQuery('.for_team').hide();
+        }
+        if(org_id == 44) //golf
+        {
+            jQuery('#wrapOptionType').show();
+            jQuery('#optionType').removeAttr('disabled');
+        }
+        else
+        {
+            jQuery('#wrapOptionType').hide();
+            jQuery('#optionType').attr('disabled', true);
         }
         jQuery('#selectPool').val('');
     },
@@ -302,18 +322,97 @@ jQuery.createcontest =
             str += '0';
         }
         return str;
+    },
+    
+    loadPosition: function()
+    {
+        var aPositions = jQuery.parseJSON(this.aPositions);
+        var data = '';
+        if(this.lineup != '')
+        {
+            data = jQuery.parseJSON(this.lineup);
+        }
+        var org_id = jQuery('#sports').val();
+        var result = '<table>';
+        var hasPosition = false;
+        if(aPositions != null)
+        {
+            for(var i = 0; i < aPositions.length; i++)
+            {
+                var aPosition = aPositions[i];
+                if(aPosition.org_id == org_id)
+                {
+                    hasPosition = true;
+                    var total = 0;
+                    var checked = 'checked="true"';
+                    if(data != '')
+                    {
+                        for(var j = 0; j < data.length; j++)
+                        {
+                            if(data[j].id == aPosition.id)
+                            {
+                                total = data[j].total;
+                                if(data[j].enable == 1)
+                                {
+                                    checked = 'checked="true"';
+                                }
+                                else 
+                                {
+                                    checked = '';
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    result +=   '<tr>\n\
+                                    <td>' + aPosition.name + '</td>\n\
+                                    <td><input type="text" name="lineup[' + aPosition.id + '][total]" value="' + total + '" /></td>\n\
+                                    <td><input type="checkbox" name="lineup[' + aPosition.id + '][enable]" ' + checked + ' value="1" /></td>\n\
+                                </tr>';
+                }
+            }
+        }
+        result += '</table>';
+        if(!hasPosition)
+        {
+            jQuery('.for_playerdraft').hide();
+        }
+        else 
+        {
+            jQuery('.for_playerdraft').show();
+        }
+        if(jQuery('option:selected', "#poolOrgs").attr('only_playerdraft') == 1)
+        {
+            jQuery('.salary_cap').show();
+        }
+        jQuery('#lineupResult').empty().append(result);
+    },
+    
+    optionType: function()
+    {
+        var type = jQuery('#optionType').val();
+        if(type == 'salary')
+        {
+            jQuery('.for_group').hide();
+        }
+        else
+        {
+            jQuery('.for_group').show();
+        }
     }
 }
 
 jQuery(window).load(function(){
-    jQuery.createcontest.setData(jQuery("#poolData").val(), jQuery("#fightData").val(), jQuery("#roundData").val());
+    jQuery.createcontest.setData(jQuery("#poolData").val(), jQuery("#fightData").val(), jQuery("#roundData").val(), jQuery("#positionData").val(), jQuery("#lineupData").val());
     jQuery.createcontest.init();
-    jQuery.createcontest.loadPools(jQuery("#sports").val(), jQuery('#sports option:selected').attr('playerdraft'), jQuery('#sports option:selected').attr('only_playerdraft'), jQuery('#sports option:selected').attr('is_round'));
+    jQuery.createcontest.loadPools(jQuery("#sports").val(), jQuery('#sports option:selected').attr('playerdraft'), jQuery('#sports option:selected').attr('only_playerdraft'), jQuery('#sports option:selected').attr('is_round'), jQuery('option:selected', this).attr('is_team'));
     jQuery.createcontest.gameTypeAttr();
     if(jQuery("#leagueID").val != '')
     {
         jQuery.createcontest.calculatePrizes();
     }
+    jQuery.createcontest.loadPosition();
+    jQuery.createcontest.optionType();
 })
 
 jQuery(document).on('click', '.radio input', function(event){

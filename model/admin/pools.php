@@ -339,12 +339,12 @@ class Pools extends Model
     {
         return $this->sendRequest("viewPlayerDraftResult", array('poolID' => $iPoolID));
     }
-
+    
     //////////////////////////////////////////add, update, delete pools//////////////////////////////////////////
     public function add($aVals)
     {
         $poolID = $this->sendRequest("addPools", $this->parsePoolsDataForModify($aVals));
-        
+
         //upload new image
         $image = $this->uploadImage();
         $this->updatePoolsImage($poolID, $image);
@@ -517,6 +517,78 @@ class Pools extends Model
             }
         }
     }
+    
+    public function reverseResult($iPoolID)
+    {
+        $result = $this->sendRequest("reverseResult", array('poolID' => $iPoolID), true, false);
+        switch($result)
+        {
+            case 2:
+                return 2;
+                break;
+            default :
+                $this->updateReverseMoney($result);
+                return 1;
+        }
+        return 0;
+    }
+    
+    public function updateReverseMoney($leagueIDs)
+    {
+        global $wpdb;
+        $table_fundhistory = $wpdb->prefix."fundhistory";
+        $table_user_extended = $wpdb->prefix."user_extended";
+        $leagueIDs = json_decode($leagueIDs);
+        if($leagueIDs != null)
+        {
+            foreach($leagueIDs as $leagueID)
+            {
+                //get list fundhistory
+                $sql = "SELECT fundshistoryID, amount,userID,type "
+                        . "FROM $table_fundhistory "
+                        . "WHERE leagueID = $leagueID AND operation = 'ADD'";
+                $aFunds = $wpdb->get_results($sql);
+                
+                //deduct balance
+                if($aFunds != null)
+                {
+                    foreach($aFunds as $aFund)
+                    {
+                        $this->payment->updateUserBalance($aFund->amount, true, 0, $aFund->userID);
+                        $wpdb->delete($table_fundhistory, array('fundshistoryID' => $aFund->fundshistoryID));
+                        $this->sendReverseEmail($aFund->userID, $leagueID);
+                    }
+                }
+            }
+        }
+    }
+    
+    private function sendReverseEmail($user_id, $leagueID)
+    {
+        $myUser = $this->payment->getUserData(get_current_user_id());
+        $myEmail = $myUser['email'];
+            
+        $aUser = $this->payment->getUserData($user_id);
+        $email = $aUser['email'];
+        $website = 'http://'.$_SERVER['SERVER_NAME'];
+        $siteTitle = get_option('blogname');
+        
+        $headers  = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+        $headers .= 'To: ' . $email . "\r\n";
+        $headers .= "From: $myEmail". "\r\n";
+        //$headers .= 'Bcc: ' . $myEmail . "\r\n";
+        $emailInfo = array('league_name' => $leagueID);
+        include 'emailTemplates/reverseLeague.php';
+        try 
+        {
+            mail($email, $message_subject, $message_body, $headers);
+        } 
+        catch (Exception $ex) 
+        {
+
+        }
+    }
 
     public function updateFights($aVals, $poolID)
     {
@@ -604,7 +676,7 @@ class Pools extends Model
     {
         $lineup = '';
         
-        if(isset($aVals['lineup']) && $aVals['lineup'] != null)
+        if(isset($aVals['lineup']) && $aVals['lineup'] != null && is_array($aVals['lineup']))
         {
             foreach($aVals['lineup'] as $k => $v)
             {
@@ -614,6 +686,10 @@ class Pools extends Model
             }
             $lineup = json_encode($lineup);
         }
+        else 
+        {
+            $lineup = $aVals['lineup'];
+        }
 
         $data = array('poolName' => str_replace("\'", "'", $aVals['poolName']),
                       'startDate' => $aVals['startDate'].' '.$aVals['startHour'].':'.$aVals['startMinute'].':00',
@@ -621,7 +697,8 @@ class Pools extends Model
                       'organization' => $aVals['organization'],
                       'type' => isset($aVals['type']) ? $aVals['type'] : '',
                       'salary_remaining' => str_replace(',', '', $aVals['salary_remaining']),
-                      'lineup' => $lineup);
+                      'lineup' => $lineup,
+                      'rounds' => isset($aVals['rounds']) ? $aVals['rounds'] : '');
         if($isUpdate)
         {
             $data['poolID'] = $aVals['poolID'];

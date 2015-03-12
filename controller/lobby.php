@@ -1,20 +1,14 @@
 <?php
-class Lobby extends WP_Widget
+require_once(FANVICTOR__PLUGIN_DIR_MODEL.'model.php');
+require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/fighters.php');
+require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/teams.php');
+require_once(FANVICTOR__PLUGIN_DIR_MODEL.'payment.php');
+require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/pools.php');
+require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/sports.php');
+require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/scoringcategory.php');
+require_once(FANVICTOR__PLUGIN_DIR_MODEL.'fanvictor.php');
+class Lobby
 {
-    public function __construct() 
-    {
-		parent::__construct(
-			'lobby_widget', // Base ID
-			__('Lobby', 'text_domain'), // Name
-			array( 'description' => __( 'Lobby Widget', 'text_domain' ), ) // Args
-		);
-	}
-    
-    public function widget( $args, $instance ) 
-    {
-        self::content();
-    }
-    
     public static function show()
     {
         self::content();

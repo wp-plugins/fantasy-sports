@@ -40,10 +40,11 @@ class ScoringCategory extends Model
         return $data;
     }
     
-    public function getPlayerStatsScoring($poolID, $fightID, $playerID, $item_per_page, $page)
+    public function getPlayerStatsScoring($poolID, $fightID, $roundID, $playerID, $item_per_page, $page)
     {
         return $this->sendRequest("playerStatsScoring", array('poolID' => $poolID, 
                                                               'fightID' => $fightID, 
+                                                              'roundID' => $roundID, 
                                                               'playerID' => $playerID,
                                                               'item_per_page' => $item_per_page,
                                                               'page' => $page));

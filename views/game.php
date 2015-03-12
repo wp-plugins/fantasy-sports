@@ -209,23 +209,38 @@
         </header>
         <section class="f-roster">
             <ul>
-                <?php if($aLineups != null):?>
-                <?php foreach($aLineups as $aLineup):?>
-                    <?php for($i = 0; $i < $aLineup['total']; $i++):?>
-                    <li class="f-roster-position f-count-0 player-position-<?=$aLineup['id'];?>">
-                        <div class="f-player-image"></div>
-                        <div class="f-position"><?=$aLineup['name'];?>
-                            <span class="f-empty-roster-slot-instruction"><?=__('Add player');?></span>
-                        </div>
-                        <div class="f-player"></div>
-                        <div class="f-salary">$0</div>
-                        <div class="f-fixture"></div>
-                        <a class="f-button f-tiny f-text">
-                            <i class="fa fa-minus-circle"></i>
-                        </a>
-                    </li>
+                <?php if($aLineups != null && is_array($aLineups)):?>
+                    <?php foreach($aLineups as $aLineup):?>
+                        <?php for($i = 0; $i < $aLineup['total']; $i++):?>
+                        <li class="f-roster-position f-count-0 player-position-<?=$aLineup['id'];?>">
+                            <div class="f-player-image"></div>
+                            <div class="f-position"><?=$aLineup['name'];?>
+                                <span class="f-empty-roster-slot-instruction"><?=__('Add player');?></span>
+                            </div>
+                            <div class="f-player"></div>
+                            <div class="f-salary">$0</div>
+                            <div class="f-fixture"></div>
+                            <a class="f-button f-tiny f-text">
+                                <i class="fa fa-minus-circle"></i>
+                            </a>
+                        </li>
+                        <?php endfor;?>
+                    <?php endforeach;?>
+                <?php else:?>  
+                    <?php for($i = 0; $i < $aLineups; $i++):?> 
+                        <li class="f-roster-position f-count-0 player-position-0">
+                            <div class="f-player-image"></div>
+                            <div class="f-position">
+                                <span class="f-empty-roster-slot-instruction"><?=__('Add player');?></span>
+                            </div>
+                            <div class="f-player"></div>
+                            <div class="f-salary">$0</div>
+                            <div class="f-fixture"></div>
+                            <a class="f-button f-tiny f-text">
+                                <i class="fa fa-minus-circle"></i>
+                            </a>
+                        </li>
                     <?php endfor;?>
-                <?php endforeach;?>
                 <?php endif;?>
             </ul>
             <div class="f-row import-clear-button-container">

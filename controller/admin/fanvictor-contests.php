@@ -8,11 +8,13 @@ class Fanvictor_Contests
     private static $url;
     private static $urladdnew;
     private static $urladd;
+    private static $playerposition;
     public function __construct() 
     {
         self::$orgs = new Organizations();
         self::$fanvictor = new Fanvictor();
         self::$leagues = new Leagues();
+        self::$playerposition = new PlayerPosition();
         self::$url = admin_url().'admin.php?page=manage-contests';
         self::$urladdnew = admin_url().'admin.php?page=add-contests';
         self::$urladd = wp_get_referer();
@@ -56,6 +58,7 @@ class Fanvictor_Contests
         
         //load css js
         wp_enqueue_script('admin.js', FANVICTOR__PLUGIN_URL_JS.'admin/admin.js');
+        wp_enqueue_script('fight.js', FANVICTOR__PLUGIN_URL_JS.'admin/fight.js');
         wp_enqueue_script('createcontest.js', FANVICTOR__PLUGIN_URL_JS.'createcontest.js', 5);
         wp_enqueue_script('accounting.js', FANVICTOR__PLUGIN_URL_JS.'accounting.js');
         
@@ -120,6 +123,10 @@ class Fanvictor_Contests
 
         //game type
         $aGameTypes = self::$orgs->getGameType();
+        
+        //position
+        $aPositions = self::$playerposition->getPlayerPosition();
+        $aPositions = json_encode($aPositions);
         
         $aLeagueSizes = get_option('fanvictor_league_size');
         $aEntryFees = get_option('fanvictor_entry_fee');

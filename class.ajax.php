@@ -38,12 +38,12 @@ class Ajax
                        'updateResult', 'updatePoolComplete', 'activeOrgs', 'sendUserCredits',
                        'sendUserWithdrawls', 'loadPoolsByOrg', 'calculatePrizes', 'loadFights',
                        'LeagueResults', 'userpicks', 'sendInviteFriend', 'getNormalGameResult',
-                       'addCredits', 'loadUserBalance', 'requestPayment',
+                       'addCredits', 'loadUserBalance', 'requestPayment', 'loadLeagueDetail',
                        'updateNewContests', 'showPoolStatisticDetail', 'viewPoolFixture',
                        'loadUser', 'loadPoolInfo', 'viewPlayerDraftResult', 'updatePlayerDraftResult',
                        'loadUserResult', 'loadLeagueLobby', 'loadLeagueEntries', 'loadLeaguePrizes',
                        'loadLiveEntries', 'liveEntriesResult', 'loadContestScores', 'loadPlayerPoints',
-                       'loadPlayerStatistics', 'loadPlayerNews', 'activeScoringCategory');
+                       'loadPlayerStatistics', 'loadPlayerNews', 'activeScoringCategory', 'reverseResult');
         foreach($funcs as $func)
         {
             add_action("wp_ajax_$func", array('Ajax', $func));
@@ -299,6 +299,16 @@ class Ajax
         exit(json_encode($aDatas));
     }
     
+    public static function loadLeagueDetail()
+    {
+        $league = self::$fanvictor->getLeagueDetail($_POST['leagueID']);
+        if($league != null)
+        {
+            $league = $league[0];
+        }
+        exit(json_encode($league));
+    }
+    
     public static function updatePlayerDraftResult()
     {
         if(!self::$pools->updatePlayerDraftResult($_POST))
@@ -374,6 +384,10 @@ class Ajax
             if(!is_numeric($credits) || (int)$credits < 1)
             {
                 exit(json_encode(array('notice' => __('Credits not valid'))));
+            }
+            else if($credits < get_option('fanvictor_minimum_deposit'))
+            {
+                exit(json_encode(array('notice' => __('Credits must be greater than ').get_option('fanvictor_minimum_deposit'))));
             }
             else if(!self::$payment->isGatewayExist($gateway))
             {
@@ -985,69 +999,29 @@ class Ajax
             exit(json_encode(array('result' => __('Successfully updated'))));
         }
     }
+    
+    public static function reverseResult()
+    {
+        $result = self::$pools->reverseResult($_POST['poolID']);
+        switch($result)
+        {
+            case 2:
+                exit(json_encode(array('notice' => __('Event does not exist'))));
+                break;
+            case 1:
+                exit(json_encode(array('result' => __('Successfully reversed'))));
+                break;;
+            default :
+                exit(json_encode(array('notice' => __('Something went wrong! Please try again'))));
+        }
+    }
     /////////////////////////////////end update complete/////////////////////////////////
     
     public static function showPoolStatisticDetail()
     {
-        $poolID = $_POST['poolID'];
-        $aLeagues = self::$statistic->viewLeagueDetail($poolID);
-        $result = '';
-        if($aLeagues != null)
-        {
-            $result .=  '<table class="wp-list-table widefat books">
-                            <thead>
-                                <tr>
-                                    <th style="width: 30px">ID</th>	
-                                    <th>'.__('League Name').'</th>	
-                                    <th style="width: 40px">'.__('Class').'</th>
-                                    <th style="width: 60px">'.__('Prizes').'</th>
-                                    <th style="width: 60px">'.__('Awarded').'</th>
-                                    <th style="width: 60px">'.__('Entry Fee').'</th>
-                                    <th style="width: 40px">'.__('Size').'</th>
-                                    <th style="width: 60px">'.__('Entries').'</th>
-                                    <th style="width: 70px">'.__('Total Cash').'</th>
-                                    <th style="width: 60px">'.__('Profit').'</th>
-                                </tr>
-                            </thead>
-                            <tbody>';
-            foreach($aLeagues as $iKey2 => $aLeague)
-            {
-                $result .= '<tr class="checkRow tr">
-                                <td>
-                                    '.$aLeague['leagueID'].'
-                                </td>
-                                <td>
-                                    '.$aLeague['name'].'
-                                </td>
-                                <td>
-                                    '.$aLeague['opponent'].'
-                                </td>
-                                <td>
-                                    '.$aLeague['prize_structure'].'
-                                </td>
-                                <td>
-                                    '.$aLeague['awarded'].'
-                                </td>
-                                <td>
-                                    '.$aLeague['entry_fee'].'
-                                </td>
-                                <td>
-                                    '.$aLeague['size'].'
-                                </td>
-                                <td>
-                                    '.$aLeague['entries'].'
-                                </td>
-                                <td>
-                                    '.$aLeague['total_cash'].'
-                                </td>
-                                <td>
-                                    '.$aLeague['profit'].'
-                                </td>
-                            </tr>';
-            }
-            $result .= '</tbody></table>';
-            exit(json_encode(array('result' => $result)));
-        }
+        $leagueID = $_POST['leagueID'];
+        $aLeagues = self::$statistic->eventStatistic($leagueID);
+        exit(json_encode($aLeagues));
     }
     
     /////////////////////////////////v2/////////////////////////////////
@@ -1062,12 +1036,13 @@ class Ajax
     {
         $poolID = $_POST['poolID'];
         $fightID = $_POST['fightID'];
+        $roundID = $_POST['roundID'];
         $playerID = $_POST['playerID'];
         $page = $_POST['page'];
         
         //scoring category
         $item_per_page = 10;
-        $aScorings = self::$scoringcategory->getPlayerStatsScoring($poolID, $fightID, $playerID, $item_per_page, $page);
+        $aScorings = self::$scoringcategory->getPlayerStatsScoring($poolID, $fightID, $roundID, $playerID, $item_per_page, $page);
         $big = 999999999;
         $paging = paginate_links( array(
             'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),

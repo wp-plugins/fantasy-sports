@@ -35,15 +35,20 @@ class TablePools extends WP_List_Table
                 }
                 return '';
             case 'status':
-                $disable = '';
+                $disable = $reverse = '';
                 if($item['status'] != 'NEW')
                 {
                     $disable = 'disabled="true"';
                 }
+                else 
+                {
+                    $reverse = 'style="display:none"';
+                }
                 return '<select '.$disable.' onchange="jQuery.fight.updatePoolStatus('.$item['poolID'].', this, \''.$item['status'].'\');" name="status">
                             <option '.($item['status'] == 'NEW' ? 'selected="true"' : "").' value="NEW">New</option>
                             <option '.($item['status'] == 'COMPLETE' ? 'selected="true"' : "").' value="COMPLETE">Complete</option>
-                        </select>';
+                        </select>
+                        <input type="button" class="button button-primary btn-reverse" onclick="jQuery.fight.reverseResult('.$item['poolID'].', this)" '.$reverse.' value="Reverse" />';
             case 'edit':
                 if($item['status'] == 'NEW')
                 {

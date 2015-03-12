@@ -16,9 +16,9 @@ class Fanvictor_Admin
         echo '.wp-list-table .column-ID, .wp-list-table .column-uID  { width: 60px; }';
         echo '.wp-list-table .column-payment_request_pending,'
            . '.wp-list-table .column-action { width: 200px; }';
-        echo '.wp-list-table .column-status, '
-           . '.wp-list-table .column-balance , '
+        echo '.wp-list-table .column-balance , '
            . '.wp-list-table .column-startDate { width: 150px; }';
+        echo '.wp-list-table .column-status{ width: 175px; }';
         echo '.wp-list-table .column-result, '
            . '.wp-list-table .column-image, '
            . '.wp-list-table .column-active, '
@@ -66,6 +66,7 @@ class Fanvictor_Admin
         register_setting('fanvictor-settings-group', 'fanvictor_payout_method');
         register_setting('fanvictor-settings-group', 'paypal_test');
         register_setting('fanvictor-settings-group', 'paypal_email_account');
+        register_setting('fanvictor-settings-group', 'fanvictor_minimum_deposit');
     }
     
     //menu bar
@@ -114,6 +115,9 @@ class Fanvictor_Admin
         $hook = add_submenu_page('fanvictor_page', 'Manage Players', 'Manage Players', 'manage_options', 'manage-players', array('Fanvictor_Players', 'managePlayers'));
         add_action("load-$hook", array('Fanvictor_Admin', "players_screen"));
         add_submenu_page('fanvictor_page', 'Add Players', 'Add Players', 'manage_options', 'add-players', array('Fanvictor_Players', 'addPlayers'));
+    
+        $hook = add_submenu_page('fanvictor_page', 'Manage Transactions', 'Manage Transactions', 'manage_options', 'transactions', array('Fanvictor_Transactions', 'manageTransactions'));
+        add_action("load-$hook", array('Fanvictor_Admin', "transactions_screen"));
     }
     
     static function sports_screen() 
@@ -234,6 +238,17 @@ class Fanvictor_Admin
             'label' => 'Pages',
             'default' => 15,
             'option' => 'manage_contests_per_page'
+        );
+        add_screen_option( $option, $args );
+    }
+    
+    static function transactions_screen() 
+    {
+        $option = 'per_page';
+        $args = array(
+            'label' => 'Pages',
+            'default' => 15,
+            'option' => 'transactions_per_page'
         );
         add_screen_option( $option, $args );
     }

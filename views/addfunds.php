@@ -6,7 +6,7 @@
         <?=__('Rate');?>: $1 <?=__('deposit equals');?> <?=get_option('fanvictor_cash_to_credit');?> <?=__('credits');?>
     </p>
     <p>
-        <?=__('How many credits do you want to add');?>:<br/>
+        <?=__('How many credits do you want to add');?> (<?=sprintf(__('minimum $%s'), get_option('fanvictor_minimum_deposit'));?>):<br/>
         <input type="text" name="credits" />
     </p>
     <p>

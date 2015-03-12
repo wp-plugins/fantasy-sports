@@ -168,6 +168,13 @@
                 <p class="description"><?=__('The email that represents your PayPal account.');?></p>
             </td>
         </tr>
+        <tr valign="top">
+            <th scope="row"><?=__('Minimum Deposit');?></th>
+            <td>
+                <input type="text" name="fanvictor_minimum_deposit" class="regular-text ltr" value="<?php echo esc_attr(get_option('fanvictor_minimum_deposit'));?>" />
+                <p class="description"><?=__('Minimum Deposit Value');?></p>
+            </td>
+        </tr>
     </table>
     <?php submit_button(); ?>
 </form>

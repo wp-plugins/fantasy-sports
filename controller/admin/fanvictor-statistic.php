@@ -12,8 +12,7 @@ class Fanvictor_Statistic
     {
         //load css js
         wp_enqueue_style('ui.css', FANVICTOR__PLUGIN_URL_CSS.'ui/ui.css');
-        wp_enqueue_script('admin.js', FANVICTOR__PLUGIN_URL_JS.'admin/admin.js');
-        wp_enqueue_script('admin.js', FANVICTOR__PLUGIN_URL_JS.'admin/init_statistic.js');
+        wp_enqueue_script('admin.js', FANVICTOR__PLUGIN_URL_JS.'admin/statistic.js');
         wp_enqueue_script('ui.js', FANVICTOR__PLUGIN_URL_JS.'ui.js');
 
         include FANVICTOR__PLUGIN_DIR_VIEW.'statistic/class.table-statistic.php';
