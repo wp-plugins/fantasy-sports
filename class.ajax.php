@@ -296,7 +296,7 @@ class Ajax
         {
             $aDatas[] = array('place' => '1st', 'prize' => 0);
         }
-        exit(json_encode($aDatas));
+        exit(json_encode(array('prize' => $aDatas, 'note' => $league['note'])));
     }
     
     public static function loadLeagueDetail()

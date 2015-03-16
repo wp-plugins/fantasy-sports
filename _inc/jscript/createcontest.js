@@ -405,7 +405,7 @@ jQuery.createcontest =
 jQuery(window).load(function(){
     jQuery.createcontest.setData(jQuery("#poolData").val(), jQuery("#fightData").val(), jQuery("#roundData").val(), jQuery("#positionData").val(), jQuery("#lineupData").val());
     jQuery.createcontest.init();
-    jQuery.createcontest.loadPools(jQuery("#sports").val(), jQuery('#sports option:selected').attr('playerdraft'), jQuery('#sports option:selected').attr('only_playerdraft'), jQuery('#sports option:selected').attr('is_round'), jQuery('option:selected', this).attr('is_team'));
+    jQuery.createcontest.loadPools(jQuery("#sports").val(), jQuery('#sports option:selected').attr('playerdraft'), jQuery('#sports option:selected').attr('only_playerdraft'), jQuery('#sports option:selected').attr('is_round'), jQuery('#sports option:selected').attr('is_team'));
     jQuery.createcontest.gameTypeAttr();
     if(jQuery("#leagueID").val != '')
     {

@@ -1,4 +1,5 @@
 <div id="f-live-scoring-app">
+    <input type="hidden" id="scoringCats" value='<?=$scoringCats;?>' />
     <div class="f-column-12 f-clearfix">
         <div id="f-scoring-table-name"><h1><?=$league['name'];?></h1></div>
         <div id="f-current-table-status">
@@ -82,6 +83,13 @@
                 Select a user from the list above to see their lineup.
             </p>
         </div>
+        <div class="clear"></div>
+        <?php if($bonus != null):?>
+        <div id="bonusPoints">
+            <h1 style="margin-bottom: 0"><?=__('Bonus');?></h5>
+            <?=$bonus;?>
+        </div>
+        <?php endif;?>
     </div>
 </div>
 

@@ -432,13 +432,14 @@ class Fanvictor extends Model
         return $this->sendRequest("getNewPools", null, false);
     }
     
-    public function validCreateLeague($orgID, $poolID, $game_type, $name, $fightID)
+    public function validCreateLeague($orgID, $poolID, $game_type, $name, $fightID, $roundID)
     {
         return $this->sendRequest("validCreateLeague", array("orgID" => $orgID, 
                                                              "poolID" => $poolID, 
                                                              "game_type" => $game_type,
                                                              "name" => $name,
-                                                             "fightID" => $fightID), false, false);
+                                                             "fightID" => $fightID,
+                                                             "roundID" => $roundID), false, false);
     }
     
     public function createLeague($data)
@@ -468,6 +469,11 @@ class Fanvictor extends Model
     public function validEnterPlayerdraft($leagueID, $playerIDs)
     {
         return $this->sendRequest("validEnterPlayerdraft", array("leagueID" => $leagueID, "playerIDs" => $playerIDs), false, false);
+    }
+    
+    public function getContestResult($leagueID)
+    {
+        return $this->sendRequest("getContestResult", array("leagueID" => $leagueID), false);
     }
 }
 ?>

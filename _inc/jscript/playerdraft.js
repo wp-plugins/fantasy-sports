@@ -10,6 +10,7 @@ jQuery.playerdraft =
         this.aFights = aFights;
         this.aPool = aPool;
         this.aIndicators = aIndicators;
+        this.scoringCat = '';
     },
     
     loadPlayers: function()
@@ -412,10 +413,12 @@ jQuery.playerdraft =
                         for(var j in aResult.playerdraft)
                         {
                             var playerdraft = aResult.playerdraft[j];
+                            var scroring_points = jQuery.playerdraft.getScoringPointById(playerdraft.scoring_category_id);
                             resultPlayerDraft += 
                                 '<li class="f-player-card-item">' + playerdraft.points + '\n\
                                     <span title="' + playerdraft.scoring_name + '">\n\
                                         ' + playerdraft.scoring_name.substring(0, 3) + '\n\
+                                         (' + scroring_points + ')\n\
                                     </span>\n\
                                 </li>';
                         }
@@ -483,6 +486,23 @@ jQuery.playerdraft =
             }
         })
         return false;
+    },
+    
+    getScoringPointById: function(id)
+    {
+        var scoringCats = jQuery("#scoringCats").val();
+        if(scoringCats != '')
+        {
+            scoringCats = jQuery.parseJSON(scoringCats);
+            for(var i in scoringCats)
+            {
+                if(scoringCats[i].id == id)
+                {
+                    return scoringCats[i].points;
+                }
+            }
+        }
+        return 0;
     },
     
     searchPlayers: function()
@@ -873,7 +893,15 @@ jQuery.playerdraft =
                 }
 
                 //result scoring
-                var resultScoring = scorings = '';
+                var resultScoring = scorings = bonusHtml = '';
+                if(aLeague.bonus != null)
+                {
+                    bonusHtml = 
+                        '<h5 class="f-game-info-scoring-title">Bonus</h5>\n\
+                        <div class="f-game-info-scoring-categories">\n\
+                            ' + aLeague.bonus + '\n\
+                        </div>';
+                }
                 resultScoring = 
                         '<hr class="f-divider">\n\
                         <div class="f-row">\n\
@@ -916,6 +944,7 @@ jQuery.playerdraft =
                     }
                     resultScoring +=
                                     '</div>\n\
+                                    ' + bonusHtml + '\n\
                                 </div>\n\
                             </div>';
                 }
@@ -990,7 +1019,9 @@ jQuery.playerdraft =
             var data = 'leagueID=' + leagueID;
             jQuery('.f-lightbox .f-tab-game-info').empty().append(this.loading());
             jQuery.post(ajaxurl, "action=loadLeaguePrizes&" + data, function(result) {
-                var aPrizes = jQuery.parseJSON(result);
+                var json = jQuery.parseJSON(result);
+                var aPrizes = json.prize;
+                var note = json.note;
                 var html = '<ul class="f-contest-prizes-list">';
                 var aPrize = '';
                 for(var i = 0; i < aPrizes.length; i++)
@@ -1002,7 +1033,11 @@ jQuery.playerdraft =
                             $' + aPrize.prize + '\n\
                         </li>';
                 }
-                html += '</ul>';
+                html += '</ul><div class="clear"></div>';
+                if(note != null)
+                {
+                    html += '<div>' + note + '</div>';
+                }
                 jQuery('.f-lightbox .f-tab-game-info').empty().append(html);
             })
         }

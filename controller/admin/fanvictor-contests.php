@@ -137,7 +137,8 @@ class Fanvictor_Contests
     {
         $valid = self::$fanvictor->validCreateLeague($_POST['organizationID'], $_POST['poolID'], 
                                                      $_POST['game_type'], $_POST['leaguename'], 
-                                                     isset($_POST['fightID']) ? $_POST['fightID'] : null);
+                                                     isset($_POST['fightID']) ? $_POST['fightID'] : null,
+                                                     $_POST['roundID']);
         
         switch($valid)
         {
@@ -151,16 +152,22 @@ class Fanvictor_Contests
                 redirect(self::$urladd, __('Fixture does not exist. Please try again.'));
                 break;
             case 5;
-                redirect(self::$urladd, __('This game type does not exist.'));
+                redirect(self::$urladd, __('Please select at least a fixture.'));
                 break;
             case 6;
-                redirect(self::$urladd, __('This sport does not support playerdraft type.'));
+                redirect(self::$urladd, __('This game type does not exist.'));
                 break;
             case 7;
-                redirect(self::$urladd, __('Please enter league name'));
+                redirect(self::$urladd, __('This sport does not support playerdraft type.'));
                 break;
             case 8;
                 redirect(self::$urladd, __('Please enter league name'));
+                break;
+            case 9;
+                redirect(self::$urladd, __('Round does not exist. Please try again'));
+                break;
+            case 10;
+                redirect(self::$urladd, __('Please select at least two rounds'));
                 break;
         }
         

@@ -55,6 +55,11 @@ class Contest
             self::$pools->selectField(array('fightID', 'name', 'fighterID1', 'fighterID2', 'startDate', 'team1score', 'team2score'));
             $aFights = self::$pools->getFights($league['poolID'], explode(',', $league['fixtures']));
             $aFights = self::$pools->parseFightsDataDetail($aFights);
+            
+            //
+            $aData = self::$fanvictor->getContestResult($leagueId);
+            $scoringCats = json_encode($aData['scoring_cat']);
+            $bonus = $aData['bonus'];
 
             include FANVICTOR__PLUGIN_DIR_VIEW.'contest.php';
         }

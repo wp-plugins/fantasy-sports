@@ -118,7 +118,8 @@ class Createcontest
     {
         $valid = self::$fanvictor->validCreateLeague($_POST['organizationID'], $_POST['poolID'], 
                                                      $_POST['game_type'], $_POST['leaguename'], 
-                                                     isset($_POST['fightID']) ? $_POST['fightID'] : null);
+                                                     isset($_POST['fightID']) ? $_POST['fightID'] : null, 
+                                                     $_POST['roundID']);
         switch($valid)
         {
             case 2;
@@ -146,7 +147,7 @@ class Createcontest
                 redirect(FANVICTOR_URL_CREATE_CONTEST, __('Round does not exist. Please try again'), true);
                 break;
             case 10;
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Please select at least a round'), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Please select at least two rounds'), true);
                 break;
         }
 
