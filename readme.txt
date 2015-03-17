@@ -160,8 +160,59 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 
 == Changelog ==
 
-= 1.0 =
+= Version 1.0 =
 * First version released.
+
+= Version 2.0 released Feb 2015 =
+* Player Draft
+
+* Player Management
+
+* Manage Salary Cap
+
+* Manage Contests
+
+* Contest Cloner Feature
+
+* Create custom Sports
+
+* Create custom organizations
+
+* New Cheque payout method
+
+* Custom scoring criteria management
+
+* Custom positions
+
+* Custom lineup per event feature
+
+= Version 2.1 released Mar 2015 =
+
+* PGA Golf Support
+
+* Bug fixes
+
+= Version 2.1.2 released March  2015 =
+
+* Enhanced event statistics
+
+* Manage user transactions
+
+* Custom lineup per contest feature
+
+* Reverse contest feature
+
+* Move lobby to its own page
+
+= Version 2.1.3 released March 16 2015 =
+
+* Golf - Requirement to select at least 2 rounds
+
+* Golf - Show bonus point accumulation on history entry page
+
+* At results page, show scoring points and bonus points
+
+* Add your own prizes text feature
 
 == Upgrade Notice ==
 
