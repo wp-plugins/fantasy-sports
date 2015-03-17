@@ -390,14 +390,22 @@ jQuery.createcontest =
     
     optionType: function()
     {
-        var type = jQuery('#optionType').val();
-        if(type == 'salary')
+        var is_round = jQuery('#sports option:selected').attr('is_round');
+        if(is_round == 1)
         {
-            jQuery('.for_group').hide();
+            var type = jQuery('#optionType').val();
+            if(type == 'salary')
+            {
+                jQuery('.for_group').hide();
+            }
+            else
+            {
+                jQuery('.for_group').show();
+            }
         }
-        else
+        else 
         {
-            jQuery('.for_group').show();
+            jQuery('.for_playerdraft.for_group').show();
         }
     }
 }
