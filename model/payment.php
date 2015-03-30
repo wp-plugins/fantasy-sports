@@ -308,6 +308,10 @@ class Payment
                 {
                     $aDatas[$k]['amount'] = "-".$aData['amount'];
                 }
+				if($aData['type'] == 'MAKE_BET')
+                {
+                    $aDatas[$k]['type'] = "ENTRY FEE";
+                }
             }
         }
         return $aDatas;
