@@ -214,6 +214,10 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 
 * Add your own prizes text feature
 
+= Version 2.1.3.1 released March 30 2015 =
+
+* Fix some bugs
+
 == Upgrade Notice ==
 
 = 1.0 =
