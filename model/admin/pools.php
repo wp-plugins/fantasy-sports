@@ -119,6 +119,11 @@ class Pools extends Model
         }
         return $data;
     }
+	
+	public function getNewPools()
+    {
+        return $this->sendRequest("getNewPools");
+    }
     
     public function getTotalCurrentPools($orgID = null, $all = false)
     {

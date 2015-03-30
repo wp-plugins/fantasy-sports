@@ -3,7 +3,7 @@
  * Plugin Name: Fan Victor
  * Plugin URI: http://plugins.svn.wordpress.org/fantasy-sports/ 
  * Description: Create a fantasy sports website in minutes. Give your members the chance to compete in daily contests by predicting the outcomes of sporting events.  To get started: 1) Click the "Activate" link to the left of this description, 2) Sign up for a Fan Victor API key, and 3) Go to your FanVictor.com members page, and save your API key.
- * Version: 2.1.3
+ * Version: 2.1.3.1
  * Author: Mega Website Services
  * Author URI: http://fanvictor.com
  * License: GPL2
@@ -28,7 +28,8 @@
 ob_start();
 
 $upload_dir = wp_upload_dir();
-define('FANVICTOR_VERSION', '2.1.3');
+define('FANVICTOR_VERSION', '2.1.3.1');
+define('FV_DOMAIN', 'fantasy-sports');
 define('FANVICTOR__PLUGIN_URL', plugin_dir_url(__FILE__));
 define('FANVICTOR__PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('FANVICTOR__PLUGIN_DIR_MODEL', FANVICTOR__PLUGIN_DIR.'model/');
@@ -113,7 +114,12 @@ register_activation_hook(__FILE__, array('FanvictorInit', 'active'));
 register_deactivation_hook(__FILE__, array('FanvictorInit', 'deactivate'));
 register_uninstall_hook(__FILE__, array('FanvictorInit', 'uninstall'));
 add_action( 'plugins_loaded', array('FanvictorInit', 'upgrade'));
-//FanvictorInit::init_home_sidebar_area();
+require_once(plugin_dir_path(__FILE__)."/languages/js-pt_PT.php");
 
 add_action('init', 'session_start');
+
+function fv_init(){
+	load_plugin_textdomain(FV_DOMAIN, false, dirname(plugin_basename(__FILE__))."/languages/");
+}
+add_action('plugins_loaded', 'fv_init');
 ?>

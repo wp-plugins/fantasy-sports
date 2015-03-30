@@ -86,6 +86,7 @@ class Game
             $league = $league[0];
             $aPool = $game['pool'];
             $aFights = $game['fights'];
+			$aRounds = $game['rounds'];
             $aPositions = $game['positions'];
             $aLineups = $game['lineup'];
             $aTeams = $game['teams'];

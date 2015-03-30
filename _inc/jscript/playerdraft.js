@@ -398,6 +398,7 @@ jQuery.playerdraft =
         }
         
         //load result
+		var leagueOptionType = jQuery('#leagueOptionType').val();
         var data = 'leagueID=' + leagueID + '&userID=' + userID;
         jQuery.post(ajaxurl, "action=loadUserResult&" + data, function(data) {
             data = jQuery.parseJSON(data);
@@ -443,15 +444,20 @@ jQuery.playerdraft =
                     }
                     
                     var htmlPosition = '';
-                    if(typeof aResult.player_position != 'undefined')
+                    if((typeof aResult.player_position != 'undefined') && (leagueOptionType != 'salary'))
                     {
                         htmlPosition = 
                             '<div class="f-pos">\n\
                                 <span title="Point Guard">' + aResult.player_position + '</span>\n\
                             </div>';
                     }
+					var styleLeagueOptionType = '';
+                    if(leagueOptionType == 'salary')
+                    {
+                        styleLeagueOptionType = 'style="padding-left:10px;"';
+                    }
                     html += 
-                        '<div class="f-roster-row f-finished">\n\
+                        '<div class="f-roster-row f-finished" ' + styleLeagueOptionType + '>\n\
                             <div class="f-roster-row-summary">\n\
                                 ' + htmlPosition + '\n\
                                 <div class="f-name">' + aResult.player_name + '</div>\n\

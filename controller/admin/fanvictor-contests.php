@@ -9,12 +9,14 @@ class Fanvictor_Contests
     private static $urladdnew;
     private static $urladd;
     private static $playerposition;
+	private static $pools;
     public function __construct() 
     {
         self::$orgs = new Organizations();
         self::$fanvictor = new Fanvictor();
         self::$leagues = new Leagues();
         self::$playerposition = new PlayerPosition();
+		self::$pools = new Pools();
         self::$url = admin_url().'admin.php?page=manage-contests';
         self::$urladdnew = admin_url().'admin.php?page=add-contests';
         self::$urladd = wp_get_referer();
@@ -79,7 +81,7 @@ class Fanvictor_Contests
 		self::modify($bIsEdit);
 
         //pools and fights
-        $aDatas = self::$fanvictor->getNewPools();
+        $aDatas = self::$pools->getNewPools();
         $aPools = htmlentities(json_encode($aDatas['pools']), ENT_QUOTES);
         $aFights = htmlentities(json_encode($aDatas['fights']), ENT_QUOTES);
         $aRounds = htmlentities(json_encode($aDatas['rounds']), ENT_QUOTES);

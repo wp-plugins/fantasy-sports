@@ -5,11 +5,6 @@
         <div class="f-contest-date-start-time">
             <?=__('Contest starts');?> <?=$aPool['startDate'];?>
         </div>
-        <div class="f-contest-date-start-countdown-container">
-            <span class="f-countdown-timer">
-                <div id="countdown_1" class="f-countdown"></div>
-            </span>
-        </div>
     </div>
 </div>
 <ul class="f-contest-information-bar">
@@ -49,6 +44,18 @@
                 @
                 <span class="f-fixture-team-away"><?=$aFight['nickName2'];?></span>
                 <span class="f-fixture-start-time"><?=$aFight['startDate'];?></span>
+            </a>
+			<?php endforeach;?>
+        </div>
+        <?php endif;?>
+		<?php if(!empty($aRounds)):?>
+		<h1><?=__('Players available from (click to filter):', FV_DOMAIN);?></h1>
+		<div class="f-fixture-picker-button-container">
+			<a class="f-button f-mini f-is-active fixture-item" onclick="jQuery.playerdraft.setActiveFixture(this);return jQuery.playerdraft.loadPlayers();">All</a>
+            <?php foreach($aRounds as $aRound):?>
+            <a class="f-button f-mini fixture-item">
+                <span class="f-fixture-team-home"><?=$aRound['name'];?></span>
+                <span class="f-fixture-start-time"><?=$aRound['startDate'];?></span>
             </a>
 			<?php endforeach;?>
         </div>
@@ -212,8 +219,8 @@
                 <?php if($aLineups != null && is_array($aLineups)):?>
                     <?php foreach($aLineups as $aLineup):?>
                         <?php for($i = 0; $i < $aLineup['total']; $i++):?>
-                        <li class="f-roster-position f-count-0 player-position-<?=$aLineup['id'];?>">
-                            <div class="f-player-image"></div>
+                        <li class="f-roster-position f-count-0 player-position-<?=$aLineup['id'];?>" <?php if($aPool['is_round'] == 1):?>style="padding-left: 0;background: none;"<?php endif;?>>
+                            <div class="f-player-image" <?php if($aPool['is_round'] == 1):?>style="display: none;"<?php endif;?>></div>
                             <div class="f-position"><?=$aLineup['name'];?>
                                 <span class="f-empty-roster-slot-instruction"><?=__('Add player');?></span>
                             </div>
@@ -228,8 +235,8 @@
                     <?php endforeach;?>
                 <?php else:?>  
                     <?php for($i = 0; $i < $aLineups; $i++):?> 
-                        <li class="f-roster-position f-count-0 player-position-0">
-                            <div class="f-player-image"></div>
+                        <li class="f-roster-position f-count-0 player-position-0" <?php if($aPool['is_round'] == 1):?>style="padding-left: 0;background: none;"<?php endif;?>>
+                            <div class="f-player-image" <?php if($aPool['is_round'] == 1):?>style="display: none;"<?php endif;?>></div>
                             <div class="f-position">
                                 <span class="f-empty-roster-slot-instruction"><?=__('Add player');?></span>
                             </div>
@@ -274,5 +281,4 @@
                                '<?=json_encode($aFights);?>',
                                '<?=json_encode($aPool);?>',
                                '<?=json_encode($aIndicators);?>');
-    getCountdown("countdown_1", false, '<?=$aFights[0]['startTimeStamp'];?>');
 </script>

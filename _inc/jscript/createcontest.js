@@ -148,6 +148,7 @@ jQuery.createcontest =
             jQuery('#wrapFixtures').hide();
             jQuery('#game_type option:not(#playerdraftType)').hide();
         }
+        jQuery('#game_type option:first:visible').attr("selected", "true");
         if(is_round == 0)
         {
             jQuery('#wrapRounds').hide();

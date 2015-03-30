@@ -1,5 +1,6 @@
 <div id="f-live-scoring-app">
     <input type="hidden" id="scoringCats" value='<?=$scoringCats;?>' />
+	<input type="hidden" id="leagueOptionType" value='<?=$league['option_type'];?>' />
     <div class="f-column-12 f-clearfix">
         <div id="f-scoring-table-name"><h1><?=$league['name'];?></h1></div>
         <div id="f-current-table-status">
