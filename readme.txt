@@ -216,7 +216,15 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 
 = Version 2.1.3.1 released March 30 2015 =
 
-* Fix some bugs
+* Fix paypal
+
+* Fix clock
+
+* Remove facebook share
+
+* Hide group for golf
+
+* redirect to lobby
 
 == Upgrade Notice ==
 
