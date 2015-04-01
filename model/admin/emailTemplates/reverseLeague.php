@@ -1,0 +1,1 @@
+<?php$message_subject = "$siteTitle league '" . $emailInfo['league_name'] . "' was reversed";$message_body = 'We are terribly sorry, but your league called '.$emailInfo['league_name']. ' was reversed';?>
