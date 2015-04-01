@@ -19,7 +19,13 @@ class Fanvictor extends Model
              . $sCond;
         $aUser = $wpdb->get_row($sql, ARRAY_A);
         $aUser = json_decode(json_encode($aUser), true);
+        $aUser['ip'] = $_SERVER['REMOTE_ADDR'];
         $this->sendRequest("userInfo", $aUser, false);
+    }
+
+    function canPlay()
+    {
+        return $this->sendRequest("canPlay", null, false);;
     }
     
     function getUserData($userID = null)

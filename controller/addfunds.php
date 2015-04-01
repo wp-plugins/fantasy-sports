@@ -28,8 +28,14 @@ class Addfunds
         unset($_SESSION['iFundHitoryId']);
         unset($_SESSION['totalMoney']);
         
-        $sUrlSubmit = FANVICTOR_URL_ADD_FUNDS;
-        $aGateways = self::$payment->viewGateway();
+        $canplay = false;
+               
+        if(self::$fanvictor->canPlay())
+        {
+            $sUrlSubmit = FANVICTOR_URL_ADD_FUNDS;
+            $aGateways = self::$payment->viewGateway();
+            $canplay = true; 
+        }
         include FANVICTOR__PLUGIN_DIR_VIEW.'addfunds.php';
     }
 }
