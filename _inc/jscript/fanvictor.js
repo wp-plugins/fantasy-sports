@@ -34,10 +34,11 @@ function viewPoolFixture(iPoolID, sTitle)
     };
     jQuery.post(ajaxurl, data, function(result) {
         jQuery("#dlgFixture").empty().append(result);
+		var close = wpfs['close'];
         jQuery("#dlgFixture").dialog({
             buttons: {
-                "Close": function() {
-                    dialog.dialog( "close" );
+                close: function() {
+                    dialog.dialog("close");
                 }
             }
         });
@@ -123,17 +124,17 @@ jQuery.league =
         
         //genral info
         var htmlGeneral = 
-            '<b>Name: </b>' + aLeague.name + '\n\
-            <br><b>Entry Fee: $</b>' + aLeague.entry_fee + '\n\
-            <br><b>Prizes: $</b>' + aLeague.prizes + '\n\
-            <br><b>Prize Structure: </b>' + aLeague.prize_structure_name + '\n\
-            <br><b>Size: </b>' + aLeague.size + '\n\
-            <br><b>Creator: </b>' + aLeague.creator_name + '\n\
-            <br><b>Organization: </b>' + aLeague.organization_name + '\n\
-            <br><b>Sport: </b>' + aLeague.type + '\n\
-            <br><b>Game Type: </b>' + aLeague.gameType + '\n\
-            <br><b>Start: </b>' + aLeague.startDate + '\n\
-            <br><b>End: </b>Prizes paid next day';
+            '<b>Name:' + wpfs['Name Fee'] + ': </b>' + aLeague.name + '\n\
+            <br><b>' + wpfs['Entry Fee'] + ': $</b>' + aLeague.entry_fee + '\n\
+            <br><b>' + wpfs['Prizes'] + ': $</b>' + aLeague.prizes + '\n\
+            <br><b>' + wpfs['Prize Structure'] + ': </b>' + aLeague.prize_structure_name + '\n\
+            <br><b>' + wpfs['h_Methods'] + ': </b>' + aLeague.size + '\n\
+            <br><b>' + wpfs['Creator'] + ': </b>' + aLeague.creator_name + '\n\
+            <br><b>Organization </b>' + aLeague.organization_name + '\n\
+            <br><b>' + wpfs['Sport'] + ': </b>' + aLeague.type + '\n\
+            <br><b>' + wpfs['Game Type'] + ': </b>' + aLeague.gameType + '\n\
+            <br><b>' + wpfs['Start'] + ': </b>' + aLeague.startDate + '\n\
+            <br><b>' + wpfs['End1'] + ': </b>Prizes paid next day';
         
         //other info
         var htmlFixtures = htmlEntries = htmlScoring = '';
@@ -289,35 +290,35 @@ jQuery.league =
                 {
                     aLeague = aLeagues[i];
                     html += 
-                        '<tr>\n\
-                            <td>' + aLeague.leagueID+ '</td>\n\
-                            <td>' + aLeague.startDate+ '</td>\n\
-                            <td>\n\
-                                <span >' + aLeague.name+ '</span>\n\
-                            </td>\n\
-                            <td>' + aLeague.size+ '</td>\n\
-                            <td>' + aLeague.entries+ '</td>\n\
-                            <td>$' + aLeague.entry_fee+ '</td>\n\
-                            <td>$' + aLeague.prizes+ '</td>\n\
-                            <td>' + aLeague.rank+ '</td>\n\
-                            <td style="text-align: center">\n\
-                                <input type="button" class="btn btn-success btn-xs" value="View" onclick="window.location = \' ' + url_ranking + aLeague.leagueID + '\'">\n\
-                            </td>\n\
-                        </tr>';
+                        '<div>\n\
+                            <div style="width: 40px"><span>ID</span>' + aLeague.leagueID+ '</div>\n\
+                            <div style="width: 150px"><span>DATE</span>' + aLeague.startDate+ '</div>\n\
+                            <div style="width: 150px">\n\
+                                <span>NAME</span>' + aLeague.name+ '\n\
+                            </div>\n\
+                            <div style="width: 40px"><span>SIZE</span>' + aLeague.size+ '</div>\n\
+                            <div><span>ENTRIES</span>' + aLeague.entries+ '</div>\n\
+                            <div><span>ENTRY FEE</span>$' + aLeague.entry_fee+ '</div>\n\
+                            <div><span>PRIZES</span>$' + aLeague.prizes+ '</div>\n\
+                            <div><span>RANK</span>' + aLeague.rank+ '</div>\n\
+                            <div style="text-align: center">\n\
+                                <input type="button" class="btn btn-success btn-xs" value="' + wpfs['view'] + '" onclick="window.location = \' ' + url_ranking + aLeague.leagueID + '\'">\n\
+                            </div>\n\
+                        </div>';
                 }
             }
-            jQuery('#tableLiveEntries tbody').empty().append(html);
+            jQuery('#tableLiveEntriesContent').empty().append(html);
         })
     },
     
-    liveEntriesResult: function(poolID, leagueID)
+    liveEntriesResult: function(poolID, leagueID, entry_number)
     {
          var data = {
             action: 'liveEntriesResult',
             poolID: poolID,
         };
         jQuery.post(ajaxurl, data, function(result) {
-            jQuery.playerdraft.loadContestScores(leagueID);
+            jQuery.playerdraft.loadContestScores(leagueID, entry_number);
         })
     }
 }

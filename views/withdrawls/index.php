@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h2><?=__("Manage Withdrawls");?></h2>
+    <h2><?=__("Manage Withdrawls", FV_DOMAIN);?></h2>
     <?=settings_errors();?>
     <form method="get">
         <input type="hidden" name="page" value="<?=$_REQUEST['page'];?>" />

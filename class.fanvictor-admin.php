@@ -42,7 +42,7 @@ class Fanvictor_Admin
     public static function options() 
     {
         if ( !current_user_can( 'manage_options' ) )  {
-            wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+            wp_die( __( 'You do not have sufficient permissions to access this page.' ) , FV_DOMAIN);
         }
         include FANVICTOR__PLUGIN_DIR_VIEW.'settings.php';
     }
@@ -67,6 +67,7 @@ class Fanvictor_Admin
         register_setting('fanvictor-settings-group', 'paypal_test');
         register_setting('fanvictor-settings-group', 'paypal_email_account');
         register_setting('fanvictor-settings-group', 'fanvictor_minimum_deposit');
+        register_setting('fanvictor-settings-group', 'directpost_login');
     }
     
     //menu bar
@@ -74,49 +75,49 @@ class Fanvictor_Admin
     {
         add_menu_page("Fan Victor Pages", "Fan Victor", '', 'fanvictor_page', '');
 
-        $hook = add_submenu_page('fanvictor_page', 'Manage Sports', 'Manage Sports', 'manage_options', 'manage-sports', array('Fanvictor_Sports', 'manageSports'));
+        $hook = add_submenu_page('fanvictor_page', __('Manage Sports', FV_DOMAIN), __('Manage Sports', FV_DOMAIN), 'manage_options', 'manage-sports', array('Fanvictor_Sports', 'manageSports'));
         add_action("load-$hook", array('Fanvictor_Admin', "sports_screen"));
-        add_submenu_page('fanvictor_page', 'Add Sports', 'Add Sports', 'manage_options', 'add-sports', array('Fanvictor_Sports', 'addSports'));
+        add_submenu_page('fanvictor_page', __('Add Sport', FV_DOMAIN), __('Add Sport', FV_DOMAIN), 'manage_options', 'add-sports', array('Fanvictor_Sports', 'addSports'));
         
-        $hook = add_submenu_page('fanvictor_page', 'Manage Events', 'Manage Events', 'manage_options', 'manage-pools', array('Fanvictor_Pools', 'managePools'));
+        $hook = add_submenu_page('fanvictor_page', __('Manage Events', FV_DOMAIN), __('Manage Events', FV_DOMAIN), 'manage_options', 'manage-pools', array('Fanvictor_Pools', 'managePools'));
         add_action("load-$hook", array('Fanvictor_Admin', "pools_screen"));
-        add_submenu_page('fanvictor_page', 'Add Events', 'Add Events', 'manage_options', 'add-pools', array('Fanvictor_Pools', 'addPools'));
+        add_submenu_page('fanvictor_page', __('Add Events', FV_DOMAIN), __('Add Events', FV_DOMAIN), 'manage_options', 'add-pools', array('Fanvictor_Pools', 'addPools'));
         
-        $hook = add_submenu_page('fanvictor_page', 'Manage Contests', 'Manage Contests', 'manage_options', 'manage-contests', array('Fanvictor_Contests', 'manageContests'));
+        $hook = add_submenu_page('fanvictor_page', __('Manage Contests', FV_DOMAIN), __('Manage Contests', FV_DOMAIN), 'manage_options', 'manage-contests', array('Fanvictor_Contests', 'manageContests'));
         add_action("load-$hook", array('Fanvictor_Admin', "contests_screen"));
-        add_submenu_page('fanvictor_page', 'Add Contests', 'Add Contests', 'manage_options', 'add-contests', array('Fanvictor_Contests', 'addContests'));
+        add_submenu_page('fanvictor_page', __('Add Contests', FV_DOMAIN), __('Add Contests', FV_DOMAIN), 'manage_options', 'add-contests', array('Fanvictor_Contests', 'addContests'));
         
-        $hook = add_submenu_page('fanvictor_page', 'Manage Fighters', 'Manage Fighters', 'manage_options', 'manage-fighters', array('Fanvictor_Fighters', 'manageFighters'));
+        $hook = add_submenu_page('fanvictor_page', __('Manage Fighters', FV_DOMAIN), __('Manage Fighters', FV_DOMAIN), 'manage_options', 'manage-fighters', array('Fanvictor_Fighters', 'manageFighters'));
         add_action("load-$hook", array('Fanvictor_Admin', "fighters_screen"));
-        add_submenu_page('fanvictor_page', 'Add Fighters', 'Add Fighters', 'manage_options', 'add-fighters', array('Fanvictor_Fighters', 'addFighters'));
+        add_submenu_page('fanvictor_page', __('Add Fighters', FV_DOMAIN), __('Add Fighters', FV_DOMAIN), 'manage_options', 'add-fighters', array('Fanvictor_Fighters', 'addFighters'));
         
-        $hook = add_submenu_page('fanvictor_page', 'Manage Teams', 'Manage Teams', 'manage_options', 'manage-teams', array('Fanvictor_Teams', 'manageTeams'));
+        $hook = add_submenu_page('fanvictor_page', __('Manage Teams', FV_DOMAIN), __('Manage Teams', FV_DOMAIN), 'manage_options', 'manage-teams', array('Fanvictor_Teams', 'manageTeams'));
         add_action("load-$hook", array('Fanvictor_Admin', "team_screen"));
-        add_submenu_page('fanvictor_page', 'Add Teams', 'Add Teams', 'manage_options', 'add-teams', array('Fanvictor_Teams', 'addTeams'));
+        add_submenu_page('fanvictor_page', __('Add Teams', FV_DOMAIN), __('Add Teams', FV_DOMAIN), 'manage_options', 'add-teams', array('Fanvictor_Teams', 'addTeams'));
         
-        $hook = add_submenu_page('fanvictor_page', 'Event Statistics', 'Event Statistics', 'manage_options', 'statistic', array('Fanvictor_Statistic', 'manageStatistic'));
+        $hook = add_submenu_page('fanvictor_page', __('Event Statistics', FV_DOMAIN), __('Event Statistics', FV_DOMAIN), 'manage_options', 'statistic', array('Fanvictor_Statistic', 'manageStatistic'));
         add_action("load-$hook", array('Fanvictor_Admin', "event_statistics_screen"));
 
-        $hook = add_submenu_page('fanvictor_page', 'Manage Credits', 'Manage Credits', 'manage_options', 'credits', array('Fanvictor_Credits', 'manageCredits'));
+        $hook = add_submenu_page('fanvictor_page', __('Manage Credits', FV_DOMAIN), __('Manage Credits', FV_DOMAIN), 'manage_options', 'credits', array('Fanvictor_Credits', 'manageCredits'));
         add_action("load-$hook", array('Fanvictor_Admin', "credits_screen"));
         
-        $hook = add_submenu_page('fanvictor_page', 'Manage Withdrawls', 'Manage Withdrawls', 'manage_options', 'withdrawls', array('Fanvictor_Withdrawls', 'manageWithdrawls'));
+        $hook = add_submenu_page('fanvictor_page', __('Manage Withdrawls', FV_DOMAIN), __('Manage Withdrawls', FV_DOMAIN), 'manage_options', 'withdrawls', array('Fanvictor_Withdrawls', 'manageWithdrawls'));
         add_action("load-$hook", array('Fanvictor_Admin', "withdrawls_screen"));
         
         //v2
-        $hook = add_submenu_page('fanvictor_page', 'Manage Player Position', 'Manage Player Position', 'manage_options', 'manage-playerposition', array('Fanvictor_PlayerPosition', 'managePlayerPosition'));
+        $hook = add_submenu_page('fanvictor_page', __('Manage Player Position', FV_DOMAIN), __('Manage Player Position', FV_DOMAIN), 'manage_options', 'manage-playerposition', array('Fanvictor_PlayerPosition', 'managePlayerPosition'));
         add_action("load-$hook", array('Fanvictor_Admin', "playerposition_screen"));
-        add_submenu_page('fanvictor_page', 'Add Player Position', 'Add Player Position', 'manage_options', 'add-playerposition', array('Fanvictor_PlayerPosition', 'addPlayerPosition'));
+        add_submenu_page('fanvictor_page', __('Add Player Position', FV_DOMAIN), __('Add Player Position', FV_DOMAIN), 'manage_options', 'add-playerposition', array('Fanvictor_PlayerPosition', 'addPlayerPosition'));
         
-        $hook = add_submenu_page('fanvictor_page', 'Manage Scoring Category', 'Manage Scoring Category', 'manage_options', 'manage-scoringcategory', array('Fanvictor_ScoringCategory', 'manageScoringCategory'));
+        $hook = add_submenu_page('fanvictor_page', __('Manage Scoring Category', FV_DOMAIN), __('Manage Scoring Category', FV_DOMAIN), 'manage_options', 'manage-scoringcategory', array('Fanvictor_ScoringCategory', 'manageScoringCategory'));
         add_action("load-$hook", array('Fanvictor_Admin', "scoringcategory_screen"));
-        add_submenu_page('fanvictor_page', 'Add Scoring Category', 'Add Scoring Category', 'manage_options', 'add-scoringcategory', array('Fanvictor_ScoringCategory', 'addScoringCategory'));
+        add_submenu_page('fanvictor_page', __('Add Scoring Category', FV_DOMAIN), __('Add Scoring Category', FV_DOMAIN), 'manage_options', 'add-scoringcategory', array('Fanvictor_ScoringCategory', 'addScoringCategory'));
 
-        $hook = add_submenu_page('fanvictor_page', 'Manage Players', 'Manage Players', 'manage_options', 'manage-players', array('Fanvictor_Players', 'managePlayers'));
+        $hook = add_submenu_page('fanvictor_page', __('Manage Players', FV_DOMAIN), __('Manage Players', FV_DOMAIN), 'manage_options', 'manage-players', array('Fanvictor_Players', 'managePlayers'));
         add_action("load-$hook", array('Fanvictor_Admin', "players_screen"));
-        add_submenu_page('fanvictor_page', 'Add Players', 'Add Players', 'manage_options', 'add-players', array('Fanvictor_Players', 'addPlayers'));
+        add_submenu_page('fanvictor_page', __('Add Players', FV_DOMAIN), __('Add Players', FV_DOMAIN), 'manage_options', 'add-players', array('Fanvictor_Players', 'addPlayers'));
     
-        $hook = add_submenu_page('fanvictor_page', 'Manage Transactions', 'Manage Transactions', 'manage_options', 'transactions', array('Fanvictor_Transactions', 'manageTransactions'));
+        $hook = add_submenu_page('fanvictor_page', __('Manage Transactions', FV_DOMAIN), __('Manage Transactions', FV_DOMAIN), 'manage_options', 'transactions', array('Fanvictor_Transactions', 'manageTransactions'));
         add_action("load-$hook", array('Fanvictor_Admin', "transactions_screen"));
     }
     

@@ -9,14 +9,14 @@ class Fanvictor_Contests
     private static $urladdnew;
     private static $urladd;
     private static $playerposition;
-	private static $pools;
+    private static $pools;
     public function __construct() 
     {
         self::$orgs = new Organizations();
         self::$fanvictor = new Fanvictor();
         self::$leagues = new Leagues();
         self::$playerposition = new PlayerPosition();
-		self::$pools = new Pools();
+        self::$pools = new Pools();
         self::$url = admin_url().'admin.php?page=manage-contests';
         self::$urladdnew = admin_url().'admin.php?page=add-contests';
         self::$urladd = wp_get_referer();
@@ -27,7 +27,7 @@ class Fanvictor_Contests
         //must check that the user has the required capability 
         if (!current_user_can('manage_options'))
         {
-            wp_die( __('You do not have sufficient permissions to access this page.') );
+            wp_die( __('You do not have sufficient permissions to access this page.') , FV_DOMAIN);
         }
 
         //load css js
@@ -55,7 +55,7 @@ class Fanvictor_Contests
         //must check that the user has the required capability 
         if (!current_user_can('manage_options'))
         {
-            wp_die( __('You do not have sufficient permissions to access this page.') );
+            wp_die( __('You do not have sufficient permissions to access this page.') , FV_DOMAIN);
         }
         
         //load css js
@@ -140,46 +140,52 @@ class Fanvictor_Contests
         $valid = self::$fanvictor->validCreateLeague($_POST['organizationID'], $_POST['poolID'], 
                                                      $_POST['game_type'], $_POST['leaguename'], 
                                                      isset($_POST['fightID']) ? $_POST['fightID'] : null,
-                                                     $_POST['roundID']);
+                                                     $_POST['roundID'], 
+                                                     isset($_POST['payouts_from']) ? $_POST['payouts_from'] : null,
+                                                     isset($_POST['payouts_to']) ? $_POST['payouts_to'] : null,
+                                                     isset($_POST['percentage']) ? $_POST['percentage'] : null);
         
         switch($valid)
         {
             case 2;
-                redirect(self::$urladd, __('Sport does not exist. Please try again.'));
+                redirect(self::$urladd, __('Sport does not exist. Please try again.', FV_DOMAIN));
                 break;
             case 3;
-                redirect(self::$urladd, __('Date does not exist. Please try again.'));
+                redirect(self::$urladd, __('Date does not exist. Please try again.', FV_DOMAIN));
                 break;
             case 4;
-                redirect(self::$urladd, __('Fixture does not exist. Please try again.'));
+                redirect(self::$urladd, __('Fixture does not exist. Please try again.', FV_DOMAIN));
                 break;
             case 5;
-                redirect(self::$urladd, __('Please select at least a fixture.'));
+                redirect(self::$urladd, __('Please select at least a fixture.', FV_DOMAIN));
                 break;
             case 6;
-                redirect(self::$urladd, __('This game type does not exist.'));
+                redirect(self::$urladd, __('This game type does not exist.', FV_DOMAIN));
                 break;
             case 7;
-                redirect(self::$urladd, __('This sport does not support playerdraft type.'));
+                redirect(self::$urladd, __('This sport does not support playerdraft type.', FV_DOMAIN));
                 break;
             case 8;
-                redirect(self::$urladd, __('Please enter league name'));
+                redirect(self::$urladd, __('Please enter league name', FV_DOMAIN));
                 break;
             case 9;
-                redirect(self::$urladd, __('Round does not exist. Please try again'));
+                redirect(self::$urladd, __('Round does not exist. Please try again', FV_DOMAIN));
                 break;
             case 10;
-                redirect(self::$urladd, __('Please select at least two rounds'));
+                redirect(self::$urladd, __('Please select at least two rounds', FV_DOMAIN));
+                break;
+            case 11;
+                redirect(self::$urladd, __('Invalid payouts', FV_DOMAIN));
                 break;
         }
         
         if(!in_array($_POST['leagueSize'], get_option('fanvictor_league_size')))
         {
-            redirect(self::$urladd, __('League size does not exist'));
+            redirect(self::$urladd, __('League size does not exist', FV_DOMAIN));
         }
         else if($_POST['entry_fee'] > 0 && !in_array($_POST['entry_fee'], get_option('fanvictor_entry_fee')))
         {
-            redirect(self::$urladd, __('Entry fee does not exist'));
+            redirect(self::$urladd, __('Entry fee does not exist', FV_DOMAIN));
         }
         return true;
     }
@@ -194,7 +200,7 @@ class Fanvictor_Contests
                 {
                     if (self::$fanvictor->createLeague($_POST))
                     {
-                        redirect(self::$urladd, __('Succesfully updated'));
+                        redirect(self::$urladd, __('Succesfully updated', FV_DOMAIN));
                     }
                 }
                 else //add
@@ -202,10 +208,10 @@ class Fanvictor_Contests
                     $leagueID = self::$fanvictor->createLeague($_POST);
                     if((int)$leagueID > 0)
                     {
-                        redirect(self::$urladd, __('Succesfully added'));
+                        redirect(self::$urladd, __('Succesfully added', FV_DOMAIN));
                     }
                 }
-                redirect(self::$urladd, __('Something went wrong! Please try again.'));
+                redirect(self::$urladd, __('Something went wrong! Please try again.', FV_DOMAIN));
 			}
 		}
     }

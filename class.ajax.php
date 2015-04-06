@@ -98,15 +98,15 @@ class Ajax
         $friend_ids = isset($data['friend_ids']) ? $data['friend_ids'] : null;
         if(!array_filter($data['emails']) && $friend_ids == null)
         {
-            exit(json_encode(array('notice' => __('You have not selected any friends to invite'))));
+            exit(json_encode(array('notice' => __('You have not selected any friends to invite', FV_DOMAIN))));
         }
         else if($data['importleagueID'] == "" || $data['importleagueID'] == "0" )
         {
-            exit(json_encode(array('notice' => __('Sorry the system detected a spam attempt please contact support'))));
+            exit(json_encode(array('notice' => __('Sorry the system detected a spam attempt please contact support', FV_DOMAIN))));
         }
         else if(!self::isValidInviteEmail($data['emails']))
         {
-            exit(json_encode(array('notice' => __('Please enter a valid email address'))));
+            exit(json_encode(array('notice' => __('Please enter a valid email address', FV_DOMAIN))));
         }
         else 
         {
@@ -213,11 +213,11 @@ class Ajax
             $aPool = self::$pools->getPools($iPoolID, null, false, true);
             if($aPool['type'] == 'MMA' || $aPool['type'] == 'BOXING')
             {
-                $teamOrFighterHeader = __("Fighter");
+                $teamOrFighterHeader = __("Fighter", FV_DOMAIN);
             }
             else 
             {
-                $teamOrFighterHeader = __("Team");
+                $teamOrFighterHeader = __("Team", FV_DOMAIN);
             }
             $sResult .= '<table class="table table-striped table-bordered table-responsive table-condensed">';
             foreach($aFights as $aFight)
@@ -232,7 +232,7 @@ class Ajax
         }
         else 
         {
-            $sResult = '<center>'.__("No fixtures").'</center>';
+            $sResult = '<center>'.__("No fixtures", FV_DOMAIN).'</center>';
         }
         exit($sResult);
     }
@@ -244,6 +244,7 @@ class Ajax
         exit(json_encode(array('league' => $aInfos['league'], 
                                'scorings' => $aInfos['scoringcats'], 
                                'fights' => $aInfos['fights'], 
+                               'rounds' => $aInfos['rounds'], 
                                'entries' => $aInfos['entries'], 
                                'startDate' => $aInfos['pool']['startDate'])));
     }
@@ -269,27 +270,18 @@ class Ajax
         {
             $structure = 'top3';
         }
-        $prizes = self::$pools->calculatePrizes('' , $structure, $league['size'], $league['entry_fee']);
+        $payouts = null;
+        if(!empty($league['payouts']))
+        {
+            $payouts = json_decode($league['payouts'], true);
+        }
+        $prizes = self::$pools->calculatePrizes('' , $structure, $league['size'], $league['entry_fee'], $payouts);
         $aDatas = array();
         if($prizes != null)
         {
-            $count = 0;
-            foreach($prizes as $prize)
+            foreach($prizes as $place => $prize)
             {
-                $count++;
-                $place = null;
-                switch ($count)
-                {
-                    case 1:
-                        $aDatas[] = array('place' => '1st', 'prize' => $prize);
-                        break;
-                    case 2:
-                        $aDatas[] = array('place' => '2nd', 'prize' => $prize);
-                        break;
-                    case 3:
-                        $aDatas[] = array('place' => '3rd', 'prize' => $prize);
-                        break;
-                }
+                $aDatas[] = array('place' => $place, 'prize' => $prize);
             }
         }
         else 
@@ -313,14 +305,14 @@ class Ajax
     {
         if(!self::$pools->updatePlayerDraftResult($_POST))
         {
-            exit('<div class=\"error_message\">'.__('Something went wrong! Please try again').'</div>');
+            exit('<div class=\"error_message\">'.__('Something went wrong! Please try again', FV_DOMAIN).'</div>');
         }
         exit('Successfully updated');
     }
     
     public static function loadUserResult()
     {
-        $aResults = self::$fanvictor->getPlayerPicksResult($_POST['leagueID'], $_POST['userID']);
+        $aResults = self::$fanvictor->getPlayerPicksResult($_POST['leagueID'], $_POST['userID'], $_POST['entry_number']);
         exit(json_encode($aResults));
     }
     
@@ -349,7 +341,7 @@ class Ajax
             foreach($aScores as $k => $aScore)
             {
                 $aScore[$k]['current'] = false;
-                if($aScore['userID'] == get_current_user_id())
+                if($aScore['userID'] == get_current_user_id() && $aScore['entry_number'] == $_POST['entry_number'])
                 {
                     $aScores[$k]['current'] = true;
                 }
@@ -383,15 +375,15 @@ class Ajax
         {
             if(!is_numeric($credits) || (int)$credits < 1)
             {
-                exit(json_encode(array('notice' => __('Credits not valid'))));
+                exit(json_encode(array('notice' => __('Credits not valid', FV_DOMAIN))));
             }
             else if($credits < get_option('fanvictor_minimum_deposit'))
             {
-                exit(json_encode(array('notice' => __('Credits must be greater than ').get_option('fanvictor_minimum_deposit'))));
+                exit(json_encode(array('notice' => __('Credits must be greater than ').get_option('fanvictor_minimum_deposit', FV_DOMAIN))));
             }
             else if(!self::$payment->isGatewayExist($gateway))
             {
-                exit(json_encode(array('notice' => __('Please select gateway'))));
+                exit(json_encode(array('notice' => __('Please select gateway', FV_DOMAIN))));
             }
             else
             {
@@ -411,24 +403,27 @@ class Ajax
                     $sUrl = self::$payment->onlineTransaction($gateway, $aSettings);
                     if($sUrl)
                     {
-                        unset($_SESSION['is_transaction']);
-                        exit(json_encode(array('result' => $sUrl)));
+                    	unset($_SESSION['is_transaction']);
+                    	if(strstr($sUrl, "//"))
+                    		exit(json_encode(array('result' => $sUrl)));
+                    	else
+							exit(json_encode(array('notice' => $sUrl)));
                     }
                     else
                     {
                         self::$payment->deleteFundhistory($iFundHitoryId);
-                        exit(json_encode(array('notice' => __('Something went wrong! Please try again.'))));
+                        exit(json_encode(array('notice' => __('Something went wrong! Please try again.', FV_DOMAIN))));
                     }
                 }
                 else
                 {
-                    exit(json_encode(array('notice' => __('Something went wrong! Please try again.'))));
+                    exit(json_encode(array('notice' => __('Something went wrong! Please try again.', FV_DOMAIN))));
                 }
             }
         }
         else 
         {
-            exit(json_encode(array('notice' => __('You are in transaction session. To start new session please refresh this page'))));
+            exit(json_encode(array('notice' => __('You are in transaction session. To start new session please refresh this page', FV_DOMAIN))));
         }
     }
     
@@ -448,39 +443,39 @@ class Ajax
         }
         else if(!self::$payment->isAllowWithdraw($credits))
         {
-            exit(json_encode(array('notice' => __('Credits must not exceed your available balance'))));
+            exit(json_encode(array('notice' => __('Credits must not exceed your available balance', FV_DOMAIN))));
         }
         else if($online && !self::$payment->isGatewayExist($aVals['gateway']))
         {
-            exit(json_encode(array('notice' => __('Please select gateway'))));
+            exit(json_encode(array('notice' => __('Please select gateway', FV_DOMAIN))));
         }
         else if($online && empty($aVals['email']))
         {
-            exit(json_encode(array('notice' => __('Please provide your email'))));
+            exit(json_encode(array('notice' => __('Please provide your email', FV_DOMAIN))));
         }
         else if(!$online && empty($aVals['name']))
         {
-            exit(json_encode(array('notice' => __('Please provide your name'))));
+            exit(json_encode(array('notice' => __('Please provide your name', FV_DOMAIN))));
         }
         else if(!$online && empty($aVals['house']))
         {
-            exit(json_encode(array('notice' => __('Please provide House/Deparment'))));
+            exit(json_encode(array('notice' => __('Please provide House/Deparment', FV_DOMAIN))));
         }
         else if(!$online && empty($aVals['street']))
         {
-            exit(json_encode(array('notice' => __('Please provide street'))));
+            exit(json_encode(array('notice' => __('Please provide street', FV_DOMAIN))));
         }
         else if(!$online && empty($aVals['city']))
         {
-            exit(json_encode(array('notice' => __('Please provide city'))));
+            exit(json_encode(array('notice' => __('Please provide city', FV_DOMAIN))));
         }
         else if(!$online && empty($aVals['state']))
         {
-            exit(json_encode(array('notice' => __('Please provide state'))));
+            exit(json_encode(array('notice' => __('Please provide state', FV_DOMAIN))));
         }
         else if(!$online && empty($aVals['country']))
         {
-            exit(json_encode(array('notice' => __('Please provide country'))));
+            exit(json_encode(array('notice' => __('Please provide country', FV_DOMAIN))));
         }
         else if(self::$payment->updateUserBalance($credits, true, 0))
         {
@@ -505,11 +500,11 @@ class Ajax
             {
                 self::sendRequestPaymentEmail($withdrawlId, $credits, $aVals);
             }
-            exit(json_encode(array('result' => __('Your request has been sent'), 'redirect' => FANVICTOR_URL_REQUEST_HISTORY)));
+            exit(json_encode(array('result' => __('Your request has been sent', FV_DOMAIN), 'redirect' => FANVICTOR_URL_REQUEST_HISTORY)));
         }
         else
         {
-            exit(json_encode(array('notice' => __('Something went wrong! Please try again.'))));
+            exit(json_encode(array('notice' => __('Something went wrong! Please try again.', FV_DOMAIN))));
         }
     }
     
@@ -546,7 +541,7 @@ class Ajax
         {
             exit(json_encode(array('result' => 'true')));
         }
-        exit(json_encode(array('notice' => __('Something went wrong! Please try again.'))));
+        exit(json_encode(array('notice' => __('Something went wrong! Please try again.', FV_DOMAIN))));
     }
     
     public static function activeScoringCategory()
@@ -557,7 +552,7 @@ class Ajax
         {
             exit(json_encode(array('result' => 'true')));
         }
-        exit(json_encode(array('notice' => __('Something went wrong! Please try again.'))));
+        exit(json_encode(array('notice' => __('Something went wrong! Please try again.', FV_DOMAIN))));
     }
     
     public static function loadCbOrgs()
@@ -585,7 +580,7 @@ class Ajax
     {
         $orgsID = $_POST['orgsID'];
         $aFighters = self::$fighters->getFighters(null, null, true);
-        $result = '<option value="">--'.__('Please select fighter').'--</option>';
+        $result = '<option value="">--'.__('Please select fighter', FV_DOMAIN).'--</option>';
         if($aFighters != null)
         {
             foreach($aFighters as $aFighter)
@@ -600,7 +595,7 @@ class Ajax
     {
         $orgsID = $_POST['orgsID'];
         $aTeams = self::$teams->getTeams(null, $orgsID, true);
-        $result = '<option value="">--'.__('Please select team').'--</option>';
+        $result = '<option value="">--'.__('Please select team', FV_DOMAIN).'--</option>';
         if($aTeams != null)
         {
             foreach($aTeams as $aTeam)
@@ -627,11 +622,11 @@ class Ajax
         $reason = $_POST['reason'];
         if(!is_numeric($credits) || (int)$credits < 1)
         {
-            exit(json_encode(array('notice' => __('Credits not valid'))));
+            exit(json_encode(array('notice' => __('Credits not valid', FV_DOMAIN))));
         }
         else if($task == 'remove' && !self::$payment->isAllowWithdraw($credits, $user_id))
         {
-            exit(json_encode(array('notice' => __('Credits must not exceed your available balance'))));
+            exit(json_encode(array('notice' => __('Credits must not exceed your available balance', FV_DOMAIN))));
         }
         else
         {
@@ -640,12 +635,12 @@ class Ajax
                 case 'remove':
                     $decrease = true;
                     $operation = 'DEDUCT';
-                    $msg = __('Successfully deducted');
+                    $msg = __('Successfully deducted', FV_DOMAIN);
                     break;
                 default :
                     $decrease = false;
                     $operation = 'ADD';
-                    $msg = __('Successfully added');
+                    $msg = __('Successfully added', FV_DOMAIN);
                     break;
             }
             if(self::$payment->updateUserBalance($credits, $decrease, 0, $user_id))
@@ -656,7 +651,7 @@ class Ajax
             }
             else
             {
-                exit(json_encode(array('notice' => __('Something went wrong! Please try again.'))));
+                exit(json_encode(array('notice' => __('Something went wrong! Please try again.', FV_DOMAIN))));
             }
         }
     }
@@ -669,7 +664,7 @@ class Ajax
         $response_message = $_POST['response_message'];
         if($action != 'APPROVED' && $action != 'DECLINED')
         {
-            exit(json_encode(array('notice' => __('Please select action'))));
+            exit(json_encode(array('notice' => __('Please select action', FV_DOMAIN))));
         }
         else
         {
@@ -682,11 +677,11 @@ class Ajax
                 if(self::$payment->updateWithdraw($withdrawlID, $aVals) &&
                    self::$payment->updateUserBalance($aWithdrawl['amount'], false, 0, $aWithdrawl['userID']))
                 {
-                    exit(json_encode(array('result' => __('Successfully updated'))));
+                    exit(json_encode(array('result' => __('Successfully updated', FV_DOMAIN))));
                 }
                 else
                 {
-                    exit(json_encode(array('result' => __('Something went wrong! Please try again.'))));
+                    exit(json_encode(array('result' => __('Something went wrong! Please try again.', FV_DOMAIN))));
                 }
             }
             else if($action == 'APPROVED' && $aWithdrawl['status'] != 'APPROVED')
@@ -712,7 +707,7 @@ class Ajax
                     }
                     else 
                     {
-                        exit(json_encode(array('notice' => __('This user does not provide email for online transaction'))));
+                        exit(json_encode(array('notice' => __('This user does not provide email for online transaction', FV_DOMAIN))));
                     }
                 }
                 else 
@@ -722,17 +717,17 @@ class Ajax
                                     'processedDate' => date('Y-m-d H:i:s'));
                     if(self::$payment->updateWithdraw($withdrawlID, $aVals))
                     {
-                        exit(json_encode(array('result' => __('Successfully updated'))));
+                        exit(json_encode(array('result' => __('Successfully updated', FV_DOMAIN))));
                     }
                     else
                     {
-                        exit(json_encode(array('result' => __('Something went wrong! Please try again.'))));
+                        exit(json_encode(array('result' => __('Something went wrong! Please try again.', FV_DOMAIN))));
                     }
                 }
             }
             else
             {
-                exit(json_encode(array('result' => __('Something went wrong! Please try again.'))));
+                exit(json_encode(array('result' => __('Something went wrong! Please try again.', FV_DOMAIN))));
             }
         }
     }
@@ -788,7 +783,7 @@ class Ajax
                                         <td colspan="6">
                                             <div class="table">
                                                 <div class="table_left">
-                                                    '.__('Winner').':
+                                                    '.__('Winner', FV_DOMAIN).':
                                                 </div>
                                                 <div class="table_right">
                                                     <select data-name="rounds" name="val[winnerID]['.$aFight['fightID'].']">
@@ -824,7 +819,7 @@ class Ajax
                         <td colspan="6">
                             <div class="table">
                                 <div class="table_left">
-                                    '.__('Team Score').' 1:
+                                    '.__('Team Score', FV_DOMAIN).' 1:
                                 </div>
                                 <div class="table_right">
                                     <input type="text" size="10" name="val[team1score]['.$fightID.']" value="'.$team1score.'">
@@ -837,7 +832,7 @@ class Ajax
                         <td colspan="6">
                             <div class="table">
                                 <div class="table_left">
-                                    '.__('Team Score').' 2:
+                                    '.__('Team Score', FV_DOMAIN).' 2:
                                 </div>
                                 <div class="table_right">
                                     <input type="text" size="10" name="val[team2score]['.$fightID.']" value="'.$team2score.'">
@@ -855,7 +850,7 @@ class Ajax
         $sResult = '<td colspan="6">
                                         <div class="table">
                                             <div class="table_left">
-                                                '.__('Method of victory').':
+                                                '.__('Method of victory', FV_DOMAIN).':
                                             </div>
                                             <div class="table_right">
                                                 <select data-name="rounds" name="val[methodID]['.$fightID.']">
@@ -884,7 +879,7 @@ class Ajax
         $sResult = '<td colspan="6">
                                         <div class="table">
                                             <div class="table_left">
-                                                '.__('Round').':
+                                                '.__('Round', FV_DOMAIN).':
                                             </div>
                                             <div class="table_right">
                                                 <select data-name="rounds" name="val[roundID]['.$fightID.']">
@@ -913,7 +908,7 @@ class Ajax
         $sResult = '<td colspan="6">
                                         <div class="table">
                                             <div class="table_left">
-                                                '.__('Minute').':
+                                                '.__('Minute', FV_DOMAIN).':
                                             </div>
                                             <div class="table_right">
                                                 <select data-name="rounds" name="val[minuteID]['.$fightID.']">
@@ -961,7 +956,7 @@ class Ajax
         }
         if(!$success)
         {
-            exit('<div class=\"error_message\">'.__('Something went wrong! Please try again').'</div>');
+            exit('<div class=\"error_message\">'.__('Something went wrong! Please try again', FV_DOMAIN).'</div>');
         }
         exit('Successfully updated');
     }
@@ -972,15 +967,15 @@ class Ajax
         $status = $_POST['status'];
         if(!self::$pools->isPoolExist($iPoolID))
         {
-            exit(json_encode(array('notice' => __('This pool does not exist'))));
+            exit(json_encode(array('notice' => __('This pool does not exist', FV_DOMAIN))));
         }
         else if($status != "NEW" && $status != "COMPLETE")
         {
-            exit(json_encode(array('notice' => __('Please select status'))));
+            exit(json_encode(array('notice' => __('Please select status', FV_DOMAIN))));
         }
         else if(!self::$pools->isPoolResultsUpdated($iPoolID))
         {
-            exit(json_encode(array('notice' => __('Please update pool result'))));
+            exit(json_encode(array('notice' => __('Please update pool result', FV_DOMAIN))));
         }
         else if($status == 'COMPLETE')
         {
@@ -990,13 +985,13 @@ class Ajax
             }
             else 
             {
-                exit(json_encode(array('notice' => __('Something went wrong! Please try again'))));
+                exit(json_encode(array('notice' => __('Something went wrong! Please try again', FV_DOMAIN))));
             }
         }
         else 
         {
             self::$pools->updatePoolStatus($iPoolID, 'NEW');
-            exit(json_encode(array('result' => __('Successfully updated'))));
+            exit(json_encode(array('result' => __('Successfully updated', FV_DOMAIN))));
         }
     }
     
@@ -1006,13 +1001,13 @@ class Ajax
         switch($result)
         {
             case 2:
-                exit(json_encode(array('notice' => __('Event does not exist'))));
+                exit(json_encode(array('notice' => __('Event does not exist', FV_DOMAIN))));
                 break;
             case 1:
-                exit(json_encode(array('result' => __('Successfully reversed'))));
+                exit(json_encode(array('result' => __('Successfully reversed', FV_DOMAIN))));
                 break;;
             default :
-                exit(json_encode(array('notice' => __('Something went wrong! Please try again'))));
+                exit(json_encode(array('notice' => __('Something went wrong! Please try again', FV_DOMAIN))));
         }
     }
     /////////////////////////////////end update complete/////////////////////////////////

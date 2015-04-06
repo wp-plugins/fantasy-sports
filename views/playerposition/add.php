@@ -1,8 +1,8 @@
 <div class="wrap">
     <h2>
-        <?=!$bIsEdit ? __("Add Player Position") : __("Edit Player Position");?>
+        <?=!$bIsEdit ? __("Add Player Position", FV_DOMAIN) : __("Edit Player Position", FV_DOMAIN);?>
         <?php if($bIsEdit):?>
-        <a class="add-new-h2" href="<?=self::$url;?>"><?=__("Add New");?></a>
+        <a class="add-new-h2" href="<?=self::$url;?>"><?=__("Add New", FV_DOMAIN);?></a>
         <?php endif;?>
     </h2>
     <?=settings_errors();?>
@@ -10,7 +10,7 @@
         <input type="hidden" name="val[id]" value="<?=$aForms['id'];?>" />
         <table class="form-table">
             <tr valign="top">
-                <th scope="row"><?=__("Sport");?> <span class="description">(<?=__("required");?>)</span></th>
+                <th scope="row"><?=__("Sport");?> <span class="description">(<?=__("required", FV_DOMAIN);?>)</span></th>
                 <td>
                     <?php if($aSports != null):?>
 
@@ -46,13 +46,13 @@
                 </td>
             </tr>
             <tr valign="top">
-                <th scope="row"><?=__("Name");?> <span class="description">(<?=__("required");?>)</span></th>
+                <th scope="row"><?=__("Name");?> <span class="description">(<?=__("required", FV_DOMAIN);?>)</span></th>
                 <td>
                     <input type="text" name="val[name]" class="regular-text ltr" value="<?=$aForms['name'];?>" />
                 </td>
             </tr>
             <tr valign="top">
-                <th scope="row"><?=__("Player Quantity");?> <span class="description">(<?=__("required");?>)</span></th>
+                <th scope="row"><?=__("Player Quantity");?> <span class="description">(<?=__("required", FV_DOMAIN);?>)</span></th>
                 <td>
                     <input type="text" name="val[default_quantity]" class="regular-text ltr" value="<?=empty($aForms['default_quantity']) ? 1 : $aForms['default_quantity'];?>" />
                 </td>

@@ -25,6 +25,8 @@ jQuery.payment =
     requestPayment : function(sTitle)
     {
         var payment = this;
+        var send = wpfs['send'];
+        var cancel = wpfs['cancel'];
         var dialog = jQuery("#dlgRequestPayment").dialog({
             height: 'auto',
             width:'500',
@@ -36,10 +38,10 @@ jQuery.payment =
                 payment.loadUserBalance();
             },
             buttons: {
-                "Send": function() {
+                send: function() {
                     payment.sendRequestPayment();
                 },
-                Cancel: function() {
+                cancel: function() {
                     dialog.dialog( "close" );
                 }
             },
@@ -73,7 +75,7 @@ jQuery.payment =
                 window.location = data.redirect;
             }
             jQuery(".ui-dialog").find('button').removeClass('ui-state-disabled').removeAttr('disabled');
-            jQuery(".ui-dialog").find('button:last').prev().find('span').empty().append('Send');
+            jQuery(".ui-dialog").find('button:last').prev().find('span').empty().append(wpfs['send']);
         })
     },
 }

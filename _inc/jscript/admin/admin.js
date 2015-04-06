@@ -11,7 +11,7 @@ jQuery.admin =
                 {
                     alert('Please select an item');
                 }
-                else if(confirm('Are you sure?'))
+                else if(confirm(wpfs['a_sure']))
                 {
                     task.val("delete");
                     this.doSubmit();

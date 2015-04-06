@@ -10,8 +10,8 @@ class TableTransactions extends WP_List_Table
         global $status, $page;
         $this->data = null;
         parent::__construct( array(
-            'singular'  => __( 'book', 'mylisttable' ),     //singular name of the listed records
-            'plural'    => __( 'books', 'mylisttable' ),   //plural name of the listed records
+            'singular'  => __( 'book', 'mylisttable' , FV_DOMAIN),     //singular name of the listed records
+            'plural'    => __( 'books', 'mylisttable' , FV_DOMAIN),   //plural name of the listed records
             'ajax'      => false        //does this table support ajax?
         ) );
     }
@@ -39,7 +39,7 @@ class TableTransactions extends WP_List_Table
             case 'contest':
                 if($item['leagueID'] > 0)
                 {
-                    return '<a href="#" onclick="return jQuery.statistic.loadLeagueDetail('.$item['leagueID'].', \'Transaction\')">'.__('View').'</a>';
+                    return '<a href="#" onclick="return jQuery.statistic.loadLeagueDetail('.$item['leagueID'].', \'Transaction\')">'.__('View', FV_DOMAIN).'</a>';
                 }
                 return '';
             default:
@@ -50,15 +50,15 @@ class TableTransactions extends WP_List_Table
     function get_columns()
     {
         $columns = array(
-            'ID' => __('ID', 'mylisttable'),
-            'uID' => __('uID', 'mylisttable'),
-            'name' => __('Name', 'mylisttable'),
-            'type' => __('Type', 'mylisttable'),
-            'amount' => __('Amount', 'mylisttable'),
-            'new_balance' => __('Balance', 'mylisttable'),
-            'date' => __('Date', 'mylisttable'),
-            'status' => __('Status', 'mylisttable'),
-            'contest' => __('Contest', 'mylisttable'),
+            'ID' => __('ID', FV_DOMAIN),
+            'uID' => __('uID', FV_DOMAIN),
+            'name' => __('Name', FV_DOMAIN),
+            'type' => __('Type', FV_DOMAIN),
+            'amount' => __('Amount', FV_DOMAIN),
+            'new_balance' => __('Balance', FV_DOMAIN),
+            'date' => __('Date', FV_DOMAIN),
+            'status' => __('Status', FV_DOMAIN),
+            'contest' => __('Contest', FV_DOMAIN),
         );		
         return $columns;
     }

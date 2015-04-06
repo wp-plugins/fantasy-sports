@@ -119,8 +119,8 @@ class Pools extends Model
         }
         return $data;
     }
-	
-	public function getNewPools()
+    
+    public function getNewPools()
     {
         return $this->sendRequest("getNewPools");
     }
@@ -288,7 +288,7 @@ class Pools extends Model
         return $aFights;
     }
     
-    public function calculatePrizes($type, $structure, $size, $entryFee)
+    public function calculatePrizes($type, $structure, $size, $entryFee, $payouts = null)
     {
         //default percent
         $winnerPercent = get_option('fanvictor_winner_percent');
@@ -311,15 +311,56 @@ class Pools extends Model
                     $result[] = round($prize, 2);
                     break;
                 case "top3":
-                    $result[] = $this->addInsufficientZeroToMoneyFormat(round($prize * $firstPercent / 100, 2));//1st
-                    $result[] = $this->addInsufficientZeroToMoneyFormat(round($prize * $secondPercent / 100, 2));//2nd
-                    $result[] = $this->addInsufficientZeroToMoneyFormat(round($prize * $thirdPercent / 100, 2));//3th
+                    if($payouts != null)
+                    {
+                        foreach($payouts as $payout)
+                        {
+                            $pos = '';
+                            $from = $this->parsePosition($payout['from']);
+                            $to = $this->parsePosition($payout['to']);
+                            if($from == $to)
+                            {
+                                $pos = $from;
+                            }
+                            else 
+                            {
+                                $pos = $from." - ".$to;
+                            }
+                            $result[$pos] = $this->addInsufficientZeroToMoneyFormat(round($prize * $payout['percent'] / 100, 2));
+                        }
+                    }
+                    else 
+                    {
+                        $result["1st"] = $this->addInsufficientZeroToMoneyFormat(round($prize * $firstPercent / 100, 2));//1st
+                        $result["2nd"] = $this->addInsufficientZeroToMoneyFormat(round($prize * $secondPercent / 100, 2));//2nd
+                        $result["3rd"] = $this->addInsufficientZeroToMoneyFormat(round($prize * $thirdPercent / 100, 2));//3th
+                    }
                     break;
                 /*default :
                     break;*/
             }
         }
         return $result;
+    }
+    
+    private function parsePosition($num)
+    {
+        switch ($num)
+        {
+            case 1:
+                $num = $num."st";
+                break;
+            case 2:
+                $num = $num."nd";
+                break;
+            case 3:
+                $num = $num."rd";
+                break;
+            default :
+                $num = $num."th";
+                break;
+        }
+        return $num;
     }
     
     private function addInsufficientZeroToMoneyFormat($str)

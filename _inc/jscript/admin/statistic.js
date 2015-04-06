@@ -59,8 +59,8 @@ jQuery.statistic =
                     <thead>\n\
                         <tr>\n\
                             <th style="width: 30px">Id</th>\n\
-                            <th style="width: 60px">Name</th>\n\
-                            <th style="width: 60px">Points</th>\n\
+                            <th style="width: 60px">' + wpfs['a_name'] + '</th>\n\
+                            <th style="width: 60px">' + wpfs['a_points'] + '</th>\n\
                         </tr>\n\
                     </thead>\n\
                     <tbody>\n\
@@ -74,12 +74,12 @@ jQuery.statistic =
                         <thead>\n\
                             <tr>\n\
                                 <th style="width: 30px"></th>\n\
-                                <th style="width: 60px">Prizes</th>\n\
-                                <th style="width: 60px">Awarded</th>\n\
-                                <th style="width: 60px">Entry Fee</th>\n\
-                                <th style="width: 40px">Size</th>\n\
-                                <th style="width: 60px">Entries</th>\n\
-                                <th style="width: 70px">Total Cash</th>\n\
+                                <th style="width: 60px">' + wpfs['a_prizes'] + '</th>\n\
+                                <th style="width: 60px">' + wpfs['a_awarded'] + '</th>\n\
+                                <th style="width: 60px">Entry Fee' + wpfs['a_fee'] + '</th>\n\
+                                <th style="width: 40px">Size' + wpfs['a_size'] + '</th>\n\
+                                <th style="width: 60px">Entries' + wpfs['a_entries'] + '</th>\n\
+                                <th style="width: 70px">' + wpfs['a_total'] + '</th>\n\
                             </tr>\n\
                         </thead>\n\
                         <tbody>\n\

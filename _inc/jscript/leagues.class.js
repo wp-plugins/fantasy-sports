@@ -146,7 +146,7 @@ leaguesClass.prototype.putCompetitorIntoRankingGrid = function(userID, status)
 			}
 			else
 			{
-				s += '<div>No results for this fight</div>';
+				s += '<div>' + wpfs['fight_no_result'] + '</div>';
 			}
 			
 			jQuery("#league_history .fight_" + id).html(s);

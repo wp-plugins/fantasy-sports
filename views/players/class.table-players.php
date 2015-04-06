@@ -12,8 +12,8 @@ class TablePlayers extends WP_List_Table
         global $status, $page;
         $this->data = null;
         parent::__construct( array(
-            'singular'  => __( 'book', 'mylisttable' ),     //singular name of the listed records
-            'plural'    => __( 'books', 'mylisttable' ),   //plural name of the listed records
+            'singular'  => __( 'book', 'mylisttable' , FV_DOMAIN),     //singular name of the listed records
+            'plural'    => __( 'books', 'mylisttable' , FV_DOMAIN),   //plural name of the listed records
             'ajax'      => false        //does this table support ajax?
         ) );
     }
@@ -56,11 +56,11 @@ class TablePlayers extends WP_List_Table
     {
         $columns = array(
             'cb'        => '<input type="checkbox" />',
-            'image' => __('Image', 'mylisttable'),
-            'name' => __('Name', 'mylisttable'),
-            'salary' => __('Salary', 'mylisttable'),
-            'team' => __('Team', 'mylisttable'),
-            'position' => __('Position', 'mylisttable'),
+            'image' => __('Image', FV_DOMAIN),
+            'name' => __('Name', FV_DOMAIN),
+            'salary' => __('Salary', FV_DOMAIN),
+            'team' => __('Team', FV_DOMAIN),
+            'position' => __('Position', FV_DOMAIN),
             'edit'    => '',
         );
         return $columns;

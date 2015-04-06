@@ -102,7 +102,7 @@ class Createcontest
 
         if((int)$leagueID < 1)
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __("Something went wrong! Please try again"), true);
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __("Something went wrong! Please try again", FV_DOMAIN), true);
         }
         else if($_POST['game_type'] == 'playerdraft')
         {
@@ -119,45 +119,51 @@ class Createcontest
         $valid = self::$fanvictor->validCreateLeague($_POST['organizationID'], $_POST['poolID'], 
                                                      $_POST['game_type'], $_POST['leaguename'], 
                                                      isset($_POST['fightID']) ? $_POST['fightID'] : null, 
-                                                     $_POST['roundID']);
+                                                     $_POST['roundID'], 
+                                                     isset($_POST['payouts_from']) ? $_POST['payouts_from'] : null,
+                                                     isset($_POST['payouts_to']) ? $_POST['payouts_to'] : null,
+                                                     isset($_POST['percentage']) ? $_POST['percentage'] : null);
         switch($valid)
         {
             case 2;
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Sport does not exist. Please try again.'), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Sport does not exist. Please try again.', FV_DOMAIN), true);
                 break;
             case 3;
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Date does not exist. Please try again.'), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Date does not exist. Please try again.', FV_DOMAIN), true);
                 break;
             case 4;
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Fixture does not exist. Please try again.'), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Fixture does not exist. Please try again.', FV_DOMAIN), true);
                 break;
             case 5;
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Please select at least a fixture.'), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Please select at least a fixture.', FV_DOMAIN), true);
                 break;
             case 6;
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __('This game type does not exist.'), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('This game type does not exist.', FV_DOMAIN), true);
                 break;
             case 7;
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __('This sport does not support playerdraft type.'), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('This sport does not support playerdraft type.', FV_DOMAIN), true);
                 break;
             case 8;
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Please enter league name'), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Please enter league name', FV_DOMAIN), true);
                 break;
             case 9;
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Round does not exist. Please try again'), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Round does not exist. Please try again', FV_DOMAIN), true);
                 break;
             case 10;
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Please select at least two rounds'), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Please select at least two rounds', FV_DOMAIN), true);
+                break;
+            case 11;
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Invalid payouts', FV_DOMAIN), true);
                 break;
         }
 
         if(!in_array($_POST['leagueSize'], get_option('fanvictor_league_size')))
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('League size does not exist'), true);
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __('League size does not exist', FV_DOMAIN), true);
         }
         else if($_POST['entry_fee'] > 0 && !in_array($_POST['entry_fee'], get_option('fanvictor_entry_fee')))
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Entry fee does not exist'), true);
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Entry fee does not exist', FV_DOMAIN), true);
         }
     }
 }

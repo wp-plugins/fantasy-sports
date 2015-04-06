@@ -35,6 +35,7 @@ class Entry
     public static function entry()
     {
         $leagueID = pageSegment(3);
+        $entry_number = $_GET['num'];
         
         //league
         $league = self::$fanvictor->getLeagueDetail($leagueID);
@@ -45,7 +46,7 @@ class Entry
         
         if(!self::$fanvictor->isPlayerDraftLeagueExist($leagueID))
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Contest does not exist'), true);
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Contest does not exist', FV_DOMAIN), true);
         }
         else if($aPool['status'] != 'NEW')//check league completed
         {
@@ -53,15 +54,15 @@ class Entry
         }
         
         //player picks
-        $playerPicks = self::$fanvictor->getPlayerPicks($leagueID);
+        $playerPicks = self::$fanvictor->getPlayerPicks($leagueID, $entry_number);
 
         if($playerPicks == null)
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('You did not select any players'));
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __('You did not select any players', FV_DOMAIN));
         }
         else
         {
-            $data = self::$fanvictor->getGameEntryData($leagueID);
+            $data = self::$fanvictor->getGameEntryData($leagueID, $entry_number);
             $league = $data['league'];
             $aPool = $data['pool'];
             $aFights = $data['fights'];

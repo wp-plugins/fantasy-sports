@@ -4826,8 +4826,6 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
 }
 .f-user-score-summary .f-rank:before, .f-user-score-summary .f-rank:after {
     color: #949494;
-    content: "⚌";
-    font-family: "FanDuel";
     font-size: 10px;
     line-height: 1;
     position: absolute;
@@ -4838,7 +4836,6 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
     color: #7ab800;
 }
 .f-user-score-summary .f-rank:after {
-    content: "→";
     right: 12px;
     text-shadow: 1px 1px 0 #f5f5f5, -1px -1px 0 #f5f5f5, 1px -1px 0 #f5f5f5, -1px 1px 0 #f5f5f5, 1px 1px 0 #f5f5f5;
 }
@@ -5099,7 +5096,7 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
 }
 .f-roster-row:before {
     background: none repeat scroll 0 0 transparent !important;
-    content: "△";
+    content: "";
     display: block;
     font-family: "FanDuel";
     font-size: 12px;

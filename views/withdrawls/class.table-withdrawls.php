@@ -8,8 +8,8 @@ class TableWithdrawls extends WP_List_Table
         global $status, $page;
         $this->data = null;
         parent::__construct( array(
-            'singular'  => __( 'book', 'mylisttable' ),     //singular name of the listed records
-            'plural'    => __( 'books', 'mylisttable' ),   //plural name of the listed records
+            'singular'  => __( 'book', 'mylisttable' , FV_DOMAIN),     //singular name of the listed records
+            'plural'    => __( 'books', 'mylisttable' , FV_DOMAIN),   //plural name of the listed records
             'ajax'      => false        //does this table support ajax?
         ) );
     }
@@ -47,15 +47,15 @@ class TableWithdrawls extends WP_List_Table
     function get_columns()
     {
         $columns = array(
-            'ID' => __('ID', 'mylisttable'),
-            'uID' => __('uID', 'mylisttable'),
-            'name' => __('Name', 'mylisttable'),
-            'amount' => __('Amount', 'mylisttable'),
-            'real_amount' => __('Real Amount', 'mylisttable'),
-            'new_balance' => __('Balance', 'mylisttable'),
-            'requestDate' => __('Request Date', 'mylisttable'),
-            'status' => __('Status', 'mylisttable'),
-            'action' => __('Action', 'mylisttable'),
+            'ID' => __('ID', FV_DOMAIN),
+            'uID' => __('uID', FV_DOMAIN),
+            'name' => __('Name', FV_DOMAIN),
+            'amount' => __('Amount', FV_DOMAIN),
+            'real_amount' => __('Real Amount', FV_DOMAIN),
+            'new_balance' => __('Balance', FV_DOMAIN),
+            'requestDate' => __('Request Date', FV_DOMAIN),
+            'status' => __('Status', FV_DOMAIN),
+            'action' => __('Action', FV_DOMAIN),
         );		
         return $columns;
     }

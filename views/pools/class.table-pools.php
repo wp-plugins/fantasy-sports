@@ -8,8 +8,8 @@ class TablePools extends WP_List_Table
         global $status, $page;
         $this->data = null;
         parent::__construct( array(
-            'singular'  => __( 'book', 'mylisttable' ),     //singular name of the listed records
-            'plural'    => __( 'books', 'mylisttable' ),   //plural name of the listed records
+            'singular'  => __( 'book', 'mylisttable' , FV_DOMAIN),     //singular name of the listed records
+            'plural'    => __( 'books', 'mylisttable' , FV_DOMAIN),   //plural name of the listed records
             'ajax'      => false        //does this table support ajax?
         ) );
     }
@@ -64,11 +64,11 @@ class TablePools extends WP_List_Table
     {
         $columns = array(
             'cb'        => '<input type="checkbox" />',
-            'image' => __('Image', 'mylisttable'),
-            'poolName' => __('Name', 'mylisttable'),
-            'playerdraft_result'    => 'Player Draft',
-            'result'    => 'Fight',
-            'status'    => 'Status',
+            'image' => __('Image', FV_DOMAIN),
+            'poolName' => __('Name', FV_DOMAIN),
+            'playerdraft_result'    =>  __('Player Draft', FV_DOMAIN),
+            'result'    =>  __('Fight', FV_DOMAIN),
+            'status'    =>  __('Status', FV_DOMAIN),
             'edit'    => '',
         );
         return $columns;

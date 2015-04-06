@@ -12,9 +12,10 @@ class Rankings
 	public static function process()
 	{  
         $leagueID = pageSegment(3);
+        $entry_number = $_GET['num'];
         if(self::$fanvictor->isPlayerDraftLeagueExist($leagueID))
         {
-            redirect(FANVICTOR_URL_CONTEST.$leagueID, null, true);
+            redirect(FANVICTOR_URL_CONTEST.$leagueID.'/?num='.$entry_number, null, true);
         }
         else 
         {
@@ -42,7 +43,7 @@ class Rankings
         
         if(!self::$fanvictor->isNormalLeagueExist($leagueID))
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Contest not found'));
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Contest not found', FV_DOMAIN));
         }
         else 
         {

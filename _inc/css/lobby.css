@@ -392,7 +392,7 @@ div.f-lobby td, div.f-lobby th {
     box-sizing: border-box;
 }
 div.f-lobby div.f-items {
-    border-left: 1px solid black;
+    /*border-left: 1px solid black;*/
     color: #393939;
 }
 div.f-lobby div.f-filter + div.f-items {
@@ -1367,4 +1367,93 @@ ul.f-icon-list {
 ul.f-unstyled li{
     margin: 0;
     padding: 0 !important;
+}
+/*Lobby*/
+#lobbyData > div > div,
+.lobbyHeader > div > div {
+    float: left;
+    width: 14.285%;
+    box-sizing: border-box;
+    height: auto;
+}
+#lobbyData > div > div.f-entry,
+.lobbyHeader > div > div.f-entry{
+    width: 10%;
+}
+#lobbyData > div > div.f-title,
+.lobbyHeader > div > div.f-title{
+    width:33.14%;
+    padding-bottom:0;
+    background: none;
+}
+#lobbyContent div.f-entryfee,
+#lobbyContent div.f-entries,
+#lobbyContent div.f-prizes{
+    width:7%;
+}
+#lobbyContent div.f-starttime
+{
+    width:21.57%
+}
+.f-lobbyitem:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+#lobbyData .f-entries{
+    text-transform: lowercase;
+}
+.lobbyHeader{
+    overflow: hidden;
+    background: #f2f2f2;
+    border-bottom: 1px solid #CFCFCE;
+    height: 50px;
+    line-height: 50px;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    color: #717171;
+    padding:0 10px;
+}
+ div.f-lobby #lobbyContent div.f-entryfee{
+    margin-top: 0;
+    padding-top: 0;
+}
+ div.f-lobby #lobbyContent .lobbyHeader div.f-entryfee{
+    font-size:12px;
+}
+body div.f-lobby div.f-entryfee > div{
+    margin:0;
+}
+#lobbyData .f-gametype{
+    text-transform: lowercase;
+}
+a.f-title-link:hover,
+a.f-title-link {
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #3a589b;
+}
+#lobbyData{
+    padding:10px;
+}
+.f-lobbyitem + .f-lobbyitem {
+    border-top: 1px solid #dfdfdf;
+    padding-top: 10px;
+}
+.f-lobbyitem {
+    padding-bottom: 10px;
+}
+div.f-lobby .f-filter div.f-entryfee{
+    height: 70px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: bold;
+    color: #000;
+    padding-top: 44px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+span.ftMobileTitle {
+    display: none;
 }

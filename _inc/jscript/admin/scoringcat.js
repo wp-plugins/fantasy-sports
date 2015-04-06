@@ -41,7 +41,7 @@ jQuery.scoringcat =
         }
         if(html == '')
         {
-            html += '<option value="">--Please select organization first--</option>';
+            html += '<option value="">--' + wpfs['a_sb_organization'] + '--</option>';
         }
         jQuery('#htmlScoringTypes').empty().append(html);
     },

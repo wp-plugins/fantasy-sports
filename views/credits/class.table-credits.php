@@ -8,8 +8,8 @@ class TableCredits extends WP_List_Table
         global $status, $page;
         $this->data = null;
         parent::__construct( array(
-            'singular'  => __( 'book', 'mylisttable' ),     //singular name of the listed records
-            'plural'    => __( 'books', 'mylisttable' ),   //plural name of the listed records
+            'singular'  => __( 'book', 'mylisttable' , FV_DOMAIN),     //singular name of the listed records
+            'plural'    => __( 'books', 'mylisttable' , FV_DOMAIN),   //plural name of the listed records
             'ajax'      => false        //does this table support ajax?
         ) );
     }
@@ -27,8 +27,8 @@ class TableCredits extends WP_List_Table
             case 'payment_request_pending':
                 return $item['payment_request_pending'];
             case 'action':
-                return '<a onclick="jQuery.admin.userCredits(this, '.$item['ID'].', \'add\', \'Add credit\')" href="#">Add credit</a>
-                        <a onclick="jQuery.admin.userCredits(this, '.$item['ID'].', \'remove\', \'Remove credit\')" href="#">Remove credit</a>';
+                return '<a onclick="jQuery.admin.userCredits(this, '.$item['ID'].', \'add\', \''.__('Add credit', FV_DOMAIN).'\')" href="#">Add credit</a>
+                        <a onclick="jQuery.admin.userCredits(this, '.$item['ID'].', \'remove\', \''.__('Remove credit', FV_DOMAIN).'\')" href="#">Remove credit</a>';
             default:
                 return print_r( $item, true ) ; //Show the whole array for troubleshooting purposes
         }
@@ -37,11 +37,11 @@ class TableCredits extends WP_List_Table
     function get_columns()
     {
         $columns = array(
-            'ID' => __('userID', 'mylisttable'),
-            'name' => __('Name', 'mylisttable'),
-            'balance' => __('Total Balance', 'mylisttable'),
-            'payment_request_pending' => __('Payment Request Pending', 'mylisttable'),
-            'action' => __('Action', 'mylisttable'),
+            'ID' => __('userID', FV_DOMAIN),
+            'name' => __('Name', FV_DOMAIN),
+            'balance' => __('Total Balance', FV_DOMAIN),
+            'payment_request_pending' => __('Payment Request Pending', FV_DOMAIN),
+            'action' => __('Action', FV_DOMAIN),
         );		
         return $columns;
     }

@@ -1,7 +1,7 @@
 <div class="wrap">
     <h2>
-        <?=__("Manage Teams");?>
-        <a class="add-new-h2" href="<?=self::$urladdnew;?>"><?=__("Add New");?></a>
+        <?=__("Manage Teams", FV_DOMAIN);?>
+        <a class="add-new-h2" href="<?=self::$urladdnew;?>"><?=__("Add New", FV_DOMAIN);?></a>
     </h2>
     <?=settings_errors();?>
     <form method="get">

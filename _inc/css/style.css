@@ -320,3 +320,96 @@ button.close {
         width: 100%;
     }
 }
+/*Submit pick*/
+.contestStructure .left {
+    width: 50%;
+    float: left;
+}
+.contestStructure .right{
+    overflow: hidden;
+}
+.contestStructure .left > div .label {
+float: left;
+width: 150px;
+font-weight: bold;
+}
+.contestStructure .left > div:after {
+    content: '';
+    clear: both;
+    display: block;
+}
+.contestStructure {
+margin-bottom: 10px;
+}
+.contestStructure:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.contestStructure .right > div {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: 1px solid #dfdfdf;
+    background: #f1f1f1;
+}
+.boxPrizes span,
+.boxEntry span {
+    font-weight: bold;
+}
+/*New css for table*/
+.tableLiveEntries > div > div{
+    float:left;
+    width: 11.111%;
+}
+.tableLiveEntries.table11 > div > div{
+    width: 9.09%;
+}
+.tableLiveEntries.table6 > div > div{
+    width:16.666%;
+}
+.tableTitle:after{
+    content:'';
+    display:block;
+    clear:both;
+}
+.tableTitle{
+    border: none;
+    background: #f2f2f2;
+    border-bottom: 1px solid #CFCFCE;
+    padding: 5px 10px;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #717171;
+}
+.tableLiveEntriesContent > div:after,
+div#tableLiveEntriesContent > div:after {
+    content: '';
+    display: block;
+    clear: both;
+}
+.tableLiveEntriesContent > div + div,
+div#tableLiveEntriesContent > div + div{
+    border-top:1px solid #dfdfdf;
+    
+}
+div.tableLiveEntriesContent,
+div#tableLiveEntriesContent{
+    font-size: 13px;
+    line-height: 16px;
+    border-left: 1px solid #dfdfdf;
+    border-right: 1px solid #dfdfdf;
+    border-bottom: 1px solid #dfdfdf;
+}
+div.tableLiveEntriesContent > div > div,
+div#tableLiveEntriesContent > div > div {
+    padding: 10px 5px;
+    box-sizing: border-box;
+}
+
+.tableLiveEntries > div > div > span{
+    display:none;
+}
+
+

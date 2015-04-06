@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h2><?=__("Manage Credits");?></h2>
+    <h2><?=__("Manage Credits", FV_DOMAIN);?></h2>
     <?=settings_errors();?>
     <form method="get">
         <input type="hidden" name="page" value="<?=$_REQUEST['page'];?>" />

@@ -107,7 +107,7 @@ jQuery.fight =
     
     removeFight : function(oObj)
     {
-        if(confirm('Are you sure?'))
+        if(confirm(wpfs['a_sure']))
         {
             jQuery(oObj).parents('.fight_container').remove();
             this.fixFightIndexs();
@@ -289,7 +289,7 @@ jQuery.fight =
     },
     
     updatePoolStatus: function(iPoolID, oObj, curValue){
-        if(confirm('Are you sure?'))
+        if(confirm(wpfs['a_sure']))
         {
             var data = {
                 action: 'updatePoolComplete',
@@ -568,7 +568,7 @@ jQuery.fight =
     
     reverseResult: function(poolID, oObj)
     {
-        if(confirm("Are you sure?"))
+        if(confirm(wpfs['a_sure']))
         {
             jQuery(oObj).parents('tr').find('.btn-reverse').attr('disabled', 'true');
             var data = 'action=reverseResult&poolID=' + poolID;

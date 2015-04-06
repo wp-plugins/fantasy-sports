@@ -205,7 +205,7 @@ User login: ".$user->user_login;
         require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER."lobby.php");
         add_action( 'widgets_init', function(){
             register_sidebar( array(
-                'name' => __('Fan Victor Home Sidebar'),
+                'name' => __('Fan Victor Home Sidebar', FV_DOMAIN),
                 'id' => 'fanvictor_home_sidebar',
             ));
             register_widget( 'Lobby' );
@@ -706,7 +706,7 @@ function redirect($url, $msg = null, $blank = false)
 {
     if($msg != null && function_exists('add_settings_error'))
     {
-        add_settings_error('general', 'settings-updated', __($msg), 'updated');
+        add_settings_error('general', 'settings-updated', __($msg), 'updated', FV_DOMAIN);
         set_transient('settings_errors', get_settings_errors(), 30);
     }
     else if($msg != null)

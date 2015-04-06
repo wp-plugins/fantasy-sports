@@ -34,32 +34,31 @@ class Contest
     public static function contest()
     {
         $leagueId = pageSegment(3);
+        $entry_number = !empty($_GET['num']) ? $_GET['num'] : 1;
         if(!self::$fanvictor->isPlayerDraftLeagueExist($leagueId))
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Please create a new contest'), true);
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Please create a new contest', FV_DOMAIN), true);
         }
         else 
         {
-            //league
-            $league = self::$fanvictor->getLeagueDetail($leagueId);
+            $aData = self::$fanvictor->getContestResult($leagueId);
+            $league = $aData['league'];
+            $scoringCats = $aData['scoring_cat'];
+            $bonus = $aData['bonus'];
+            $aRounds = $aData['rounds'];
             
             //pool
             self::$pools->selectField(array('startDate'));
-            $aPool = self::$pools->getPools($league[0]['poolID'], null, false, true);
+            $aPool = self::$pools->getPools($league['poolID'], null, false, true);
 
-            $league[0]['startDate'] = $aPool['startDate'];
-            $league = self::$fanvictor->parseLeagueData($league);
+            //$league['startDate'] = $aPool['startDate'];
+            $league = self::$fanvictor->parseLeagueData(array($league));
             $league = $league[0];
 
             //fight
             self::$pools->selectField(array('fightID', 'name', 'fighterID1', 'fighterID2', 'startDate', 'team1score', 'team2score'));
             $aFights = self::$pools->getFights($league['poolID'], explode(',', $league['fixtures']));
             $aFights = self::$pools->parseFightsDataDetail($aFights);
-            
-            //
-            $aData = self::$fanvictor->getContestResult($leagueId);
-            $scoringCats = json_encode($aData['scoring_cat']);
-            $bonus = $aData['bonus'];
 
             include FANVICTOR__PLUGIN_DIR_VIEW.'contest.php';
         }

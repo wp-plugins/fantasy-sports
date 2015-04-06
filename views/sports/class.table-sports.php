@@ -9,8 +9,8 @@ class TableSports extends WP_List_Table
         global $status, $page;
         $this->data = null;
         parent::__construct( array(
-            'singular'  => __( 'book', 'mylisttable' ),     //singular name of the listed records
-            'plural'    => __( 'books', 'mylisttable' ),   //plural name of the listed records
+            'singular'  => __( 'book', 'mylisttable' , FV_DOMAIN),     //singular name of the listed records
+            'plural'    => __( 'books', 'mylisttable' , FV_DOMAIN),   //plural name of the listed records
             'ajax'      => false        //does this table support ajax?
         ) );
     }
@@ -24,8 +24,8 @@ class TableSports extends WP_List_Table
     {
         $columns = array(
             'cb' => '<input type="checkbox" />',
-            'name' => __('Name', 'mylisttable'),
-            'active' => __('Active'),
+            'name' => __('Name', FV_DOMAIN),
+            'active' => __('Active', FV_DOMAIN),
             'edit'    => '',
         );
         return $columns;

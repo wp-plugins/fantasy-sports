@@ -242,7 +242,7 @@ jQuery.playerdraft =
                     {
                         positionName = '';
                     }
-                    jQuery('.f-errorMessage').empty().append("Player cannot be added - all" + positionName + " positions are filled").slideToggle().delay(4000).fadeOut();
+                    jQuery('.f-errorMessage').empty().append(wpfs['fullpositions1'] + positionName + " " + wpfs['fullpositions2']).slideToggle().delay(4000).fadeOut();
                 }
             }
         }
@@ -260,7 +260,7 @@ jQuery.playerdraft =
     
     clearAllPlayer: function()
     {
-        if(confirm('Are you sure you want to clear all players from your team?'))
+        if(confirm(wpfs['players_out_team']))
         {
             jQuery('.f-roster .f-roster-position').each(function(){
                 if(typeof jQuery(this).attr('data-id') != typeof undefined)
@@ -340,11 +340,11 @@ jQuery.playerdraft =
     {
         if(jQuery('.f-roster-position:not(.f-has-player)').length > 0)
         {
-            alert("Please select a player for each position");
+            alert(wpfs['player_each_position']);
         }
         else if(this.salaryCap > 0 && this.salaryRemaining < 0)
         {
-            alert("Your team has exceeded this game's salary cap. Please change your team so it fits under the salary cap before entering");
+            alert(wpfs['team_exceed_salary_cap']);
         }
         else 
         {
@@ -358,7 +358,7 @@ jQuery.playerdraft =
         }
     },
     
-    userResult: function(leagueID, is_curent, userID, username, avatar, rank, totalScore)
+    userResult: function(leagueID, is_curent, userID, username, avatar, rank, totalScore, entry_number)
     {
         //load user info
         var html = 
@@ -366,7 +366,7 @@ jQuery.playerdraft =
                 <div>\n\
                     <div class="f-rank">\n\
                         <header>\n\
-                            <h6>Pos</h6>\n\
+                            <h6>' + wpfs['position'] + '</h6>\n\
                         </header>\n\
                         <h1>' + rank + '</h1>\n\
                     </div>\n\
@@ -398,8 +398,8 @@ jQuery.playerdraft =
         }
         
         //load result
-		var leagueOptionType = jQuery('#leagueOptionType').val();
-        var data = 'leagueID=' + leagueID + '&userID=' + userID;
+        var leagueOptionType = jQuery('#leagueOptionType').val();
+        var data = 'leagueID=' + leagueID + '&userID=' + userID + '&entry_number=' + entry_number;
         jQuery.post(ajaxurl, "action=loadUserResult&" + data, function(data) {
             data = jQuery.parseJSON(data);
             html = '';
@@ -415,11 +415,12 @@ jQuery.playerdraft =
                         {
                             var playerdraft = aResult.playerdraft[j];
                             var scroring_points = jQuery.playerdraft.getScoringPointById(playerdraft.scoring_category_id);
+                            var score = scroring_points * playerdraft.points;
                             resultPlayerDraft += 
                                 '<li class="f-player-card-item">' + playerdraft.points + '\n\
                                     <span title="' + playerdraft.scoring_name + '">\n\
                                         ' + playerdraft.scoring_name.substring(0, 3) + '\n\
-                                         (' + scroring_points + ')\n\
+                                         (' + score + ')\n\
                                     </span>\n\
                                 </li>';
                         }
@@ -451,7 +452,7 @@ jQuery.playerdraft =
                                 <span title="Point Guard">' + aResult.player_position + '</span>\n\
                             </div>';
                     }
-					var styleLeagueOptionType = '';
+                    var styleLeagueOptionType = '';
                     if(leagueOptionType == 'salary')
                     {
                         styleLeagueOptionType = 'style="padding-left:10px;"';
@@ -550,14 +551,14 @@ jQuery.playerdraft =
         return false;
     },
     
-    loadContestScores: function(leagueID)
+    loadContestScores: function(leagueID, entry_number)
     {
         var html = '';
         var aScore = '';
         var htmlCurrent = '';
         var htmlNoCurrent = '';
         var currentScores = '';
-        var data = 'leagueID=' + leagueID;
+        var data = 'leagueID=' + leagueID + '&entry_number=' + entry_number;
         jQuery.post(ajaxurl, "action=loadContestScores&" + data, function(result) {
             var aScores = jQuery.parseJSON(result);
             if(aScores != null)
@@ -573,7 +574,14 @@ jQuery.playerdraft =
                     }
                     else
                     {
-                        htmlNoCurrent = 'href="#" onclick="return jQuery.playerdraft.userResult(' + leagueID + ', 0, ' + aScore.userID + ', \'' + aScore.username + '\', \'' + aScore.avatar + '\', ' + aScore.rank + ', \'' + aScore.points + '\')"';
+                        htmlNoCurrent = 'href="#" onclick="return jQuery.playerdraft.userResult(' + leagueID + ', 0, ' + aScore.userID + ', \'' + aScore.username + '\', \'' + aScore.avatar + '\', ' + aScore.rank + ', \'' + aScore.points + '\', ' + aScore.entry_number + ')"';
+                    }
+                    var htmlMultiEntry = '';
+                    if(jQuery('#multiEntry').val() == 1)
+                    {
+                        htmlMultiEntry = '<td>\n\
+                            ' + aScore.entry_number + '\n\
+                        </td>';
                     }
                     html +=
                         '<tr ' + htmlCurrent + ' ' + htmlNoCurrent + ' >\n\
@@ -587,6 +595,7 @@ jQuery.playerdraft =
                                     ' + aScore.username + '\n\
                                 </a>\n\
                             </td>\n\
+                            ' + htmlMultiEntry + '\n\
                             <td class="f-num">\n\
                                 ' + aScore.points + '\n\
                             </td>\n\
@@ -599,7 +608,7 @@ jQuery.playerdraft =
             jQuery('#tableScores tbody').empty().append(html);
             if(currentScores != '')
             {
-                jQuery.playerdraft.userResult(leagueID, 1, currentScores.userID, currentScores.username, currentScores.avatar, currentScores.rank, currentScores.points);
+                jQuery.playerdraft.userResult(leagueID, 1, currentScores.userID, currentScores.username, currentScores.avatar, currentScores.rank, currentScores.points, currentScores.entry_number);
             }
         })
     },
@@ -634,7 +643,7 @@ jQuery.playerdraft =
         else 
         {
             button =    '<div class="f-add-button">\n\
-                            <input type="button" value="Remove Player" class="f-button f-primary f-mini f-plbARB" onclick="jQuery.playerdraft.clearPlayer(' + player_id + '); jQuery.playerdraft.closeDialog(\'#dlgInfo\');">\n\
+                            <input type="button" value="' + wpfs['remove_player'] + '" class="f-button f-primary f-mini f-plbARB" onclick="jQuery.playerdraft.clearPlayer(' + player_id + '); jQuery.playerdraft.closeDialog(\'#dlgInfo\');">\n\
                         </div>';
         }
         
@@ -663,32 +672,32 @@ jQuery.playerdraft =
                                     '</div>\n\
                                     <div class="f-player-stats f-brief">\n\
                                                    <div class="f-stat">\n\
-                                            <b>' + player.played + '</b> Played </div>\n\
+                                            <b>' + player.played + '</b> ' + wpfs['played'] + ' </div>\n\
                                         <div class="f-stat">\n\
-                                            <b>$' + accounting.formatNumber( player.salary) + '</b> Salary </div>\n\
+                                            <b>$' + accounting.formatNumber( player.salary) + '</b> ' + wpfs['salary'] + ' </div>\n\
                                     </div>\n\
                                 </div>\n\
                                 ' + button + '\n\
                                 <ul class="f-tabs">\n\
                                     <li>\n\
-                                        <a data-tabname="tab1" href="#tab1">Summary</a>\n\
+                                        <a data-tabname="tab1" href="#tab1">' + wpfs['summary'] + '</a>\n\
                                     </li>\n\
                                     <li>\n\
-                                        <a data-tabname="tab2" href="#tab2">Game Log</a>\n\
+                                        <a data-tabname="tab2" href="#tab2">' + wpfs['game_log'] + '</a>\n\
                                     </li>\n\
                                     <li>\n\
-                                        <a data-tabname="tab3" href="#tab3">Player News</a>\n\
+                                        <a data-tabname="tab3" href="#tab3">' + wpfs['player_news'] + '</a>\n\
                                     </li>\n\
                                 </ul>\n\
                             </div>\n\
                             <div class="f-player-stats-lb-tab tab1" id="tab1">\n\
                                 <div class="f-player-stats f-season">\n\
-                                    <h1>Season Statistics</h1>\n\
+                                    <h1>' + wpfs['season_statistics'] + '</h1>\n\
                                     <div class="f-well f-clearfix" id="playerStatistic"></div>\n\
                                 </div>\n\
                                 <div class="f-player-news f-latest">\n\
                                     <div class="f-row">\n\
-                                        <h1 class="f-left">\n\Latest Player News</h1>\n\
+                                        <h1 class="f-left">' + wpfs['latest_player_news'] + '</h1>\n\
                                     </div>\n\
                                     <div data-role="scrollable-body" class="f-clear f-news-item" id="playerBrief"></div>\n\
                                 </div>';
@@ -696,7 +705,7 @@ jQuery.playerdraft =
         {
             html +=             
                                 '<div class="f-next-game">\n\
-                                    <h1>Next Game</h1>\n\
+                                    <h1>' + wpfs['next_game'] + '</h1>\n\
                                     <div class="f-game">' + player.teamName1 + ' vs ' + player.teamName2 + '</div>\n\
                                 </div>';
         }
@@ -704,14 +713,14 @@ jQuery.playerdraft =
                             '</div>\n\
                             <div class="f-player-stats-lb-tab f-tab2" id="tab2">\n\
                                 <div class="f-game-log">\n\
-                                    <h1>Game Log</h1>\n\
+                                    <h1>' + wpfs['game_log'] + '</h1>\n\
                                     <div class="f-table-container" id="gameLog"></div>\n\
                                 </div>\n\
                             </div>\n\
                             <div id="tab3" class="f-player-stats-lb-tab f-tab3">\n\
                                 <div class="f-player-news">\n\
                                     <div class="f-row">\n\
-                                        <h1 class="f-left">Player News</h1>\n\
+                                        <h1 class="f-left">' + wpfs['player_news'] + '</h1>\n\
                                     </div>\n\
                                     <div class="f-clear f-news-item" data-role="scrollable-body" id="playerNews"></div>\n\
                                 </div>\n\
@@ -737,14 +746,14 @@ jQuery.playerdraft =
                 {
                     aStatistic = aStatistics[i];
                     htmlStatistic += '<div class="f-stat">\n\
-                            <b>' + aStatistic.points + '</b> ' + aStatistic.name + 's </div>';
+                            <b>' + aStatistic.points + '</b> ' + aStatistic.name + ' </div>';
                 }
             }
             jQuery('#playerStatistic').empty().append(htmlStatistic);
             
             //full statistic
             var aStats = result.stats;
-            var htmlPlayerStatistic = 'This player has not played any matches yet.';
+            var htmlPlayerStatistic = wpfs['player_no_match'];
             if(aStats.scoring != null)
             {
                 htmlPlayerStatistic =   '<table class="f-game-log f-condensed f-text-align-right">\n\
@@ -793,19 +802,19 @@ jQuery.playerdraft =
                         <header>\n\
                             <h1 class="f-game-title">' + name + '</h1>\n\
                             <ul class="f-game-info">\n\
-                                <li class="f-game-info-entry-fee">Entry Fee: $' + entry_fee + '</li>\n\
-                                <li class="f-game-info-salary-cap">Salary Cap: $' + accounting.formatNumber(salary_remaining) + '</li>\n\
+                                <li class="f-game-info-entry-fee">' + wpfs['Entry Fee'] + ': $' + entry_fee + '</li>\n\
+                                <li class="f-game-info-salary-cap">' + wpfs['salary_cap'] + ': $' + accounting.formatNumber(salary_remaining) + '</li>\n\
                             </ul>\n\
                             <div id="tabRuleScoring">\n\
                                 <ul class="f-tabs">\n\
                                     <li onclick="jQuery.playerdraft.loadTabScoringCategory(jQuery(this), ' + leagueID + ')">\n\
-                                        <a data-tabname="tab-info" href="#tab1">Contest</a>\n\
+                                        <a data-tabname="tab-info" href="#tab1">' + wpfs['contest'] + '</a>\n\
                                     </li>\n\
                                     <li onclick="jQuery.playerdraft.loadTabLeagueEntries(jQuery(this), ' + leagueID + ')">\n\
-                                        <a data-tabname="tab2" href="#tab2">Entries</a>\n\
+                                        <a data-tabname="tab2" href="#tab2">' + wpfs['a_entries'] + '</a>\n\
                                     </li>\n\
                                     <li onclick="jQuery.playerdraft.loadTabLeaguePrizes(jQuery(this), ' + leagueID + ')">\n\
-                                        <a data-tabname="tab3" href="#tab3">Prizes</a>\n\
+                                        <a data-tabname="tab3" href="#tab3">' + wpfs['Prizes'] + '</a>\n\
                                     </li>\n\
                                 </ul>\n\
                             </div>\n\
@@ -887,6 +896,7 @@ jQuery.playerdraft =
                 var aPlayerDraftScorings = result.scorings.playerdraft;
                 var aNormalScorings = result.scorings.normal;
                 var aFights = result.fights;
+                var aRounds = result.rounds;
 
                 //result fight
                 var resultFight = '';
@@ -897,6 +907,17 @@ jQuery.playerdraft =
                         resultFight += '<li><b>' + aFights[i].nickName1 + ' @ ' + aFights[i].nickName2 + '</b> ' + aFights[i].startDate + '</li>';
                     }
                 }
+                
+                //result round
+                var htmlRound = '';
+                if(aRounds != null)
+                {
+                    for(var i = 0; i < aRounds.length; i++)
+                    {
+                        htmlRound += '<li><b>' + aRounds[i].name + '</b> ' + aRounds[i].startDate + '</li>';
+                    }
+                }
+                
 
                 //result scoring
                 var resultScoring = scorings = bonusHtml = '';
@@ -912,7 +933,7 @@ jQuery.playerdraft =
                         '<hr class="f-divider">\n\
                         <div class="f-row">\n\
                             <div class="f-column-12 game-info-scoring">\n\
-                                <h5 class="f-game-info-scoring-title">Scoring Categories</h5>\n\
+                                <h5 class="f-game-info-scoring-title">' + wpfs['scoring_categories'] + '</h5>\n\
                                 <div class="f-game-info-scoring-categories">';
                 if(aNormalScorings != null)
                 {
@@ -944,7 +965,7 @@ jQuery.playerdraft =
                         for(var i = 0; i < aPlayerDraftScorings.length; i++)
                         {
                             var aScoring = aPlayerDraftScorings[i];
-                            resultScoring += aScoring.name + ' = ' + aScoring.points + ', '; 
+                            resultScoring += aScoring.name + ' = ' + aScoring.points + '<br/> '; 
                         }
                         resultScoring += '</div>';
                     }
@@ -958,22 +979,23 @@ jQuery.playerdraft =
                 var htmlPickPlayer = '';
                 if(aLeague.is_playerdraft && aLeague.only_playerdraft == 0)
                 {
-                    htmlPickPlayer = '<p>Pick a team of players from the following games:</p>';
+                    htmlPickPlayer = '<p>' + wpfs['pick_a_team'] + '</p>';
                 }
                 else if(aLeague.is_playerdraft && aLeague.only_playerdraft == 1)
                 {
-                    htmlPickPlayer = '<p>Pick players from the following lists</p>';
+                    htmlPickPlayer = '<p>' + wpfs['pick_player_from_list'] + '</p>';
                 }
                 var html = '<div class="f-row">\n\
                                 <div class="f-game-info-fixtures">\n\
                                     ' + htmlPickPlayer + '\n\
                                     <ul class="f-game-info-fixture-list">\n\
                                         ' + resultFight + '\n\
+                                        ' + htmlRound + '\n\
                                     </ul>\n\
                                 </div>\n\
                                 <div class="f-game-info-start-time">\n\
                                     <div class="f-stat">\n\
-                                        <b> ' + result.startDate + '</b> Game Start\n\
+                                        <b> ' + result.startDate + '</b> ' + wpfs['Start'] + '\n\
                                     </div>\n\
                                 </div>\n\
                             </div>\n\
@@ -994,7 +1016,7 @@ jQuery.playerdraft =
             jQuery('.f-lightbox .f-tab-game-info').empty().append(this.loading());
             jQuery.post(ajaxurl, "action=loadLeagueEntries&" + data, function(result) {
                 var aUsers = jQuery.parseJSON(result);
-                var html = '<center>There are no entries in this contest yet.</center>';
+                var html = '<center>' + wpfs['no_contest_entry'] + '</center>';
                 if(aUsers != null)
                 {
                     html = '<ul class="f-contest-entrants-list">';

@@ -3,15 +3,15 @@
     <form id="formUserCredits">
         <table>
             <tr>
-                <td style="width: 170px"><?=__("Name");?></td>
+                <td style="width: 170px"><?=__("Name", FV_DOMAIN);?></td>
                 <td class="full_name">User</td>
             </tr>
             <tr>
-                <td><?=__("Total balance");?></td>
+                <td><?=__("Total balance", FV_DOMAIN);?></td>
                 <td class="total_balance">User</td>
             </tr>
             <tr>
-                <td><?=__("Payment request pending");?></td>
+                <td><?=__("Payment request pending", FV_DOMAIN);?></td>
                 <td class="payment_request_pending">User</td>
             </tr>
         </table>
@@ -19,7 +19,7 @@
         <table>
             <tr>
                 <td>
-                    <?=__("Credits");?>
+                    <?=__("Credits", FV_DOMAIN);?>
                     <input type="hidden" name="user_id" class="user_id" />
                 </td>
             </tr>
@@ -29,7 +29,7 @@
                 </td>
             </tr>
             <tr>
-                <td><?=__("Reason");?></td>
+                <td><?=__("Reason", FV_DOMAIN);?></td>
             </tr>
             <tr>
                 <td>

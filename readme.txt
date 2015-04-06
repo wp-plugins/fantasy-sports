@@ -4,7 +4,7 @@ Donate link: http://fanvictor.com/
 Tags: fantasy sports, fantasy football, fantasy baseball, fantasy hockey, fantasy basketball
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 2.1.3.2
+Stable tag: 2.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -225,6 +225,20 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 * Hide group for golf
 
 * redirect to lobby
+
+= Version 2.1.3.2 released March 31 2015 =
+
+* Support MLB
+
+* Use Auto Ip
+
+* Fixed restrict user from some states
+
+= Version 2.1.4 released Apr 6 2015 =
+
+* Add and fix text phrase
+
+* Support multi entry
 
 == Upgrade Notice ==
 

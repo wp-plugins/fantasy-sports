@@ -27,7 +27,7 @@ class Fanvictor extends Model
     {
         return $this->sendRequest("canPlay", null, false);;
     }
-    
+            
     function getUserData($userID = null)
     {
         $user_id = (int)Phpfox::getUserId();
@@ -268,9 +268,9 @@ class Fanvictor extends Model
         return false;
     }
     
-    public function isPlayerDraftLeagueFull($leagueID)
+    public function isPlayerDraftLeagueFull($leagueID, $entry_number)
     {
-        if($this->sendRequest("isPlayerDraftLeagueFull", array('leagueID' => $leagueID), false, false) == 1)
+        if($this->sendRequest("isPlayerDraftLeagueFull", array('leagueID' => $leagueID, 'entry_number' => $entry_number), false, false) == 1)
         {
             return true;
         }
@@ -299,12 +299,12 @@ class Fanvictor extends Model
     
     public function getLiveEntries()
     {
-        return $this->sendRequest("getLiveEntries", null, false);
+        echo $this->sendRequest("getLiveEntries", null, false,false);exit;
     }
     
     public function liveEntriesResult($poolID)
     {
-        echo $this->sendRequest("liveEntriesResult", array('poolID' => $poolID), null, false);exit;
+        echo $this->sendRequest("liveEntriesResult", array('poolID' => $poolID), false, false);exit;
     }
 
     public function parseLeagueData($aLeagues)
@@ -352,9 +352,10 @@ class Fanvictor extends Model
 
     public function insertPlayerPicks($data)
     {
-        if($this->sendRequest("insertPlayerPicks", $data, false, false))
+        $entry_number = $this->sendRequest("insertPlayerPicks", $data, false, false);
+        if($entry_number > 0)
         {
-            return true;
+            return $entry_number;
         }
         return false;
     }
@@ -368,9 +369,9 @@ class Fanvictor extends Model
         return false;
     }
     
-    public function getPlayerPicks($leagueID)
+    public function getPlayerPicks($leagueID, $entry_number)
     {
-        $data = $this->sendRequest("getPlayerPicks", array('leagueID' => $leagueID), false);
+        $data = $this->sendRequest("getPlayerPicks", array('leagueID' => $leagueID, 'entry_number' => $entry_number), false);
         return $data;
     }
     
@@ -415,9 +416,9 @@ class Fanvictor extends Model
 		return $matches[1];
     }
     
-    public function getPlayerPicksResult($leagueID, $userID)
+    public function getPlayerPicksResult($leagueID, $userID, $entry_number)
     {
-        return $this->sendRequest("getPlayerPicksResult", array('leagueID' => $leagueID, 'userID' => $userID), false);
+        return $this->sendRequest("getPlayerPicksResult", array('leagueID' => $leagueID, 'userID' => $userID, 'entry_number' => $entry_number), false);
     }
     
     public function getPlayerStatistics($orgID, $playerID)
@@ -438,14 +439,17 @@ class Fanvictor extends Model
         return $this->sendRequest("getNewPools", null, false);
     }
     
-    public function validCreateLeague($orgID, $poolID, $game_type, $name, $fightID, $roundID)
+    public function validCreateLeague($orgID, $poolID, $game_type, $name, $fightID, $roundID, $payouts_from = null, $payouts_to = null, $percentage = null)
     {
         return $this->sendRequest("validCreateLeague", array("orgID" => $orgID, 
                                                              "poolID" => $poolID, 
                                                              "game_type" => $game_type,
                                                              "name" => $name,
                                                              "fightID" => $fightID,
-                                                             "roundID" => $roundID), false, false);
+                                                             "roundID" => $roundID,     
+                                                             "payouts_from" => $payouts_from,
+                                                             "payouts_to" => $payouts_to,
+                                                             "percentage" => $percentage), false, false);
     }
     
     public function createLeague($data)
@@ -457,9 +461,9 @@ class Fanvictor extends Model
         return $this->sendRequest("createLeague", $data, false, false);
     }
     
-    public function getEnterGameData($leagueID)
+    public function getEnterGameData($leagueID, $entry_number)
     {
-        return $this->sendRequest("getEnterGameData", array("leagueID" => $leagueID), false);
+        return $this->sendRequest("getEnterGameData", array("leagueID" => $leagueID, "entry_number" => $entry_number), false);
     }
     
     public function getEnterNormalGameData($leagueID)
@@ -467,9 +471,9 @@ class Fanvictor extends Model
         return $this->sendRequest("getEnterNormalGameData", array("leagueID" => $leagueID), false);
     }
     
-    public function getGameEntryData($leagueID)
+    public function getGameEntryData($leagueID, $entry_number)
     {
-        return $this->sendRequest("getGameEntryData", array("leagueID" => $leagueID), false);
+        return $this->sendRequest("getGameEntryData", array("leagueID" => $leagueID, "entry_number" => $entry_number), false);
     }
     
     public function validEnterPlayerdraft($leagueID, $playerIDs)

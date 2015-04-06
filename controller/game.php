@@ -29,7 +29,7 @@ class Game
             }
             else 
             {
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __("Contest does not exist."), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __("Contest does not exist.", FV_DOMAIN), true);
             }
         }
         else 
@@ -54,6 +54,7 @@ class Game
     public static function game()
     {
         $leagueId = pageSegment(3);
+        $entry_number = isset($_GET['num']) ? $_GET['num'] : 0;
         //league
         $league = self::$fanvictor->getLeagueDetail($leagueId);
         
@@ -63,30 +64,30 @@ class Game
         
         if(!self::$fanvictor->isPlayerDraftLeagueExist($leagueId))
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Contest does not exist'), true);
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Contest does not exist', FV_DOMAIN), true);
         }
         else if(!self::$payment->isUserEnoughMoneyToJoin($league[0]['entry_fee'], $leagueId))
         {
-            redirect(FANVICTOR_URL_ADD_FUNDS, __('You do not have enough funds to enter. Please add funds'), true);
+            redirect(FANVICTOR_URL_ADD_FUNDS, __('You do not have enough funds to enter. Please add funds', FV_DOMAIN), true);
         }
         else if($aPool['status'] != 'NEW')//check league completed
         {
             redirect(FANVICTOR_URL_CONTEST.$leagueId, null, true);
         }
-        else if(self::$fanvictor->isPlayerDraftLeagueFull($leagueId))
+        else if(self::$fanvictor->isPlayerDraftLeagueFull($leagueId, $entry_number))
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Sorry! This league is full'), true);
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Sorry! This contest was full', FV_DOMAIN), true);
         }
         else 
         {
             //load game data
-            $game = self::$fanvictor->getEnterGameData($leagueId);
+            $game = self::$fanvictor->getEnterGameData($leagueId, $entry_number);
             $league = $game['league'];
             $league = self::$fanvictor->parseLeagueData(array($league));
             $league = $league[0];
             $aPool = $game['pool'];
             $aFights = $game['fights'];
-			$aRounds = $game['rounds'];
+            $aRounds = $game['rounds'];
             $aPositions = $game['positions'];
             $aLineups = $game['lineup'];
             $aTeams = $game['teams'];
@@ -94,7 +95,7 @@ class Game
             $playerIdPicks = $game['playerIdPicks'];
             $aPlayers = $game['players'];
             $aPlayers = self::$players->parsePlayersData($aPlayers);
-            
+
             include FANVICTOR__PLUGIN_DIR_VIEW.'game.php';
         }
     }
@@ -103,14 +104,18 @@ class Game
     {
         //check valid data
         self::validData();
+        $entry_number = $_POST['entry_number'];
 
         $data = array('leagueID' => $_POST['leagueID'],
-                      'player_id' => $_POST['player_id']);
-        if(self::$fanvictor->insertPlayerPicks($data))
+                      'player_id' => $_POST['player_id'],
+                      'entry_number' => $entry_number);
+        $entry_number = self::$fanvictor->insertPlayerPicks($data);
+        if($entry_number > 0)
         {
             $league = self::$fanvictor->getLeagueDetail($_POST['leagueID']);
             $league = $league [0];
-            if(!self::$payment->isMakeBetForLeague($league['leagueID']))
+            $makeBet = self::$payment->isMakeBetForLeague($league['leagueID']);
+            if($makeBet != $entry_number)
             {
                 //decrease user money
                 self::$payment->updateUserBalance($league['entry_fee'], true, $league['leagueID']);
@@ -120,9 +125,9 @@ class Game
                 self::$payment->addFundhistory($league['entry_fee'], $league['leagueID'], $aUser['balance'], 'MAKE_BET', 'DEDUCT');
             }
             $_SESSION['showInviteFriends'.$league['leagueID']] = true;
-            redirect(FANVICTOR_URL_ENTRY.$_POST['leagueID'], null, true);
+            redirect(FANVICTOR_URL_ENTRY.$_POST['leagueID']."/?num=".$entry_number, null, true);
         }
-        redirect(FANVICTOR_URL_GAME.$_POST['leagueID'], __('Something went wrong! Please try again.'), true);
+        redirect(FANVICTOR_URL_GAME.$_POST['leagueID'], __('Something went wrong! Please try again.', FV_DOMAIN), true);
     }
     
     private static function validData()
@@ -135,25 +140,25 @@ class Game
         switch($valid)
         {
             case 2:
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __("This contest had completed"), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __("This contest had completed", FV_DOMAIN), true);
                 break;
             case 3:
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Contest does not exist'), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Contest does not exist', FV_DOMAIN), true);
                 break;
             case 4:
-                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Sorry! This contest is full'), true);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Sorry! This contest is full', FV_DOMAIN), true);
                 break;
             case 5:
-                redirect(FANVICTOR_URL_GAME.$league[0]['leagueID'], __("Your team has exceeded this game's salary cap. Please change your team so it fits under the salary cap before entering"), true);
+                redirect(FANVICTOR_URL_GAME.$league[0]['leagueID'], __("Your team has exceeded this game's salary cap. Please change your team so it fits under the salary cap before entering", FV_DOMAIN), true);
                 break;
             case 6:
-                redirect(FANVICTOR_URL_GAME.$league[0]['leagueID'], __("Please select a player for each position"), true);
+                redirect(FANVICTOR_URL_GAME.$league[0]['leagueID'], __("Please select a player for each position", FV_DOMAIN), true);
                 break;
         }
         
         if(!self::$payment->isUserEnoughMoneyToJoin($league[0]['entry_fee'], $_POST['leagueID']))
         {
-            redirect(FANVICTOR_URL_ADD_FUNDS, __('You do not have enough funds to enter. Please add funds'));
+            redirect(FANVICTOR_URL_ADD_FUNDS, __('You do not have enough funds to enter. Please add funds', FV_DOMAIN));
         }
     }
 }

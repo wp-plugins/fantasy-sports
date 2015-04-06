@@ -1,7 +1,7 @@
 <?php foreach($aFights as $aFight):?>
 <div class="fight_container">
     <div class="title_area">
-        <div class="fight_number_title">*<?=__("Fixture");?> <?=$aFight['count'];?></div>
+        <div class="fight_number_title">*<?=__("Fixture", FV_DOMAIN);?> <?=$aFight['count'];?></div>
         <a onclick="return jQuery.fight.removeFight(this);" class="fight_action fight_remove" href="#">
             <img src="<?=FANVICTOR__PLUGIN_URL_IMAGE.'delete.png';?>" alt="Delete" title="Delete" />
         </a>&nbsp;&nbsp;
@@ -14,12 +14,12 @@
     <table>
         <tr>
             <th>
-                <span class="for_fighter"><?=__("Fighter");?> 1</span>
-                <span class="for_team"><?=__("Team");?> 1</span>
+                <span class="for_fighter"><?=__("Fighter", FV_DOMAIN);?> 1</span>
+                <span class="for_team"><?=__("Team", FV_DOMAIN);?> 1</span>
             </th>
             <th>
-                <span class="for_fighter"><?=__("Fighter");?> 2</span>
-                <span class="for_team"><?=__("Team");?> 2</span>
+                <span class="for_fighter"><?=__("Fighter", FV_DOMAIN);?> 2</span>
+                <span class="for_team"><?=__("Team", FV_DOMAIN);?> 2</span>
             </th>
         </tr>
         <tr>
@@ -36,7 +36,7 @@
             <td colspan="6">
                 <div class="table">
                     <div class="table_left">
-                        <?=__("Fixture Name");?>  <span class="description">(<?=__("required");?>)</span>:
+                        <?=__("Fixture Name");?>  <span class="description">(<?=__("required", FV_DOMAIN);?>)</span>:
                     </div>
                     <div class="table_right">
                         <input type="text" data-name="fight_name" value="<?=$aFight['name'];?>" size="40"/>
@@ -49,17 +49,17 @@
             <td colspan="6">
                 <div class="table">
                     <div class="table_left">
-                        <?=__("Start Date");?>  <span class="description">(<?=__("required");?>)</span>:
+                        <?=__("Start Date");?>  <span class="description">(<?=__("required", FV_DOMAIN);?>)</span>:
                     </div>
                     <div class="table_right">
                         <input type="text" class="fightDatePicker" data-name="fight_startDate" value="<?=$aFight['startDateOnly'];?>" size="40"/>
-                        <?=__("Hour");?>:
+                        <?=__("Hour", FV_DOMAIN);?>:
                         <select data-name="fight_startHour">
                             <?php foreach($aPoolHours as $aPoolHour):?>
                             <option value="<?=$aPoolHour;?>" <?=$aFight['startHour'] == $aPoolHour ? 'selected="true"' : '';?>><?=$aPoolHour;?></option>
                             <?php endforeach;?>
                         </select>
-                        <?=__("Minute");?>:
+                        <?=__("Minute", FV_DOMAIN);?>:
                         <select data-name="fight_startMinute">
                             <?php foreach($aPoolMinutes as $aPoolMinute):?>
                             <option value="<?=$aPoolMinute;?>" <?=$aFight['startMinute'] == $aPoolMinute ? 'selected="true"' : '';?>><?=$aPoolMinute;?></option>
@@ -74,7 +74,7 @@
             <td colspan="6">
                 <div class="table">
                     <div class="table_left">
-                        <?=__("Championship Fight");?>:
+                        <?=__("Championship Fight", FV_DOMAIN);?>:
                     </div>
                     <div class="table_right">
                         <input type="checkbox" data-name="champFight" <?=isset($aFight['champFight']) && $aFight['champFight'] == 'YES' ? 'checked="true"' : '';?> value="1" id="champFight" />
@@ -87,7 +87,7 @@
             <td colspan="6">
                 <div class="table">
                     <div class="table_left">
-                        <?=__("Amateur Fight");?>:
+                        <?=__("Amateur Fight", FV_DOMAIN);?>:
                     </div>
                     <div class="table_right">
                         <input type="checkbox" data-name="amateurFight" <?=isset($aFight['amateurFight']) && $aFight['amateurFight'] == 'YES' ? 'checked="true"' : '';?> value="1" id="amateurFight" />
@@ -100,7 +100,7 @@
             <td colspan="6">
                 <div class="table">
                     <div class="table_left">
-                        <?=__("Main Card Fight");?>:
+                        <?=__("Main Card Fight", FV_DOMAIN);?>:
                     </div>
                     <div class="table_right">
                         <input type="checkbox" data-name="mainFight" <?=isset($aFight['mainFight']) && $aFight['mainFight'] == 'YES' ? 'checked="true"' : '';?> value="1" id="mainFight" />
@@ -113,7 +113,7 @@
             <td colspan="6">
                 <div class="table">
                     <div class="table_left">
-                        <?=__("Preliminary Card Fight");?>:
+                        <?=__("Preliminary Card Fight", FV_DOMAIN);?>:
                     </div>
                     <div class="table_right">
                         <input type="checkbox" data-name="prelimFight" <?=isset($aFight['prelimFight']) && $aFight['prelimFight'] == 'YES' ? 'checked="true"' : '';?> value="1" id="prelimFight" />
@@ -126,7 +126,7 @@
             <td colspan="6">
                 <div class="table">
                     <div class="table_left">
-                        <?=__("Round");?>:
+                        <?=__("Round", FV_DOMAIN);?>:
                     </div>
                     <div class="table_right">
                         <select data-name="rounds">

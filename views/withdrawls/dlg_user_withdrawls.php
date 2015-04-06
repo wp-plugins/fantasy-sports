@@ -3,23 +3,23 @@
     <form id="formUserWithdrawls">
         <table>
             <tr>
-                <td style="width: 170px"><?=__("Name");?></td>
+                <td style="width: 170px"><?=__("Name", FV_DOMAIN);?></td>
                 <td class="full_name"></td>
             </tr>
             <tr>
-                <td><?=__("Amount");?></td>
+                <td><?=__("Amount", FV_DOMAIN);?></td>
                 <td class="amount"></td>
             </tr>
             <tr>
-                <td><?=__("Real Amount");?></td>
+                <td><?=__("Real Amount", FV_DOMAIN);?></td>
                 <td class="real_amount"></td>
             </tr>
             <tr>
-                <td><?=__("Request Date");?></td>
+                <td><?=__("Request Date", FV_DOMAIN);?></td>
                 <td class="request_date"></td>
             </tr>
             <tr>
-                <td><?=__("Reason");?></td>
+                <td><?=__("Reason", FV_DOMAIN);?></td>
                 <td class="reason"></td>
             </tr>
         </table>
@@ -27,22 +27,22 @@
         <table>
             <tr>
                 <td>
-                    <?=__("Action");?>
+                    <?=__("Action", FV_DOMAIN);?>
                     <input type="hidden" name="withdrawlID" class="withdrawlID" />
                 </td>
             </tr>
             <tr>
                 <td>
                     <select name="status" class="status">
-                        <option value="APPROVED"><?=__("APPROVED");?></option>
-                        <option value="DECLINED"><?=__("DECLINED");?></option>
+                        <option value="APPROVED"><?=__("APPROVED", FV_DOMAIN);?></option>
+                        <option value="DECLINED"><?=__("DECLINED", FV_DOMAIN);?></option>
                     </select>
                 </td>
             </tr>
             <?php if(get_option('fanvictor_payout_method') == 'paypal'):?>
             <tr>
                 <td>
-                    <?=__("Gateway");?>
+                    <?=__("Gateway", FV_DOMAIN);?>
                     <input type="hidden" name="withdrawlID" class="withdrawlID" />
                 </td>
             </tr>
@@ -57,7 +57,7 @@
             </tr>
             <?php endif;?>
             <tr>
-                <td><?=__("Response Message");?></td>
+                <td><?=__("Response Message", FV_DOMAIN);?></td>
             </tr>
             <tr>
                 <td>

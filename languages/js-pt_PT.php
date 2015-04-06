@@ -76,6 +76,20 @@ function js_lang()
             "close" : "'.__("Close", "fantasy-sports").'",
             "send" : "'.__("Send", "fantasy-sports").'",
             "cancel" : "'.__("Cancel", "fantasy-sports").'",
+            "from" : "'.__("From", "fantasy-sports").'",
+            "to" : "'.__("To", "fantasy-sports").'",
+            "add" : "'.__("Add", "fantasy-sports").'",
+            "delete" : "'.__("Delete", "fantasy-sports").'",
+            "summary" : "'.__("Summary", "fantasy-sports").'",
+            "game_log" : "'.__("Game Log", "fantasy-sports").'",
+            "player_news" : "'.__("Player News", "fantasy-sports").'",
+            "salary" : "'.__("Salary", "fantasy-sports").'",
+            "played" : "'.__("Played", "fantasy-sports").'",
+            "season_statistics" : "'.__("Season Statistics", "fantasy-sports").'",
+            "latest_player_news" : "'.__("Latest Player News", "fantasy-sports").'",
+            "played" : "'.__("Played", "fantasy-sports").'",
+            "remove_player" : "'.__("Remove Player", "fantasy-sports").'",
+            "next_game" : "'.__("Next Game", "fantasy-sports").'"
         }
     </script>';
 }

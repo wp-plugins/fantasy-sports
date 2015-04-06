@@ -22,7 +22,7 @@ class GameSummary
     {
         $aPools = self::$fanvictor->getGamesummary();
 		$htmlData = $aPools['html'];	
- 		$sHeader = __("Game summary");
+ 		$sHeader = __("Game summary", FV_DOMAIN);
         include FANVICTOR__PLUGIN_DIR_VIEW.'gamesummary.php';
     }
 }

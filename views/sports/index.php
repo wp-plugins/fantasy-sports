@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h2><?=__("Organization Settings");?></h2>
+    <h2><?=__("Organization Settings", FV_DOMAIN);?></h2>
     <?=settings_errors();?>
     <form name="adminForm" action="<?=self::$url;?>" method="post">
         <input id="submitTask" type="hidden" name="task">

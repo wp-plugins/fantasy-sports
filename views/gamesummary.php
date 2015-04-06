@@ -1,4 +1,1 @@
-<h3 class="widget-title">
-    <?=$sHeader;?>
-</h3>
-<?=$htmlData;?>
+<div class="contentPlugin">    <h3 class="widget-title">        <?=$sHeader;?>    </h3>    <?=$htmlData;?></div>

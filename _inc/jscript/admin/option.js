@@ -11,7 +11,7 @@ jQuery.option =
     
     removeArray: function(obj)
     {
-        if(confirm("Are you sure ?"))
+        if(confirm(wpfs['a_sure']))
         {
             jQuery(obj).parent('div').remove();
         }

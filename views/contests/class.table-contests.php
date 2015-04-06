@@ -8,8 +8,8 @@ class TableContests extends WP_List_Table
         global $status, $page;
         $this->data = null;
         parent::__construct( array(
-            'singular'  => __( 'book', 'mylisttable' ),     //singular name of the listed records
-            'plural'    => __( 'books', 'mylisttable' ),   //plural name of the listed records
+            'singular'  => __( 'book', 'mylisttable' , FV_DOMAIN),     //singular name of the listed records
+            'plural'    => __( 'books', 'mylisttable' , FV_DOMAIN),   //plural name of the listed records
             'ajax'      => false        //does this table support ajax?
         ) );
     }
@@ -50,13 +50,13 @@ class TableContests extends WP_List_Table
     {
         $columns = array(
             'cb'        => '<input type="checkbox" />',
-            'ID' => __('ID', 'mylisttable'),
-            'name' => __('Name', 'mylisttable'),
-            'gameType' => __('Game Type', 'mylisttable'),
-            'poolName' => __('Event', 'mylisttable'),
-            'startDate' => __('Start Date', 'mylisttable'),
-            'creator' => __('Creator', 'mylisttable'),
-            'status' => __('Status', 'mylisttable'),
+            'ID' => __('ID', FV_DOMAIN),
+            'name' => __('Name', FV_DOMAIN),
+            'gameType' => __('Game Type', FV_DOMAIN),
+            'poolName' => __('Event', FV_DOMAIN),
+            'startDate' => __('Start Date', FV_DOMAIN),
+            'creator' => __('Creator', FV_DOMAIN),
+            'status' => __('Status', FV_DOMAIN),
             'edit'    => '',
         );
         return $columns;

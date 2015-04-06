@@ -39,7 +39,7 @@ function pickSelected(leagueID)
         }
         if ( !ifAnyBoutChecked )
         {
-                alert('Please enter your picks');
+                alert(wpfs['input_picks']);
                 return false;
         }
         return true;

@@ -10,17 +10,17 @@ function submitWithdrawalRequest()
 	}
 	if ( (String(userAmount).indexOf(".") != -1) && (String(userAmount).indexOf(".") < String(userAmount).length - 3))
 	{
-		alert("Number can only be 2 decimal places at most");
+		alert(wpfs['number_decimal']);
 		return false;
 	}
 	if ( isNaN(userAmount) )
 	{
-		alert("Please enter a valid withdrawal amount");
+		alert(wpfs['valid_amount']);
 		return false;
 	}
 	if ( userAmount == "" )
 	{
-		alert("Please enter an amount to withdrawal");
+		alert(wpfs['withdraw_amount']);
 		return false;
 	}
 	userBalance = userBalance.substr(1); // remove first character
@@ -37,7 +37,7 @@ function submitWithdrawalRequest()
 	var userEmail = $('#paypal_email').val();
 	if (! userEmail.match(emailRule))
 	{
-		alert("Please enter a valid email address");
+		alert(wpfs['invalid_email']);
 		return false;
 	}
 	return true;

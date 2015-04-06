@@ -20,20 +20,20 @@ jQuery.ranking = {
             if(pool.allow_method == 1)
             {
                 htmlForMethod = 
-                    '<th>Methods</th>\n\
-                    <th>Rounds</th>\n\
-                    <th>Minutes</th>\n\
-                    <th>Bonuses</th>';
+                    '<th>' + wpfs['h_Methods'] + '</th>\n\
+                    <th>' + wpfs['h_Rounds'] + '</th>\n\
+                    <th>' + wpfs['h_Minutes'] + '</th>\n\
+                    <th>' + wpfs['h_Bonuses'] + '</th>';
             }
             var htmlPlayers = 
                 '<table class="table table-bordered table-responsive table-condensed">\n\
                     <tr>\n\
-                        <th>User</th>\n\
-                        <th>Rank</th>\n\
-                        <th>Points</th>\n\
-                        <th>Winners</th>\n\
+                        <th>' + wpfs['h_User'] + '</th>\n\
+                        <th>' + wpfs['h_Rank'] + '</th>\n\
+                        <th>' + wpfs['h_Points'] + '</th>\n\
+                        <th>' + wpfs['h_Winners'] + '</th>\n\
                         ' + htmlForMethod + '\n\
-                        <th>Winnings</th>\n\
+                        <th>' + wpfs['h_Winnings'] + '</th>\n\
                     </tr>';
             if(users != null)
             {

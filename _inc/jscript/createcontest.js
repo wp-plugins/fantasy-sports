@@ -51,13 +51,20 @@ function setOptions(matchWith)
     switch ( matchWith ) 
     {
         case "head2head":
-        {
-                jQuery('.leagueDiv').hide();
-        }break;
+            jQuery('.leagueDiv').hide();
+            jQuery('#addPayouts').hide();
+            jQuery('#payouts').empty();
+            break;
         case "league":
-        {
-                jQuery('.leagueDiv').show();
-        }break;
+            jQuery('.leagueDiv').show();
+            break;
+        case "top3":
+            jQuery('#addPayouts').show();
+            break;
+        case "winnertakeall":
+            jQuery('#addPayouts').hide();
+            jQuery('#payouts').empty();
+            break;
         case "winnertakeall":
         case "top3":
         case "public":
@@ -264,6 +271,7 @@ jQuery.createcontest =
         
         //calculate
         var prizes = [];
+        var poss = [];
         if(type == 'head2head')
         {
             size = 2;
@@ -275,12 +283,48 @@ jQuery.createcontest =
             switch(structure)
             {
                 case "winnertakeall":
+                    poss.push("1st");
                     prizes.push(prize.toFixed(2));
                     break;
                 case "top3":
-                    prizes.push((prize * firstPercent / 100).toFixed(2));//1st
-                    prizes.push((prize * secondPercent / 100).toFixed(2));//2nd
-                    prizes.push((prize * thirdPercent / 100).toFixed(2));//3th
+                    if(jQuery("#payouts input[name='percentage[]']").length > 0)
+                    {
+                        var index = -1;
+                        jQuery("#payouts input[name='payouts_from[]']").each(function(){
+                            index++;
+                            var from = parseInt(jQuery(this).val());
+                            var to = parseInt(jQuery("#payouts input[name='payouts_to[]']:eq(" + index + ")").val());
+                            from = jQuery.createcontest.parsePosition(from);
+                            to = jQuery.createcontest.parsePosition(to);
+                            pos = from + " - " + to;
+                            if(from == to)
+                            {
+                                pos = from;
+                            }
+                            poss.push(pos);
+                        })
+                        jQuery("#payouts input[name='percentage[]']").each(function(){
+                            var percentage = jQuery(this).val();
+                            if(percentage != '')
+                            {
+                                percentage = parseInt(jQuery(this).val());
+                            }
+                            else 
+                            {
+                                percentage = 0;
+                            }
+                            prizes.push((prize * percentage / 100).toFixed(2));//1st
+                        })
+                    }
+                    else 
+                    {
+                        prizes.push((prize * firstPercent / 100).toFixed(2));//1st
+                        prizes.push((prize * secondPercent / 100).toFixed(2));//2nd
+                        prizes.push((prize * thirdPercent / 100).toFixed(2));//3th
+                        poss.push("1st");
+                        poss.push("2nd");
+                        poss.push("3rd");
+                    }
                     break;
                 /*default :
                     break;*/
@@ -292,11 +336,12 @@ jQuery.createcontest =
             '<table style="width:100%">\n\
                 <tr><td style="text-align:left">Pos</td><td style="text-align:right">Prize</td></tr>';
         var count = 0;
-        for(var i in prizes)
+        for(var i in poss)
         {
             var prize = prizes[i];
+            var pos = poss[i];
             count++;
-            place = null;
+            /*place = null;
             switch (count)
             {
                 case 1:
@@ -308,11 +353,31 @@ jQuery.createcontest =
                 case 3:
                     place = '3rd';
                     break;
-            }
-            html += '<tr><td style="text-align:left">' + place + '</td><td style="text-align:right">' + prize + '</td></tr>';
+            }*/
+            html += '<tr><td style="text-align:left">' + pos + '</td><td style="text-align:right">' + prize + '</td></tr>';
         }
         html += '</table>';
         jQuery("#prizesum").empty().append(html);	
+    },
+    
+    parsePosition: function(num)
+    {
+        switch (num)
+        {
+            case 1:
+                num = num + "st";
+                break;
+            case 2:
+                num = num + "nd";
+                break;
+            case 3:
+                num = num + "rd";
+                break;
+            default :
+                num = num + "th";
+                break;
+        }
+        return num;
     },
     
     addInsufficientZeroToMoneyFormat: function(str)
@@ -408,6 +473,33 @@ jQuery.createcontest =
         {
             jQuery('.for_playerdraft.for_group').show();
         }
+    },
+    
+    addPayouts: function()
+    {
+        var plugin_url_image = jQuery("#plugin_url_image").val();
+        var html = 
+            '<div>\n\
+                <label style="display: inline-block;width: auto">' + wpfs['from'] + '</label>\n\
+                <input type="text" name="payouts_from[]" value="" style="display: inline-block;width: 50px;padding: 2px 5px;text-align:center" onkeyup="jQuery.createcontest.calculatePrizes()">\n\
+                <label style="display: inline-block;width: auto">' + wpfs['to'] + '</label>\n\
+                <input type="text" name="payouts_to[]" value="" style="display: inline-block;width: 50px;padding: 2px 5px;text-align:center" onkeyup="jQuery.createcontest.calculatePrizes()">\n\
+                <label style="display: inline-block;width: auto">:</label>\n\
+                <input type="text" name="percentage[]" value="" style="display: inline-block;width: 50px;padding: 2px 5px;text-align:center" onkeyup="jQuery.createcontest.calculatePrizes()">\n\
+                <label style="display: inline-block;width: auto">%</label>\n\
+                <a onclick="return jQuery.createcontest.removePayouts(jQuery(this).parent());" href="#">\n\
+                    <img title="' + wpfs['delete'] + '" alt="' + wpfs['delete'] + '" src="' + plugin_url_image + 'delete.png"\>\n\
+                </a>\n\
+            </div>';
+        jQuery("#payouts").append(html);
+        return false;
+    },
+    
+    removePayouts: function(item)
+    {
+        item.remove();
+        this.calculatePrizes();
+        return false;
     }
 }
 

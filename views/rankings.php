@@ -11,13 +11,13 @@
                 <tbody>
                     <tr class="info">
                         <td colspan="2">
-                            <br>&nbsp;&nbsp;<b>Prize structure:</b> <?=$aLeague['prize_structure'];?>
-                            <br>&nbsp;&nbsp;<b>Sport:</b> <?=$aPool['sport_name'];?>
-                            <br>&nbsp;&nbsp;<b>Game Type:</b> <?=$aLeague['gameType'];?>
-                            <br>&nbsp;&nbsp;<b>Start:</b> <?=$aLeague['startDate'];?>
-                            <br>&nbsp;&nbsp;<b>Ends:</b> Prizes paid next day
-                            <br>&nbsp;&nbsp;<b>Creator:</b> <?=$creator->data->user_login;?>
-                            <br>&nbsp;&nbsp;<b>Players:</b> <?=$aLeague['size'];?> player game, <?=$aLeague['entries'];?> entries</td>
+                            <br>&nbsp;&nbsp;<b><?=__('Prize structure', FV_DOMAIN)?>:</b> <?=$aLeague['prize_structure'];?>
+                            <br>&nbsp;&nbsp;<b><?=__('Sport', FV_DOMAIN)?>:</b> <?=$aPool['sport_name'];?>
+                            <br>&nbsp;&nbsp;<b><?=__('Game Type', FV_DOMAIN)?>:</b> <?=$aLeague['gameType'];?>
+                            <br>&nbsp;&nbsp;<b><?=__('Start', FV_DOMAIN)?>:</b> <?=$aLeague['startDate'];?>
+                            <br>&nbsp;&nbsp;<b><?=__('Ends', FV_DOMAIN)?>:</b> Prizes paid next day
+                            <br>&nbsp;&nbsp;<b><?=__('Creator', FV_DOMAIN)?>:</b> <?=$creator->data->user_login;?>
+                            <br>&nbsp;&nbsp;<b><?=__('Players', FV_DOMAIN)?>:</b> <?=$aLeague['size'];?> player game, <?=$aLeague['entries'];?> entries</td>
                         <td width="170" align="center">
                             <br>
                             <div style="height:40px;-moz-border-radius: 5px;-webkit-border-radius: 5px;border: 1px solid #000;padding: 10px;background-color: #E6E6E6;">
@@ -45,7 +45,7 @@
     <br>
     <div id="listPlayers"></div>
     <br>
-    <div class="results_caption">Results for:  <span class="competitor_name competitor_name_2"><?=__('Please select a user');?></span></div>
+    <div class="results_caption"><?=__('Results for')?>:  <span class="competitor_name competitor_name_2"><?=__('Please select a user', FV_DOMAIN);?></span></div>
     <br>
     <div id="listFixtures"></div>
 </div>
@@ -56,7 +56,7 @@
     <form name="inviteForm" id="inviteForm">
         <input type="hidden" name="val[importleagueID]" value="<?=$leagueID;?>" />
         <div>
-            <label><?=__('Attach a message');?></label>
+            <label><?=__('Attach a message', FV_DOMAIN);?></label>
             <br>
             <textarea rows='3' cols='58' name='val[message_boxinvite]'></textarea>
         </div>
@@ -65,7 +65,7 @@
             <tr>
                 <td>
                     <div>
-                        <label><?=__('Who would you like to invite?');?></label>
+                        <label><?=__('Who would you like to invite?', FV_DOMAIN);?></label>
                         <div>
                             <input type="text" name="val[emails][]" placeholder="Enter email address" style="width:200px">
                         </div>
@@ -85,11 +85,11 @@
                     <br>
                     <div>
                         <input type='submit' class='button' value='Send Invites' onclick='jQuery.ranking.sendInvite(); return false;'>
-                        <span class="inviting" style="display: none"><?=__('Sending...');?></span>
+                        <span class="inviting" style="display: none"><?=__('Sending...', FV_DOMAIN);?></span>
                     </div>
                 </td>
                 <td>
-                    <label><?=__('Select your Friends');?></label>
+                    <label><?=__('Select your Friends', FV_DOMAIN);?></label>
                     <div class="Content list_of_users_to_invite" style="width:450px;height:250px;overflow:auto;">
                         <input type="button" onclick="jQuery.ranking.checkAll()" value="Select All" class="button">
                         <input type="button" onclick="jQuery.ranking.checkNone()" value="Select None" class="button">

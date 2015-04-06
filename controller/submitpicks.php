@@ -34,6 +34,7 @@ class Submitpicks
     public static function addContent()
     {
         $leagueID = pageSegment(3);
+        $entry_number = !empty($_GET['num']) ? "/?num=".$_GET['num'] : '';
         //league
         $league = self::$fanvictor->getLeagueDetail($leagueID);
         $league = $league[0];
@@ -44,19 +45,19 @@ class Submitpicks
         
         if(strtolower($league['gameType']) == 'playerdraft')
         {
-            redirect(FANVICTOR_URL_GAME.$leagueID, null, true);
+            redirect(FANVICTOR_URL_GAME.$leagueID.$entry_number, null, true);
         }
         else if(!self::$fanvictor->isNormalLeagueExist($leagueID))
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('League not found'), true);
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __('League not found', FV_DOMAIN), true);
         }
         else if($aPool['status'] != 'NEW')//check league completed
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('This contest had completed'), true);
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __('This contest had completed', FV_DOMAIN), true);
         }
         else if(!self::$payment->isUserEnoughMoneyToJoin($league['entry_fee'], $leagueID))
         {
-            redirect(FANVICTOR_URL_ADD_FUNDS, __('You do not have enough funds to enter. Please add funds'));
+            redirect(FANVICTOR_URL_ADD_FUNDS, __('You do not have enough funds to enter. Please add funds', FV_DOMAIN));
         }
         else 
         {
@@ -64,7 +65,7 @@ class Submitpicks
             $errorMessage = '';
             if ( $htmlData == 'pool_expired' )
             {
-                $errorMessage = __('Sorry the pool expired');
+                $errorMessage = __('Sorry the pool expired', FV_DOMAIN);
             }*/
             $aDatas = self::$fanvictor->getEnterNormalGameData($leagueID);
             $aLeague = $aDatas['league'];
@@ -94,15 +95,15 @@ class Submitpicks
         }
         else if(!self::$fanvictor->isNormalLeagueExist($leagueID))
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('League not found'), true);
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __('League not found', FV_DOMAIN), true);
         }
         else if($aPool['status'] != 'NEW')//check league completed
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('This contest had completed'), true);
+            redirect(FANVICTOR_URL_CREATE_CONTEST, __('This contest had completed', FV_DOMAIN), true);
         }
         else if(!self::$payment->isUserEnoughMoneyToJoin($league['entry_fee'], $leagueID))
         {
-            redirect(FANVICTOR_URL_ADD_FUNDS, __('You do not have enough funds to enter. Please add funds'));
+            redirect(FANVICTOR_URL_ADD_FUNDS, __('You do not have enough funds to enter. Please add funds', FV_DOMAIN));
         }
         else 
         {
@@ -171,7 +172,7 @@ class Submitpicks
                         }
                         else
                         {
-                            $errorMessage = __('No league ID is set.');
+                            $errorMessage = __('No league ID is set.', FV_DOMAIN);
                             $error = true;
                         }
                     }
@@ -181,24 +182,24 @@ class Submitpicks
                         {
                             if ( 'pool_expired' == $jsonObject['reason'] )
                             {
-                                $errorMessage = __('The pool has expired. Your picks have NOT been submitted.');
+                                $errorMessage = __('The pool has expired. Your picks have NOT been submitted.', FV_DOMAIN);
                             }
                             elseif ( 'pool_full' == $jsonObject['reason'] )
                             {
-                                $errorMessage = __('The pool has maximum amount of users. Your picks have NOT been submitted.');
+                                $errorMessage = __('The pool has maximum amount of users. Your picks have NOT been submitted.', FV_DOMAIN);
                             }
                             elseif ( 'not_enough_funds' == $jsonObject['reason'] )
                             {
-                                $errorMessage = __('You do NOT have enough funds to enter. Please ADD FUNDS.');
+                                $errorMessage = __('You do NOT have enough funds to enter. Please ADD FUNDS.', FV_DOMAIN);
                             }
                             elseif ( 'cannot_play_payed' == $jsonObject['reason'] )
                             {
-                                $errorMessage = __("Sorry, we cannot process your request. You can't play payed leagues.");
+                                $errorMessage = __("Sorry, we cannot process your request. You can't play payed leagues.", FV_DOMAIN);
 
                             }
                             elseif ( 'same_league_has_been_already_created' == $jsonObject['reason'] )
                             {
-                                $errorMessage = __('The league is not created because you have already created the same league.');
+                                $errorMessage = __('The league is not created because you have already created the same league.', FV_DOMAIN);
                             }
                         }
                         elseif ( isset($jsonObject['msg']) )
@@ -209,7 +210,7 @@ class Submitpicks
                 }
                 else
                 {
-                    $errorMessage = __('Error occured. Your picks have NOT been submitted.');
+                    $errorMessage = __('Error occured. Your picks have NOT been submitted.', FV_DOMAIN);
                 }
             }
             $_SESSION['showInviteFriends'.$leagueID] = true;

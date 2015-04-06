@@ -10,8 +10,8 @@ class TableScoringCategory extends WP_List_Table
         global $status, $page;
         $this->data = null;
         parent::__construct( array(
-            'singular'  => __( 'book', 'mylisttable' ),     //singular name of the listed records
-            'plural'    => __( 'books', 'mylisttable' ),   //plural name of the listed records
+            'singular'  => __( 'book', 'mylisttable' , FV_DOMAIN),     //singular name of the listed records
+            'plural'    => __( 'books', 'mylisttable' , FV_DOMAIN),   //plural name of the listed records
             'ajax'      => false        //does this table support ajax?
         ) );
     }
@@ -55,11 +55,11 @@ class TableScoringCategory extends WP_List_Table
     {
         $columns = array(
             'cb'        => '<input type="checkbox" />',
-            'name' => __('Name', 'mylisttable'),
-            'points' => __('Point', 'mylisttable'),
-            'org_id' => __('Sport', 'mylisttable'),
-            'type' => __('Type', 'mylisttable'),
-            'is_active' => __('Active', 'mylisttable'),
+            'name' => __('Name', FV_DOMAIN),
+            'points' => __('Point', FV_DOMAIN),
+            'org_id' => __('Sport', FV_DOMAIN),
+            'type' => __('Type', FV_DOMAIN),
+            'is_active' => __('Active', FV_DOMAIN),
             'edit'    => '',
         );
         return $columns;

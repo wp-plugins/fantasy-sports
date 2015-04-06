@@ -45,6 +45,7 @@ class Payment
     
     function onlineTransaction($gateway = PAYPAL, $aSettings)
     {
+        global $wpdb;
         switch($gateway)
         {
             case PAYPAL:
@@ -248,9 +249,9 @@ class Payment
              . "FROM $table_name "
              . $sCons;
         $data = $wpdb->get_var($sql);
-        if($data == 1)
+        if($data > 0)
         {
-            return true;
+            return $data;
         }
         return false;
     }
@@ -308,7 +309,7 @@ class Payment
                 {
                     $aDatas[$k]['amount'] = "-".$aData['amount'];
                 }
-				if($aData['type'] == 'MAKE_BET')
+                if($aData['type'] == 'MAKE_BET')
                 {
                     $aDatas[$k]['type'] = "ENTRY FEE";
                 }

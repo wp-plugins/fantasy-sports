@@ -1,5 +1,5 @@
 <div class="wrap">
-    <h2><?=__("Event Statistics");?></h2>
+    <h2><?=__("Event Statistics", FV_DOMAIN);?></h2>
     <?=settings_errors();?>
     <form method="get">
         <input type="hidden" name="page" value="<?=$_REQUEST['page'];?>" />
@@ -7,7 +7,7 @@
     </form>
     <?php $myListTable->display();$data = $myListTable->getData()?>
     <p>
-        <b><?=__("Total Cash Processed");?>:</b>
+        <b><?=__("Total Cash Processed", FV_DOMAIN);?>:</b>
         <?=$data['accumCash'];?>
     </p>
     <p>
@@ -19,4 +19,4 @@
         <?=$data['accumProfit'];?>
     </p>
 </div>
-<div id="dlgStatistic" style="display: none"><center><?=__("Loading...Please wait!");?></center></div>
+<div id="dlgStatistic" style="display: none"><center><?=__("Loading...Please wait!", FV_DOMAIN);?></center></div>
