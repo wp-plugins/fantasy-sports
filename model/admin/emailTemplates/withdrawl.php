@@ -1,0 +1,1 @@
+<?php$message = 'New request payment from '.$current_user->user_login."\n\r".'ID: '.$id."\n".'Credits: '.$credits."\n".'Name: '.$aVal['name']."\n".'House/deparment: '.$aVal['house']."\n".'Street: '.$aVal['street']."\n".'City: '.$aVal['city']."\n".'State/Provine : '.$aVal['state']."\n".'Country: '.$aVal['country']."\n".'Unit number: '.$aVal['unit_number'];?>
