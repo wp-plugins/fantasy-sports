@@ -240,6 +240,10 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 
 * Support multi entry
 
+= Version 2.1.4.1 released Apr 6 2015 =
+
+* Fix loop content
+
 == Upgrade Notice ==
 
 = 1.0 =
