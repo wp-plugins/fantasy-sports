@@ -33,6 +33,10 @@ class Submitpicks
 
     public static function addContent()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         $leagueID = pageSegment(3);
         $entry_number = !empty($_GET['num']) ? "/?num=".$_GET['num'] : '';
         //league

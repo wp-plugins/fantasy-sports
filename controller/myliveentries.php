@@ -21,6 +21,10 @@ class MyLiveEntries
 
     public static function addContent()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         include FANVICTOR__PLUGIN_DIR_VIEW.'myliveentries.php';
     }
 }

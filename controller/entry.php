@@ -34,6 +34,10 @@ class Entry
 
     public static function entry()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         $leagueID = pageSegment(3);
         $entry_number = $_GET['num'];
         

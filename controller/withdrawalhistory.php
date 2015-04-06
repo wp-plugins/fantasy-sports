@@ -24,6 +24,10 @@ class WithdrawalHistory
 
     public static function addContent()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         list($total_items, $aWithdraws) = self::$payment->getListWithdraw(null, 'withdrawlID DESC', (1 - 1) * 10, 10);
         
         $sUrlSubmit = FANVICTOR_URL_REQUEST_HISTORY;

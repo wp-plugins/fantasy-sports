@@ -37,6 +37,10 @@ class Createcontest
 
     public static function addContent()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         $aPools = $aSports = $aFights = null;
         
         //pools and fights

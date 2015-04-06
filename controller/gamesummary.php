@@ -20,6 +20,10 @@ class GameSummary
     
     public static function addContent()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         $aPools = self::$fanvictor->getGamesummary();
 		$htmlData = $aPools['html'];	
  		$sHeader = __("Game summary", FV_DOMAIN);

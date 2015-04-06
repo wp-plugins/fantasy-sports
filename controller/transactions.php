@@ -25,6 +25,10 @@ class Transactions
 
     public static function addContent()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         list($total_items, $aFundHistorys) = self::$payment->getFundhistory(null, 'fundshistoryID DESC', (1 - 1) * 10, 10);
         $aFundHistorys = self::$payment->parseFunhistoryData($aFundHistorys);
         

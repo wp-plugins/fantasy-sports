@@ -33,6 +33,10 @@ class Contest
 
     public static function contest()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         $leagueId = pageSegment(3);
         $entry_number = !empty($_GET['num']) ? $_GET['num'] : 1;
         if(!self::$fanvictor->isPlayerDraftLeagueExist($leagueId))

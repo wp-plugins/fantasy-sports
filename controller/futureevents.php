@@ -23,6 +23,10 @@ class FutureEvents
 
     public static function addContent()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         $sHeader = __("Future Events", FV_DOMAIN);
         $futureEvents = self::$fanvictor->getFutureEvents();
         include FANVICTOR__PLUGIN_DIR_VIEW.'futureevents.php';

@@ -53,6 +53,10 @@ class Game
 
     public static function game()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         $leagueId = pageSegment(3);
         $entry_number = isset($_GET['num']) ? $_GET['num'] : 0;
         //league
@@ -149,7 +153,7 @@ class Game
                 redirect(FANVICTOR_URL_CREATE_CONTEST, __('Sorry! This contest is full', FV_DOMAIN), true);
                 break;
             case 5:
-                redirect(FANVICTOR_URL_GAME.$league[0]['leagueID'], __("Your team has exceeded this game's salary cap. Please change your team so it fits under the salary cap before entering", FV_DOMAIN), true);
+                redirect(FANVICTOR_URL_GAME.$league[0]['leagueID'], __("Your team has exceeded this game's salary cap. Please change your team so it fits under the salary cap before entering"), true, FV_DOMAIN);
                 break;
             case 6:
                 redirect(FANVICTOR_URL_GAME.$league[0]['leagueID'], __("Please select a player for each position", FV_DOMAIN), true);

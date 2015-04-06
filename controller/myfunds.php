@@ -28,6 +28,10 @@ class MyFunds
 
     public static function addContent()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         unset($_SESSION['is_transaction']);
         unset($_SESSION['iFundHitoryId']);
         unset($_SESSION['totalMoney']);

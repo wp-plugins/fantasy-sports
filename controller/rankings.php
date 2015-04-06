@@ -35,6 +35,10 @@ class Rankings
 
     public static function addContent()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         $leagueID = pageSegment(3);
         if($leagueID > 0)
         {

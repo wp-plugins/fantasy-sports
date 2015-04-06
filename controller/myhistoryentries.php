@@ -21,6 +21,10 @@ class MyHistoryEntries
 
     public static function addContent()
     {
+        if(!in_the_loop())
+        {
+            return;
+        }
         $aLeagues = self::$fanvictor->getHistoryEntries();
         $aLeagues = self::$fanvictor->parseLeagueData($aLeagues);
         include FANVICTOR__PLUGIN_DIR_VIEW.'myhistoryentries.php';
