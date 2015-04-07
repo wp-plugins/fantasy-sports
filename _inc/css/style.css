@@ -411,5 +411,39 @@ div#tableLiveEntriesContent > div > div {
 .tableLiveEntries > div > div > span{
     display:none;
 }
+@media screen and (max-width:992px){
+    .wrap_content{
+        overflow: auto;
+    }
+    .tableTitle{
+            display:none;
+    }
+    .tableLiveEntries > div > div > span{
+        display: block;
+        float: left;
+        width: 120px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #717171;
+    }
+    .tableLiveEntries.table6 > div > div,
+    .tableLiveEntries.table11 > div > div,
+    .tableLiveEntries > div > div{
+        float:none!important;
+        width:auto!important;
+        padding:5px 0;
+    }
+    .contentPlugin .widget-title{
+        font-size:17px;
+    }
+    .landingContent .left{
+        float:none;
+        width:100%;
+    }
+    div.tableLiveEntriesContent, div#tableLiveEntriesContent{
+        border:none;
+    }
+}
 
 

@@ -12,15 +12,14 @@
             <div id="tableLiveEntries">
                 <div class="tableLiveEntries">
                     <div class="tableTitle">
-                        <div style="width: 40px"><?=__('ID', FV_DOMAIN)?></div>
-                        <div style="width: 150px"><?=__('Date', FV_DOMAIN)?></div>
-                        <div style="width: 150px"><?=__('Name', FV_DOMAIN)?></div>
-                        <div style="width: 40px"><?=__('Size', FV_DOMAIN)?></div>
-                        <div><?=__('Entries', FV_DOMAIN)?></div>
-                        <div><?=__('Entry Fee', FV_DOMAIN)?></div>
-                        <div><?=__('Prizes', FV_DOMAIN)?></div>
-                        <div><?=__('Rank', FV_DOMAIN)?></div>
-                        <div>&nbsp;</div>
+                        <div style="width: 6%"><?=__('ID', FV_DOMAIN)?></div>
+                        <div style="width: 15%"><?=__('Date', FV_DOMAIN)?></div>
+                        <div style="width: 38%"><?=__('Name', FV_DOMAIN)?></div>
+                        <div style="width: 10%"><?=__('Entries', FV_DOMAIN)?></div>
+                        <div style="width: 10%"><?=__('Entry Fee', FV_DOMAIN)?></div>
+                        <div style="width: 7%"><?=__('Prizes', FV_DOMAIN)?></div>
+                        <div style="width: 6%"><?=__('Rank', FV_DOMAIN)?></div>
+                        <div style="width: 8%">&nbsp;</div>
                     </div>
                 </div>
                 <div class="tableLiveEntries" id="tableLiveEntriesContent"></div>

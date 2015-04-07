@@ -158,25 +158,25 @@
                     <div class="f-items" id="lobbyContent">
                         <div class="lobbyHeader">
                             <div>
-                                <div class="f-title">
+                                <div class="f-title" style="width: 34%">
                                     <?=__('Contest', FV_DOMAIN);?>
                                 </div>
-                                <div class="f-gametype">
+                                <div class="f-gametype" style="width: 12%">
                                     <?=__('Type', FV_DOMAIN);?>
                                 </div>
-                                <div class="f-entries">
+                                <div class="f-entries" style="width: 12%">
                                     <?=__('Entries', FV_DOMAIN);?>
                                 </div>
-                                <div class="f-entryfee">
+                                <div class="f-entryfee" style="width: 8%">
                                     <?=__('Entry', FV_DOMAIN);?>
                                 </div>
-                                <div class="f-prizes">
+                                <div class="f-prizes" style="width: 8%">
                                     <?=__('Prizes', FV_DOMAIN);?>
                                 </div>
-                                <div class="f-starttime">
+                                <div class="f-starttime" style="width: 18%">
                                     <?=__('Starts&nbsp;(ET)', FV_DOMAIN);?>
                                 </div>
-                                <div class="f-entry">&nbsp;</div>
+                                <div class="f-entry" style="width: 8%">&nbsp;</div>
                             </div>
                         </div>
                         <div id="lobbyData"></div>

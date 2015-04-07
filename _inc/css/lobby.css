@@ -1444,6 +1444,25 @@ a.f-title-link {
 .f-lobbyitem {
     padding-bottom: 10px;
 }
+.f-lobbyitem .indicator{
+    float: right;
+    margin-right: 10px;
+}
+.f-lobbyitem .indicator:after{
+    display: block;
+    clear: both;
+    content: "";
+}
+.f-lobbyitem .indicator .multi-entry{
+    background-color: #ff9100;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 9px;
+    height: 16px;
+    text-align: center;
+    width: 16px;
+    cursor: pointer;
+}
 div.f-lobby .f-filter div.f-entryfee{
     height: 70px;
     font-size: 14px;
@@ -1456,4 +1475,86 @@ div.f-lobby .f-filter div.f-entryfee{
 }
 span.ftMobileTitle {
     display: none;
+}
+@media screen and (max-width:991px){
+    .f-lobbyitem > div > span{
+        display:block;
+    }
+    div.f-lobby div.f-empty-view h1{
+        position:static;
+        width: auto;
+    }
+    div.f-lobby div.f-filter{
+        width: 100%;
+        height: auto;
+        float: none;
+    }
+    div.f-lobby div.f-filter + div.f-items{
+        margin-left:0;
+    }
+    .ftMobileTitle{
+        display:block;
+    }
+    #lobbyContent div.f-starttime,
+    div.f-lobby #lobbyData div.f-entryfee > div,
+    #lobbyContent div.f-entryfee, #lobbyContent div.f-entries, #lobbyContent div.f-prizes,
+    #lobbyContent div.f-entryfee, #lobbyContent div.f-entries, #lobbyContent div.f-prizes,
+    #lobbyContent div.f-entryfee, #lobbyContent div.f-entries, #lobbyContent div.f-prizes,
+    #lobbyData > div > div.f-title, .lobbyHeader > div > div.f-title,
+    #lobbyData > div > div, .lobbyHeader > div > div{
+        float:none;
+        width:auto !important;
+    }
+    .f-lobbyitem > div > span {
+        float: left;
+        width: 120px;
+        text-transform: uppercase;
+        color: #717171;
+        font-weight: bold;
+    }
+    .f-lobbyitem > div{
+        padding:5px 0!important;
+    }
+    div.f-lobby div.f-items div.f-body div.f-inner{
+        height:auto;
+        overflow: auto;
+    }
+    .f-lobby .f-text-search{
+        left: 0;
+        box-sizing: border-box;
+        right: 0;
+        width: auto;
+        padding: 0 10px;
+        top: 80px;
+    }
+    .f-lobby input.f-search-input{
+        margin:0;
+    }
+    div.entry-content > div.f-lobby > div.f-title{
+        height:88px;
+    }
+    .f-lobby .f-title .f-nextgame{
+        top:48px;
+    }
+	
+	.f-lobby .f-text-search {
+	  box-sizing: border-box;
+	  left: 0;
+	  padding: 0 10px;
+	  right: 0;
+	  top: 100px;
+	  width: auto;
+	}
+	.f-lobby .f-text-search input{
+	  width: 100%;
+	}
+	div.f-lobby div.f-filter{
+		 padding: 65px 0 32px;
+	}
+	div.f-lobby div.f-entryfee > div{
+		width:100%;
+	}
+	.ui-slider{
+		width:90%;
+	}
 }

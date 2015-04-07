@@ -291,17 +291,16 @@ jQuery.league =
                     aLeague = aLeagues[i];
                     html += 
                         '<div>\n\
-                            <div style="width: 40px"><span>ID</span>' + aLeague.leagueID+ '</div>\n\
-                            <div style="width: 150px"><span>DATE</span>' + aLeague.startDate+ '</div>\n\
-                            <div style="width: 150px">\n\
+                            <div style="width: 6%"><span>ID</span>' + aLeague.leagueID+ '</div>\n\
+                            <div style="width: 15%"><span>DATE</span>' + aLeague.startDate+ '</div>\n\
+                            <div style="width: 38%">\n\
                                 <span>NAME</span>' + aLeague.name+ '\n\
                             </div>\n\
-                            <div style="width: 40px"><span>SIZE</span>' + aLeague.size+ '</div>\n\
-                            <div><span>ENTRIES</span>' + aLeague.entries+ '</div>\n\
-                            <div><span>ENTRY FEE</span>$' + aLeague.entry_fee+ '</div>\n\
-                            <div><span>PRIZES</span>$' + aLeague.prizes+ '</div>\n\
-                            <div><span>RANK</span>' + aLeague.rank+ '</div>\n\
-                            <div style="text-align: center">\n\
+                            <div style="width: 10%"><span>ENTRIES</span>' + aLeague.entries+ ' / ' + aLeague.size+ '</div>\n\
+                            <div style="width: 10%"><span>ENTRY FEE</span>$' + aLeague.entry_fee+ '</div>\n\
+                            <div style="width: 7%"><span>PRIZES</span>$' + aLeague.prizes+ '</div>\n\
+                            <div style="width: 6%"><span>RANK</span>' + aLeague.rank+ '</div>\n\
+                            <div style="text-align: center;width: 8%">\n\
                                 <input type="button" class="btn btn-success btn-xs" value="' + wpfs['view'] + '" onclick="window.location = \' ' + url_ranking + aLeague.leagueID + '\'">\n\
                             </div>\n\
                         </div>';

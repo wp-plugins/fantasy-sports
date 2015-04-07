@@ -9003,3 +9003,12 @@ h5.f-game-info-scoring-title{
     opacity: 0.3;
 }
 }
+
+@media screen and (max-width:992px){
+    .f-quickfire-lightbox .f-inner{
+       overflow: auto; 
+    }
+    .f-roster-container .f-roster{
+        padding: 5px;
+    }
+}

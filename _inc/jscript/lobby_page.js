@@ -118,7 +118,7 @@ jQuery.lobby =
 
                                         html +=   
                                             '<div class="f-lobbyitem">\n\
-                                                <div class="f-title"><span class="ftMobileTitle">CONTEST</span>\n\
+                                                <div class="f-title" style="width: 34%"><span class="ftMobileTitle">CONTEST</span>\n\
                                                     ' + htmlImage + '\n\
                                                     <a href="#" class="f-title-link" onclick="return jQuery.playerdraft.ruleScoring(' + aLeague.leagueID + ', \'' + quoteEncoding(aLeague.name) + '\', \'' + aLeague.entry_fee + '\', \'' + aLeague.salary_remaining + '\')">' + aLeague.name + '\n\
                                                         <span class="f-icon1"></span><span class="f-icon2"></span>\n\
@@ -126,19 +126,19 @@ jQuery.lobby =
                                                     </a>\n\
                                                     ' + htmlMultiEntry + '\n\
                                                 </div>\n\
-                                                <div class="f-gametype"><span class="ftMobileTitle">TYPE</span>' + aLeague.gameType + '</div>\n\
-                                                <div class="f-entries"><span class="ftMobileTitle">ENTRIES</span>\n\
+                                                <div class="f-gametype" style="width: 12%"><span class="ftMobileTitle">TYPE</span>' + aLeague.gameType + '</div>\n\
+                                                <div class="f-entries" style="width: 12%"><span class="ftMobileTitle">ENTRIES</span>\n\
                                                     <a href="#" onclick="return jQuery.playerdraft.ruleScoring(' + aLeague.leagueID + ', \'' + quoteEncoding(aLeague.name) + '\', \'' + aLeague.entry_fee + '\', \'' + aLeague.salary_remaining + '\', 2)">' + aLeague.entries + '</a>\n\
                                                                                                         /' + aLeague.size + '\n\
                                                 </div>\n\
-                                                <div class="f-entryfee"><span class="ftMobileTitle">ENTRY</span><div>$' + aLeague.entry_fee + '</div></div>\n\
-                                                <div class="f-prizes breakdown"><span class="ftMobileTitle">PRIZES</span>\n\
+                                                <div class="f-entryfee" style="width: 8%"><span class="ftMobileTitle">ENTRY</span><div>$' + aLeague.entry_fee + '</div></div>\n\
+                                                <div class="f-prizes breakdown" style="width: 8%"><span class="ftMobileTitle">PRIZES</span>\n\
                                                     <div onclick="return jQuery.playerdraft.ruleScoring(' + aLeague.leagueID + ', \'' + quoteEncoding(aLeague.name) + '\', \'' + aLeague.entry_fee + '\', \'' + aLeague.salary_remaining + '\', 3)">\n\
                                                         $' + aLeague.prizes + '\n\
                                                     </div>\n\
                                                 </div>\n\
-                                                <div class="f-starttime"><span class="ftMobileTitle">STARTS (ET)</span><div>' + aLeague.startDate + '</div></div>\n\
-                                                <div class="f-entry">\n\
+                                                <div class="f-starttime" style="width: 18%"><span class="ftMobileTitle">STARTS (ET)</span><div>' + aLeague.startDate + '</div></div>\n\
+                                                <div class="f-entry" style="width: 8%">\n\
                                                     <div>\n\
                                                         <a href="' + jQuery('#submitUrl').val() + aLeague.leagueID + '" class="f-button f-primary f-tiny">' + enterLable + '</a>\n\
                                                     </div>\n\

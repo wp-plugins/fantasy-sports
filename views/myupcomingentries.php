@@ -8,31 +8,30 @@
                  <div >
                     <div class="tableLiveEntries">
                         <div class="tableTitle">
-                            <div><?=__('ID', FV_DOMAIN)?></div>
-                            <div><?=__('Date', FV_DOMAIN)?></div>
-                            <div><?=__('Name', FV_DOMAIN)?></div>
-                            <div><?=__('Type', FV_DOMAIN)?></div>
-                            <div><?=__('Entries', FV_DOMAIN)?></div>
-                            <div><?=__('Size', FV_DOMAIN)?></div>
-                            <div><?=__('Entry Fee', FV_DOMAIN)?></div>
-                            <div><?=__('Prizes', FV_DOMAIN)?></div><div>&nbsp;</div>
+                            <div style="width: 6%"><?=__('ID', FV_DOMAIN)?></div>
+                            <div style="width: 15%"><?=__('Date', FV_DOMAIN)?></div>
+                            <div style="width: 32%"><?=__('Name', FV_DOMAIN)?></div>
+                            <div style="width: 12%"><?=__('Type', FV_DOMAIN)?></div>
+                            <div style="width: 10%"><?=__('Entries', FV_DOMAIN)?></div>
+                            <div style="width: 10%"><?=__('Entry Fee', FV_DOMAIN)?></div>
+                            <div style="width: 7%"><?=__('Prizes', FV_DOMAIN)?></div>
+                            <div style="width: 8%">&nbsp;</div>
                         </div>
                     </div>
                     <?php if($aLeagues != null):?>
                     <div class="tableLiveEntries tableLiveEntriesContent">
                         <?php foreach($aLeagues as $aLeague):?>
                         <div>
-                            <div><span><?=__('ID', FV_DOMAIN)?></span><?=$aLeague['leagueID'];?></div>
-                            <div><span><?=__('Date', FV_DOMAIN)?></span><?=$aLeague['startDate'];?></div>
-                            <div>
+                            <div style="width: 6%"><span><?=__('ID', FV_DOMAIN)?></span><?=$aLeague['leagueID'];?></div>
+                            <div style="width: 15%"><span><?=__('Date', FV_DOMAIN)?></span><?=$aLeague['startDate'];?></div>
+                            <div style="width: 32%">
                                 <span><?=__('Name', FV_DOMAIN)?></span><?=$aLeague['name'];?>
                             </div>
-                            <div><span><?=__('Type', FV_DOMAIN)?></span><?=$aLeague['gameType'];?></div>
-                            <div><span><?=__('Entries', FV_DOMAIN)?></span><?=$aLeague['entries'];?></div>
-                            <div><span><?=__('Size', FV_DOMAIN)?></span><?=$aLeague['size'];?></div>
-                            <div><span><?=__('Entry Fee', FV_DOMAIN)?></span>$<?=$aLeague['entry_fee'];?></div>
-                            <div><span><?=__('Prizes', FV_DOMAIN)?></span>$<?=$aLeague['prizes'];?></div>
-                            <div style="text-align: center">
+                            <div style="width: 12%"><span><?=__('Type', FV_DOMAIN)?></span><?=$aLeague['gameType'];?></div>
+                            <div style="width: 10%"><span><?=__('Entries', FV_DOMAIN)?></span><?=$aLeague['entries'];?> / <?=$aLeague['size'];?></div>
+                            <div style="width: 10%"><span><?=__('Entry Fee', FV_DOMAIN)?></span>$<?=$aLeague['entry_fee'];?></div>
+                            <div style="width: 7%"><span><?=__('Prizes', FV_DOMAIN)?></span>$<?=$aLeague['prizes'];?></div>
+                            <div style="text-align: center;width: 8%">
                                 <input type="button" class="btn btn-success btn-xs" value="<?=__('Edit', FV_DOMAIN)?>" onclick="window.location = '<?=FANVICTOR_URL_SUBMIT_PICKS.$aLeague['leagueID']."/?num=".$aLeague['entry_number'];?>'">
                             </div>
                         </div>

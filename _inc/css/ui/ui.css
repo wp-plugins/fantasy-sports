@@ -1308,3 +1308,8 @@ button.ui-button::-moz-focus-inner {
     height: 100%;
     margin: -1px;
 }
+@media screen and (max-width:991px){
+    .ui-dialog{
+        width: 100% !important;
+    }
+}
