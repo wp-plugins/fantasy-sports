@@ -485,5 +485,10 @@ class Fanvictor extends Model
     {
         return $this->sendRequest("getContestResult", array("leagueID" => $leagueID), false);
     }
+    
+    public function getPlayerNews($playerID)
+    {
+        return $this->sendRequest("getPlayerNews", array("playerID" => $playerID), false);
+    }
 }
 ?>

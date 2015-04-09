@@ -358,9 +358,8 @@ class Ajax
     
     public static function loadPlayerNews()
     {
-        self::$players->selectField(array('player_news_brief', 'player_news'));
-        $news = self::$players->getPlayers($_POST['playerID']);
-        exit(json_encode($news[0]));
+        $news = self::$fanvictor->getPlayerNews($_POST['playerID']);
+        exit(json_encode($news));
     }
 
     //////////////////

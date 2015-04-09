@@ -176,10 +176,11 @@
             </td>
         </tr>
         <tr valign="top">
-            <th scope="row"><?=__('DirectPost account', FV_DOMAIN);?></th>
+            <th scope="row"><?=__('Choice account', FV_DOMAIN);?></th>
             <td>
-                <input type="text" name="directpost_login" class="regular-text ltr" value="<?php echo esc_attr(get_option('directpost_login','username/password'));/*TODO,payment setting markup*/?>" />
+                <input type="text" name="fanvictor_choice_account" class="regular-text ltr" placeholder="username/password" value="<?php echo esc_attr(get_option('fanvictor_choice_account'));?>"/>
                 <p class="description"><?=__('Input as the following format: username/password', FV_DOMAIN);?></p>
+                <p class="description"><?= sprintf(__('Choice Merchant Solutions offers the widest selection of credit card processing solutions and products. Click %s to register', FV_DOMAIN), "<a href='http://fantasysportspayments.com/' target='_blank'>".__('here')."</a>");?></p>
             </td>
         </tr>
     </table>

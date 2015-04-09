@@ -1,6 +1,7 @@
 <?php
 include_once("paypal.php");
 define('PAYPAL', 'PAYPAL');
+define('CHOICE', 'CHOICE');
 class Payment
 {
     function validEmail($email)
@@ -25,7 +26,16 @@ class Payment
     
     function viewGateway()
     {
-        return array(PAYPAL);
+        $gateway = array();
+        if(get_option('paypal_email_account') != null)
+        {
+            $gateway[] = PAYPAL;
+        }
+        if(get_option('fanvictor_choice_account') != null)
+        {
+            $gateway[] = CHOICE;
+        }
+        return $gateway;
     }
     
     function changeCashToCredit($iCash)
@@ -51,6 +61,48 @@ class Payment
             case PAYPAL:
                 $paypal = new Paypal();
                 return $paypal->parseData($aSettings);
+                break;
+            case CHOICE:/*TODO, add new payment*/
+            	include_once("choice.php");
+                $pm = new gwapi();
+                
+                $dat=$_POST["dp"];
+                $dat['ccexp']=str_replace("/","",$dat['ccexp']);
+                $acc=explode("/", get_option('fanvictor_choice_account'));
+                
+				if($acc[0] AND $acc[1])
+                	//$_SESSION['dp_acc']=$acc;
+					$pm->setLogin($acc[0], $acc[1]);
+                $pm->setBilling($dat['fname'],$dat['lname'],$dat['company'],$dat['address'],"", $dat['city'],
+        $dat['state'],$dat['zip'],$dat['country'],$dat['phone'],$dat['fax'],$dat['email']);
+				//$pm->setShipping("Mary","Smith","na","124 Shipping Main St","Suite Ship", "Beverly Hills", "CA","90210","US","support@example.com");
+				$pm->setOrder("685".time(),$aSettings["item_name"],1, 2);
+
+				$r = $pm->doSale($aSettings['amount'],$dat['cc'],$dat['ccexp']);
+				//[response] => 1 [responsetext] => SUCCESS [authcode] => 123456 [transactionid] => 2619420359 [avsresponse] => N [cvvresponse] => [orderid] => 6851426813066 [type] => sale [response_code] => 100)
+				if($pm->responses['response_code']==100){
+					$custom = explode('|', $aSettings['custom']);
+					$fundshistoryID = $custom[1];
+					
+					$this->updateUserBalance($custom[2], null, 0, $custom[0]);
+					$x=$this->updateFundhistory($fundshistoryID, array('transactionID' => $pm->responses['transactionid'], 'is_checkout' => 1), $custom[0], "completed");
+				}
+                else
+                {
+                    $custom = explode('|', $aSettings['custom']);
+					$fundshistoryID = $custom[1];
+					
+					$this->updateUserBalance($custom[2], null, 0, $custom[0]);
+                    $this->updateFundhistory($fundshistoryID, array('transactionID' => $pm->responses['transactionid'], 'is_checkout' => 0), $custom[0], "failed");
+                }
+                if($pm->responses['responsetext'] == "SUCCESS")
+                {
+                    return __("Successfully transaction", FV_DOMAIN);
+                }
+                else 
+                {
+                    return __("Something went wrong. Please try again", FV_DOMAIN);
+                }
                 break;
             default :
                 return false;

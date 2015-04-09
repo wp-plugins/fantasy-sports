@@ -779,17 +779,33 @@ jQuery.playerdraft =
         })
         
         //player news brief
-        var htmlNewsBrief = 'Updating...';
-        var htmlNews = 'Updating...';
+        var htmlNewsBrief = '';
+        var htmlNews = '';
         jQuery.post(ajaxurl, 'action=loadPlayerNews&playerID=' + player_id + '&brief=1', function(result) {
             result = jQuery.parseJSON(result);
-            if(result.player_news_brief != null)
+            if(result != null)
             {
-                htmlNewsBrief = result.player_news_brief;
+                var style = 'style="padding-bottom:5px;margin-bottom:5px;border-bottom:solid 1px #8b8b8b"';
+                for(var i in result)
+                {
+                    if(result.length == (parseInt(i)+1))
+                    {
+                        style = '';
+                    }
+                    htmlNews += '<div ' + style + '>' + result[i].updated + '<br/>' + result[i].title + '<br/>' + result[i].content + '</div>';
+                    if(i == 0)
+                    {
+                        htmlNewsBrief = result[i].title + '<br/>' + result[i].content;
+                    }
+                }
             }
-            if(result.player_news != null)
+            if(htmlNewsBrief == '')
             {
-                htmlNews = result.player_news;
+                htmlNewsBrief = wpfs['updating'] + '...'; 
+            }
+            if(htmlNews == '')
+            {
+                htmlNews = wpfs['updating'] + '...'; 
             }
             jQuery('#playerBrief').empty().append(htmlNewsBrief);
             jQuery('#playerNews').empty().append(htmlNews);

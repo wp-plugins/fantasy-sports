@@ -89,7 +89,8 @@ function js_lang()
             "latest_player_news" : "'.__("Latest Player News", "fantasy-sports").'",
             "played" : "'.__("Played", "fantasy-sports").'",
             "remove_player" : "'.__("Remove Player", "fantasy-sports").'",
-            "next_game" : "'.__("Next Game", "fantasy-sports").'"
+            "next_game" : "'.__("Next Game", "fantasy-sports").'",
+            "updating" : "'.__("Updating", "fantasy-sports").'"
         }
     </script>';
 }

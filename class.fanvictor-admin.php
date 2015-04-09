@@ -67,7 +67,7 @@ class Fanvictor_Admin
         register_setting('fanvictor-settings-group', 'paypal_test');
         register_setting('fanvictor-settings-group', 'paypal_email_account');
         register_setting('fanvictor-settings-group', 'fanvictor_minimum_deposit');
-        register_setting('fanvictor-settings-group', 'directpost_login');
+        register_setting('fanvictor-settings-group', 'fanvictor_choice_account');
     }
     
     //menu bar

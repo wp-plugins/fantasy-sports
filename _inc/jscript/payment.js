@@ -13,6 +13,9 @@ jQuery.payment =
             if(data.notice)
             {
                 jQuery('#msgAddCredits').empty().append(data.notice).show();
+                jQuery('html,body').animate({
+                    scrollTop: jQuery("#msgAddCredits").offset().top - 50},
+                    'slow');
             }
             if(data.result)
             {
