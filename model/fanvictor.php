@@ -299,7 +299,7 @@ class Fanvictor extends Model
     
     public function getLiveEntries()
     {
-        echo $this->sendRequest("getLiveEntries", null, false,false);exit;
+        return $this->sendRequest("getLiveEntries", null, false);
     }
     
     public function liveEntriesResult($poolID)
