@@ -90,7 +90,8 @@ function js_lang()
             "played" : "'.__("Played", "fantasy-sports").'",
             "remove_player" : "'.__("Remove Player", "fantasy-sports").'",
             "next_game" : "'.__("Next Game", "fantasy-sports").'",
-            "updating" : "'.__("Updating", "fantasy-sports").'"
+            "updating" : "'.__("Updating", "fantasy-sports").'",
+            "no_news" : "'.__("No news", "fantasy-sports").'"
         }
     </script>';
 }

@@ -50,18 +50,20 @@ class Contest
             $scoringCats = $aData['scoring_cat'];
             $bonus = $aData['bonus'];
             $aRounds = $aData['rounds'];
+            $aFights = $aData['fights'];
             
             //pool
-            self::$pools->selectField(array('startDate'));
-            $aPool = self::$pools->getPools($league['poolID'], null, false, true);
+            //self::$pools->selectField(array('startDate'));
+            //$aPool = self::$pools->getPools($league['poolID'], null, false, true);
 
             //$league['startDate'] = $aPool['startDate'];
             $league = self::$fanvictor->parseLeagueData(array($league));
             $league = $league[0];
 
             //fight
-            self::$pools->selectField(array('fightID', 'name', 'fighterID1', 'fighterID2', 'startDate', 'team1score', 'team2score'));
-            $aFights = self::$pools->getFights($league['poolID'], explode(',', $league['fixtures']));
+            //self::$pools->selectField(array('fightID', 'name', 'fighterID1', 'fighterID2', 'startDate', 'team1score', 'team2score', 'is_closed'));
+            //$aFights = self::$pools->getFights($league['poolID'], explode(',', $league['fixtures']));
+            
             $aFights = self::$pools->parseFightsDataDetail($aFights);
 
             include FANVICTOR__PLUGIN_DIR_VIEW.'contest.php';

@@ -302,9 +302,9 @@ class Fanvictor extends Model
         return $this->sendRequest("getLiveEntries", null, false);
     }
     
-    public function liveEntriesResult($poolID)
+    public function liveEntriesResult($poolID, $leagueID)
     {
-        echo $this->sendRequest("liveEntriesResult", array('poolID' => $poolID), false, false);exit;
+        echo $this->sendRequest("liveEntriesResult", array('poolID' => $poolID, 'leagueID' => $leagueID), false, false);exit;
     }
 
     public function parseLeagueData($aLeagues)

@@ -40,8 +40,10 @@
                             <li class="f-fixture-card-away"><?=$aFight['nickName1'];?> <?=$aFight['team1score'];?></li>
                             <li class="f-fixture-card-home"><?=$aFight['nickName2'];?> <?=$aFight['team2score'];?></li>
                             <li class="f-fixture-card-time">
-                                <?php if($aFight['is_final']):?>
-                                <?=__('FINAL', FV_DOMAIN);?>
+                                <?php if($aFight['is_closed'] == 1):?>
+                                    <?=__('FINAL', FV_DOMAIN);?>
+                                <?php elseif($aFight['is_closed'] == 2):?>
+                                    <?=__('POSTPONE', FV_DOMAIN);?>
                                 <?php endif;?>&nbsp;
                             </li>
                         </ul>
@@ -59,6 +61,13 @@
                     <li class="f-fixture-card">
                         <ul class="f-fixture-card-live-status f-pending">
                             <li class="f-fixture-card-away"><?=$aRound['name'];?></li>
+                            <li class="f-fixture-card-time">
+                                <?php if($aRound['is_closed'] == 1):?>
+                                    <?=__('FINAL', FV_DOMAIN);?>
+                                <?php elseif($aFight['is_closed'] == 2):?>
+                                    <?=__('POSTPONE', FV_DOMAIN);?>
+                                <?php endif;?>&nbsp;
+                            </li>
                         </ul>
                     </li>
                     <?php endforeach;?>
@@ -71,54 +80,46 @@
                 <table class="f-condensed" id="tableScores">
                     <thead>
                         <tr>
-                            <th><?=__('Pos', FV_DOMAIN)?></th>
+                            <th style="width:40px;"></th>
                             <th><?=__('User', FV_DOMAIN)?></th>
                             <?php if($league['multi_entry'] == 1):?>
-                            <th><?=__('Entry number', FV_DOMAIN)?></th>
+                            <th style="width:50px;"><?=__('Entry', FV_DOMAIN)?></th>
                             <?php endif;?>
-                            <th class="f-text-align-right"><?=__('Score', FV_DOMAIN)?></th>
-                            <th class="f-text-align-right"><?=__('Prizes', FV_DOMAIN)?></th>
+                            <th class="f-text-align-right" style="width:50px;"><?=__('Score', FV_DOMAIN)?></th>
+                            <th class="f-text-align-right" style="width:110px;"><?=__('Prizes', FV_DOMAIN)?></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="5"></td>
-                        </tr>
-                    </tfoot>
                 </table>
             </div>
         </div>
-        <div id="f-live-scoring-filter">
-            <div class="f-button-group f-container" style="visibility:hidden;">
-                <button class="f-button f-mini f-is-active"><?=__('All', FV_DOMAIN)?></button>
-                <button class="f-button f-mini"><?=__('Me', FV_DOMAIN)?></button>
-            </div>
-        </div>
-        <div id="f-live-scoring-entry-details">
-            <div class="f-slot f-column-6 f-entry-component f-small-screen-pane f-odd" id="f-seat-1"></div>
-            <div class="f-slot f-column-6 f-entry-component f-small-screen-pane f-even" id="f-seat-2">
-                <div id="live-scoring-app" class="loading"></div>
-                <p class="f-entry-placeholder-text">
-                    <?=__('Select a user from the list above to see their lineup.', FV_DOMAIN)?>
-                </p>
-            </div>
-            <div class="clear"></div>
-            <?php if($scoringCats != null):?> 
-                <div>
-                    <h3 style="margin-bottom: 0"><?=__('Scoring Categories', FV_DOMAIN);?></h3>
-                    <?php foreach($scoringCats as $item):?> 
-                        <?=$item['name'];?> = <?=$item['points'];?> <br/>
-                    <?php endforeach;?>
+        <div class="fl-contest-right" >
+            <div id="f-live-scoring-entry-details">
+                <div class="f-slot f-column-6 f-entry-component f-small-screen-pane f-odd" id="f-seat-1"></div>
+                <div class="f-slot f-column-6 f-entry-component f-small-screen-pane f-even" id="f-seat-2">
+                    <div id="live-scoring-app" class="loading"></div>
+                    <p class="f-entry-placeholder-text">
+                        <?=__('Select a user from the list above to see their lineup.', FV_DOMAIN)?>
+                    </p>
                 </div>
-            <?php endif;?> 
-            <?php if($bonus != null):?>
-            <div id="bonusPoints">
-                <h3 style="margin-bottom: 0"><?=__('Bonus', FV_DOMAIN);?></h3>
-                <?=$bonus;?>
+                <div class="clear"></div>
+                
             </div>
-            <?php endif;?>
         </div>
+        <?php if($scoringCats != null):?> 
+            <div>
+                <h3 style="margin-bottom: 0"><?=__('Scoring Categories', FV_DOMAIN);?></h3>
+                <?php foreach($scoringCats as $item):?> 
+                    <?=$item['name'];?> = <?=$item['points'];?> <br/>
+                <?php endforeach;?>
+            </div>
+        <?php endif;?> 
+        <?php if($bonus != null):?>
+        <div id="bonusPoints">
+            <h3 style="margin-bottom: 0"><?=__('Bonus', FV_DOMAIN);?></h3>
+            <?=$bonus;?>
+        </div>
+        <?php endif;?>
     </div>
 </div>
 

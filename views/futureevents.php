@@ -1,5 +1,4 @@
 <div class="contentPlugin">
-    <h1><?=$sHeader;?></h1>
     <?php if($futureEvents != null):?>
         <form action="{url link='fanvictor.submitpicks'}" medivod="POST">
             <input type="hidden" class="leagueID" name="leagueID" />
@@ -8,23 +7,23 @@
 
                 <div class="tableLiveEntries table6">
                     <div class="tableTitle">
-                        <div><?=__('ID', FV_DOMAIN);?></div>
-                        <div><?=__('Name', FV_DOMAIN);?></div>
-                        <div><?=__('Sport', FV_DOMAIN);?></div>
-                        <div><?=__('Start Date', FV_DOMAIN);?></div>
-                        <div><?=__('Cut Date', FV_DOMAIN);?></div>
-                        <div><?=__('Fixture', FV_DOMAIN);?></div>
+                        <div style="width: 6%"><?=__('ID', FV_DOMAIN);?></div>
+                        <div style="width: 39%"><?=__('Name', FV_DOMAIN);?></div>
+                        <div style="width: 15%"><?=__('Sport', FV_DOMAIN);?></div>
+                        <div style="width: 15%"><?=__('Start Date', FV_DOMAIN);?></div>
+                        <div style="width: 15%"><?=__('Cut Date', FV_DOMAIN);?></div>
+                        <div style="width: 10%"><?=__('Fixture', FV_DOMAIN);?></div>
                     </div>
                 </div>
                 <div class="tableLiveEntries tableLiveEntriesContent  table6">
                     <?php foreach($futureEvents as $item):?>
                     <div >
-                        <div><span><?=__('ID', FV_DOMAIN);?></span><?=$item['poolID']?></div>
-                        <div><span><?=__('Name', FV_DOMAIN);?></span><?=$item['poolName']?></div>
-                        <div><span><?=__('Sport', FV_DOMAIN);?></span><?=$item['organization']?></div>
-                        <div><span><?=__('Start Date', FV_DOMAIN);?></span><?=$item['startDate']?></div>
-                        <div><span><?=__('Cut Date', FV_DOMAIN);?></span><?=$item['cutDate']?></div>
-                        <div>
+                        <div style="width: 6%"><span><?=__('ID', FV_DOMAIN);?></span><?=$item['poolID']?></div>
+                        <div style="width: 39%"><span><?=__('Name', FV_DOMAIN);?></span><?=$item['poolName']?></div>
+                        <div style="width: 15%"><span><?=__('Sport', FV_DOMAIN);?></span><?=$item['organization']?></div>
+                        <div style="width: 15%"><span><?=__('Start Date', FV_DOMAIN);?></span><?=$item['startDate']?></div>
+                        <div style="width: 15%"><span><?=__('Cut Date', FV_DOMAIN);?></span><?=$item['cutDate']?></div>
+                        <div style="width: 10%">
                             <?php if($item['only_playerdraft'] == 0):?>
                             <a href="#" onclick="return viewPoolFixture(<?=$item['poolID'];?>, '<?=__("fixtures", FV_DOMAIN);?>')">
                                 <?=__("View fixtures", FV_DOMAIN);?>

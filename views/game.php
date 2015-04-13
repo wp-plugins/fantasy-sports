@@ -268,7 +268,7 @@
                 </form>
             </div>
             <div class="f-contest-enter-button-container">
-                <input type="submit" data-nav-warning="off" value="<?=__('Enter', FV_DOMAIN);?>" class="f-button f-jumbo f-primary" onclick="jQuery.playerdraft.submitData()">
+                <input type="submit" data-nav-warning="off" id="btnSubmit" value="<?=__('Enter', FV_DOMAIN);?>" class="f-button f-jumbo f-primary" onclick="jQuery.playerdraft.submitData()">
             </div>
         </footer>
     </section>

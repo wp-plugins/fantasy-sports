@@ -4,7 +4,7 @@ Donate link: http://fanvictor.com/
 Tags: fantasy sports, fantasy football, fantasy baseball, fantasy hockey, fantasy basketball
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 2.1.6
+Stable tag: 2.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -257,6 +257,14 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 * Player news for MLB
 
 * Support Choice Gateway
+
+= Version 2.1.7 released Apr 13 2015 =
+
+* Fix double players
+
+* Fix template
+
+* Fix incompatibility with some plugins
 
 == Upgrade Notice ==
 

@@ -315,6 +315,7 @@ jQuery.league =
          var data = {
             action: 'liveEntriesResult',
             poolID: poolID,
+            leagueID: leagueID
         };
         jQuery.post(ajaxurl, data, function(result) {
             jQuery.playerdraft.loadContestScores(leagueID, entry_number);

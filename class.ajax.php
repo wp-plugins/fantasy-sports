@@ -49,7 +49,7 @@ class Ajax
             add_action("wp_ajax_$func", array('Ajax', $func));
         }
 		
-		if(get_current_user_id() == 0 && isset($_POST['action']))
+		if(get_current_user_id() == 0 && isset($_POST['action']) && in_array($_POST['action'], $funcs))
         {
             $func = $_POST['action'];
             self::$func();
@@ -326,7 +326,7 @@ class Ajax
     
     public static function liveEntriesResult()
     {
-        self::$fanvictor->liveEntriesResult($_POST['poolID']);
+        self::$fanvictor->liveEntriesResult($_POST['poolID'], $_POST['leagueID']);
     }
     
     public static function loadContestScores()

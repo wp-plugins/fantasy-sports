@@ -348,6 +348,7 @@ jQuery.playerdraft =
         }
         else 
         {
+            jQuery('#btnSubmit').attr("disabled", "true");
             jQuery('.f-roster .f-roster-position').each(function(){
                 if(typeof jQuery(this).attr('data-id') != typeof undefined)
                 {
@@ -437,9 +438,6 @@ jQuery.playerdraft =
                                                 <span class="f-home f-player-team-highlight">\n\
                                                     ' + fights[1].nickName + '\n\
                                                 </span> ' + fights[1].team2score + '\n\
-                                                <span class="f-current-state started">\n\
-                                                    FINAL\n\
-                                                </span>\n\
                                             </div>\n\
                                         </div>';
                     }
@@ -572,20 +570,20 @@ jQuery.playerdraft =
                         htmlCurrent = 'class="f-user-highlight"';
                         currentScores = aScore;
                     }
-                    else
-                    {
+                    //else
+                    //{
                         htmlNoCurrent = 'href="#" onclick="return jQuery.playerdraft.userResult(' + leagueID + ', 0, ' + aScore.userID + ', \'' + aScore.username + '\', \'' + aScore.avatar + '\', ' + aScore.rank + ', \'' + aScore.points + '\', ' + aScore.entry_number + ')"';
-                    }
+                    //}
                     var htmlMultiEntry = '';
                     if(jQuery('#multiEntry').val() == 1)
                     {
-                        htmlMultiEntry = '<td>\n\
+                        htmlMultiEntry = '<td style="text-align:center">\n\
                             ' + aScore.entry_number + '\n\
                         </td>';
                     }
                     html +=
                         '<tr ' + htmlCurrent + ' ' + htmlNoCurrent + ' >\n\
-                            <td>\n\
+                            <td style="text-align:center">\n\
                                 ' + aScore.rank + '\n\
                             </td>\n\
                             <td>\n\
@@ -608,7 +606,7 @@ jQuery.playerdraft =
             jQuery('#tableScores tbody').empty().append(html);
             if(currentScores != '')
             {
-                jQuery.playerdraft.userResult(leagueID, 1, currentScores.userID, currentScores.username, currentScores.avatar, currentScores.rank, currentScores.points, currentScores.entry_number);
+                jQuery.playerdraft.userResult(leagueID, 0, currentScores.userID, currentScores.username, currentScores.avatar, currentScores.rank, currentScores.points, currentScores.entry_number);
             }
         })
     },
@@ -801,11 +799,11 @@ jQuery.playerdraft =
             }
             if(htmlNewsBrief == '')
             {
-                htmlNewsBrief = wpfs['updating'] + '...'; 
+                htmlNewsBrief = wpfs['no_news']; 
             }
             if(htmlNews == '')
             {
-                htmlNews = wpfs['updating'] + '...'; 
+                htmlNews = wpfs['no_news']; 
             }
             jQuery('#playerBrief').empty().append(htmlNewsBrief);
             jQuery('#playerNews').empty().append(htmlNews);

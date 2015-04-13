@@ -4542,7 +4542,7 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
 }
 @media (max-width: 640px) {
 #f-live-scoring-fixture-info {
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
 }
 }
@@ -4558,12 +4558,13 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
     overflow-y: hidden;
 }
 #f-live-scoring-fixture-info section > ul {
-    background: none repeat scroll 0 0 #efefef;
+    background: none;
     border-radius: 5px;
     height: 55px;
     margin: 0;
     white-space: nowrap;
 }
+
 #f-live-scoring-fixture-info section > ul:before, #f-live-scoring-fixture-info section > ul:after {
     content: "";
     display: table;
@@ -4590,6 +4591,13 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
     position: relative;
     text-align: center;
     width: 64px;
+}
+.f-fixture-card.active{
+    background:#ccc !important;
+    color:#000;
+}
+.f-fixture-card.active li.f-fixture-card-time{
+    border: none !important;
 }
 .f-fixture-card:after {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0) 51%, rgba(255, 255, 255, 0) 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
@@ -4619,7 +4627,16 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
     color: #949494;
 }
 #f-live-scoring-leaderboard {
-    margin-bottom: -46px;
+    /*margin-bottom: -46px;*/
+    float:left;
+    width:40%;
+    margin: 0;
+    max-height: 500px;
+    overflow-y: auto;
+}
+.fl-contest-right{
+    width: 59%;
+    float: right;
 }
 @media (max-width: 640px) {
 #f-live-scoring-leaderboard {
@@ -4631,6 +4648,7 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
     border-right: 0 none;
     margin: 0;
     line-height: 1.5;
+    table-layout: fixed;
 }
 #f-live-scoring-leaderboard table.f-condensed thead tr th, #f-live-scoring-leaderboard table.f-condensed tbody tr td {
     padding: 1px 8px;
@@ -4753,12 +4771,20 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
     position: relative;
     width: 14.5833%;
 }
+#f-live-scoring-leaderboard table.f-condensed thead tr th{
+    font-size: 10px;
+    padding: 0;
+    text-align: center;
+}
+@media (max-width: 992px) {
+    .fl-contest-right{
+        width: 100%;
+    }
+}
 @media (max-width: 640px) {
-#f-live-scoring-filter {
+    #f-live-scoring-filter {
     display: none;
 }
-}
-@media (max-width: 640px) {
 #f-live-scoring-filter {
     margin: 0;
     padding: 0 7px;
@@ -4768,6 +4794,10 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
 .f-slot {
     background: -moz-linear-gradient(center top , #f7f7f7 0%, #eaeaea 100%) repeat scroll 0 0 rgba(0, 0, 0, 0);
     color: #bebebe;
+}
+.fl-contest-right .f-slot{
+    width: 100%;
+    margin: 0;
 }
 @media (max-width: 640px) {
 .f-slot {
@@ -4950,6 +4980,7 @@ html.f-lt-ie10 #f-live-scoring-app.f-loading:after, html.f-lt-ie10 #f-live-scori
     text-align: center;
     top: 8px;
     width: 32px;
+    font-size: 10px;
 }
 .f-roster-row .f-name {
     color: #3b3b3b;
