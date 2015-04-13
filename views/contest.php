@@ -106,6 +106,7 @@
                 
             </div>
         </div>
+		<div class="clear"></div>
         <?php if($scoringCats != null):?> 
             <div>
                 <h3 style="margin-bottom: 0"><?=__('Scoring Categories', FV_DOMAIN);?></h3>
