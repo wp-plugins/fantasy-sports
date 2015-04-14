@@ -266,6 +266,10 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 
 * Fix incompatibility with some plugins
 
+= Version 2.1.8 released Apr 14 2015 =
+
+* Fix create contest
+
 == Upgrade Notice ==
 
 = 1.0 =
