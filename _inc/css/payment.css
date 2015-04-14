@@ -1,0 +1,27 @@
+table{
+    border:solid 1px #000000;
+    width: 100%;
+}
+table th{
+    background-color: #EEEEEE;
+}
+table th, table td{
+    border-right:solid 1px #000000;
+    border-bottom:solid 1px #000000;
+    text-align: left;
+    padding: 5px;
+}
+table th:last-child{
+    border-right: none;
+}
+.table{
+    position: relative;
+}
+.table_left{
+    width: 180px;
+    position: absolute;
+    left:0;
+}
+.table_right{
+    margin-left: 190px;
+}
