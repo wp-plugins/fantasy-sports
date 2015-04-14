@@ -4,7 +4,7 @@ Donate link: http://fanvictor.com/
 Tags: fantasy sports, fantasy football, fantasy baseball, fantasy hockey, fantasy basketball
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 2.1.8
+Stable tag: 2.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -160,8 +160,93 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 
 == Changelog ==
 
-= Version 1.0 =
-* First version released.
+= Version 2.1.9 released Apr 14 2015 =
+
+* Fix withdrawl
+
+= Version 2.1.8 released Apr 14 2015 =
+
+* Fix create contest
+
+= Version 2.1.7 released Apr 13 2015 =
+
+* Fix double players
+
+* Fix template
+
+* Fix incompatibility with some plugins
+
+= Version 2.1.6 released Apr 9 2015 =
+
+* Player news for MLB
+
+* Support Choice Gateway
+
+= Version 2.1.5 released Apr 7 2015 =
+
+* Fix template
+
+= Version 2.1.4.2 released Apr 6 2015 =
+
+* Fix loop content
+
+= Version 2.1.4.1 released Apr 6 2015 =
+
+* Fix loop content
+
+= Version 2.1.4 released Apr 6 2015 =
+
+* Add and fix text phrase
+
+* Support multi payouts
+
+= Version 2.1.3.2 released March 31 2015 =
+
+* Support MLB
+
+* Use Auto Ip
+
+* Fixed restrict user from some states
+
+= Version 2.1.3.1 released March 30 2015 =
+
+* Fix paypal
+
+* Fix clock
+
+* Remove facebook share
+
+* Hide group for golf
+
+* redirect to lobby
+
+= Version 2.1.3 released March 16 2015 =
+
+* Golf - Requirement to select at least 2 rounds
+
+* Golf - Show bonus point accumulation on history entry page
+
+* At results page, show scoring points and bonus points
+
+* Add your own prizes text feature
+
+= Version 2.1.2 released March  2015 =
+
+* Enhanced event statistics
+
+* Manage user transactions
+
+* Custom lineup per contest feature
+
+* Reverse contest feature
+
+* Move lobby to its own page
+
+= Version 2.1 released Mar 2015 =
+
+* PGA Golf Support
+
+* Bug fixes
 
 = Version 2.0 released Feb 2015 =
 * Player Draft
@@ -186,89 +271,8 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 
 * Custom lineup per event feature
 
-= Version 2.1 released Mar 2015 =
-
-* PGA Golf Support
-
-* Bug fixes
-
-= Version 2.1.2 released March  2015 =
-
-* Enhanced event statistics
-
-* Manage user transactions
-
-* Custom lineup per contest feature
-
-* Reverse contest feature
-
-* Move lobby to its own page
-
-= Version 2.1.3 released March 16 2015 =
-
-* Golf - Requirement to select at least 2 rounds
-
-* Golf - Show bonus point accumulation on history entry page
-
-* At results page, show scoring points and bonus points
-
-* Add your own prizes text feature
-
-= Version 2.1.3.1 released March 30 2015 =
-
-* Fix paypal
-
-* Fix clock
-
-* Remove facebook share
-
-* Hide group for golf
-
-* redirect to lobby
-
-= Version 2.1.3.2 released March 31 2015 =
-
-* Support MLB
-
-* Use Auto Ip
-
-* Fixed restrict user from some states
-
-= Version 2.1.4 released Apr 6 2015 =
-
-* Add and fix text phrase
-
-* Support multi payouts
-
-= Version 2.1.4.1 released Apr 6 2015 =
-
-* Fix loop content
-
-= Version 2.1.4.2 released Apr 6 2015 =
-
-* Fix loop content
-
-= Version 2.1.5 released Apr 7 2015 =
-
-* Fix template
-
-= Version 2.1.6 released Apr 9 2015 =
-
-* Player news for MLB
-
-* Support Choice Gateway
-
-= Version 2.1.7 released Apr 13 2015 =
-
-* Fix double players
-
-* Fix template
-
-* Fix incompatibility with some plugins
-
-= Version 2.1.8 released Apr 14 2015 =
-
-* Fix create contest
+= Version 1.0 =
+* First version released.
 
 == Upgrade Notice ==
 

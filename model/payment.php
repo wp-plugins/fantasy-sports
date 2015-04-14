@@ -256,7 +256,7 @@ class Payment
         $sCond = "WHERE up.user_id = ".(int)get_current_user_id()." AND up.gateway = '$gateway'";
         if((int)$user_id > 0)
         {
-            $sCond = "WHERE up.user_id = ".(int)get_current_user_id();
+            $sCond = "WHERE up.user_id = ".(int)$user_id;
         }
         $table_userpayment = $wpdb->prefix."user_payment";
         $table_user = $wpdb->prefix."users";
