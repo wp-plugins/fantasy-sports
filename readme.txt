@@ -4,7 +4,7 @@ Donate link: http://fanvictor.com/
 Tags: fantasy sports, fantasy football, fantasy baseball, fantasy hockey, fantasy basketball
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 2.1.7
+Stable tag: 2.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
