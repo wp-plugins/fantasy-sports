@@ -3,7 +3,7 @@
  * Plugin Name: Fan Victor
  * Plugin URI: http://plugins.svn.wordpress.org/fantasy-sports/ 
  * Description: Create a fantasy sports website in minutes. Give your members the chance to compete in daily contests by predicting the outcomes of sporting events.  To get started: 1) Click the "Activate" link to the left of this description, 2) Sign up for a Fan Victor API key, and 3) Go to your FanVictor.com members page, and save your API key.
- * Version: 2.1.9
+ * Version: 2.1.10
  * Author: Mega Website Services
  * Author URI: http://fanvictor.com
  * License: GPL2
@@ -28,7 +28,7 @@
 ob_start();
 
 $upload_dir = wp_upload_dir();
-define('FANVICTOR_VERSION', '2.1.9');
+define('FANVICTOR_VERSION', '2.1.10');
 define('FV_DOMAIN', 'fantasy-sports');
 define('FANVICTOR__PLUGIN_URL', plugin_dir_url(__FILE__));
 define('FANVICTOR__PLUGIN_DIR', plugin_dir_path(__FILE__));
@@ -107,6 +107,19 @@ function caption_shortcode( $atts, $content = null ) {
 	return Lobby::show();
 }
 add_shortcode( 'fanvictor_lobby', 'caption_shortcode' );
+
+//add footer
+function fv_footer(){
+	echo '<div style="background-color:#FFFFFF;color:#333333;padding:20px;">';
+    echo '<div style="text-align:center;font-size:12px;">';
+	echo __('This site is a Game of Skill and is 100% LEGAL in the United States. This site operates in full compliance with the Unlawful Internet Gambling Enforcement Act of 2006.', FV_DOMAIN);
+    echo '</div>';
+    echo '<div style="text-align:center;margin-top:5px;font-size:12px;">';
+    echo sprintf(__('Due to sate and provincial law residents of Arizona, Iowa, Louisiana, Montana, Vermont and Quebec may only play in free competitions. All other trademarks and logos belong to their respective owners. %s Fantasy Sports', FV_DOMAIN), '<a style="color:#000000" href="http://fanvictor.com" target="_blank">FanVictor.com</a>');
+    echo '</div>';
+	echo '</div>';
+}
+add_action('wp_footer', 'fv_footer');
 
 //init
 require_once(FANVICTOR__PLUGIN_DIR.'class.init.php');
