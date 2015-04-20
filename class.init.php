@@ -421,7 +421,7 @@ User login: ".$user->user_login;
                         {
                             $post_content = (string)$page->content;
                         }
-                        if (!get_page_by_title($title, 'OBJECT', $post_name))
+                        if (!get_page_by_title($name, 'OBJECT', $post_name))
                         {
                             $query = "INSERT INTO ".$wpdb->prefix."posts(post_title,post_status, post_type, post_parent,post_author, menu_order, post_name, post_content)
                                 VALUES('$name', 'publish', 'page', '$post_parent', '".get_current_user_id()."', '$count', '$post_name', '$post_content')";
