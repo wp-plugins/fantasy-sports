@@ -810,7 +810,7 @@ jQuery.playerdraft =
         })
     },
     
-    ruleScoring: function(leagueID, name, entry_fee, salary_remaining, tab)
+    ruleScoring: function(leagueID, name, entry_fee, salary_remaining, tab, contest_url)
     {
         var html = '<div>\n\
                         <header>\n\
@@ -821,7 +821,7 @@ jQuery.playerdraft =
                             </ul>\n\
                             <div id="tabRuleScoring">\n\
                                 <ul class="f-tabs">\n\
-                                    <li onclick="jQuery.playerdraft.loadTabScoringCategory(jQuery(this), ' + leagueID + ')">\n\
+                                    <li onclick="jQuery.playerdraft.loadTabScoringCategory(jQuery(this), ' + leagueID + ', \'' + contest_url + '\')">\n\
                                         <a data-tabname="tab-info" href="#tab1">' + wpfs['contest'] + '</a>\n\
                                     </li>\n\
                                     <li onclick="jQuery.playerdraft.loadTabLeagueEntries(jQuery(this), ' + leagueID + ')">\n\
@@ -895,7 +895,7 @@ jQuery.playerdraft =
         jQuery.playerdraft.loadTabLeaguePrizes(jQuery(this), leagueID);
     },
     
-    loadTabScoringCategory: function(item, leagueID)
+    loadTabScoringCategory: function(item, leagueID, contest_url)
     {
         if(!item.find('a').hasClass('f-is-active'))
         {
@@ -991,13 +991,13 @@ jQuery.playerdraft =
                 }
 
                 var htmlPickPlayer = '';
-                if(aLeague.is_playerdraft && aLeague.only_playerdraft == 0)
+                if(aLeague.is_playerdraft && aLeague.only_playerdraft == 0 && (contest_url != 'undefined'))
                 {
-                    htmlPickPlayer = '<p>' + wpfs['pick_a_team'] + '</p>';
+                    htmlPickPlayer = '<p>' + wpfs['pick_a_team'] + ' <a href="' + contest_url + '">' + wpfs['here'] + '</a></p>';
                 }
-                else if(aLeague.is_playerdraft && aLeague.only_playerdraft == 1)
+                else if(aLeague.is_playerdraft && aLeague.only_playerdraft == 1 && (contest_url != 'undefined'))
                 {
-                    htmlPickPlayer = '<p>' + wpfs['pick_player_from_list'] + '</p>';
+                    htmlPickPlayer = '<p>' + wpfs['pick_player_from_list'] + ' <a href="' + contest_url + '">' + wpfs['here'] + '</a></p>';
                 }
                 var html = '<div class="f-row">\n\
                                 <div class="f-game-info-fixtures">\n\

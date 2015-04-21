@@ -172,7 +172,7 @@ class Fanvictor extends Model
 		//$message_subject=$name.$message['subject'];
 		$message_subject = $message['subject'];
 		$message_body = $message['body'] . $message_footer;
-		$headers="From: ".$myEmail;
+		$headers="From: ".get_option('admin_email');
         $success = true;
 
 		foreach ($trueContacts as $email)

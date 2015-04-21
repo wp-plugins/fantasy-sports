@@ -44,8 +44,8 @@ function js_lang()
             "player_each_position" : "'.__("Please select a player for each position", "fantasy-sports").'",
             "team_exceed_salary_cap" : "'.__("Your team has exceeded this game\'s salary cap. Please change your team so it fits under the salary cap before entering", "fantasy-sports").'",
             "player_no_match" : "'.__("This player has not played any matches yet.", "fantasy-sports").'",
-            "pick_a_team" : "'.__("Pick a team of players from the following games:", "fantasy-sports").'",
-            "pick_player_from_list" : "'.__("Pick players from the following lists", "fantasy-sports").'",
+            "pick_a_team" : "'.__("Pick a team of players from the following games", "fantasy-sports").'",
+            "pick_player_from_list" : "'.__("Pick players from", "fantasy-sports").'",
             "no_contest_entry" : "'.__("There are no entries in this contest yet.", "fantasy-sports").'",
             "input_picks" : "'.__("Please enter your picks", "fantasy-sports").'",//submitpicks.js
             "sec_warn1" : "'.__("Please logout and login again. A security warning ", "fantasy-sports").'",//withdraw.js
@@ -91,7 +91,8 @@ function js_lang()
             "remove_player" : "'.__("Remove Player", "fantasy-sports").'",
             "next_game" : "'.__("Next Game", "fantasy-sports").'",
             "updating" : "'.__("Updating", "fantasy-sports").'",
-            "no_news" : "'.__("No news", "fantasy-sports").'"
+            "no_news" : "'.__("No news", "fantasy-sports").'",
+            "here" : "'.__("here", "fantasy-sports").'",
         }
     </script>';
 }

@@ -502,8 +502,6 @@ class Pools extends Model
         
         if($aDatas != null)
         {
-            $myUser = $this->payment->getUserData(get_current_user_id());
-            $myEmail = $myUser['email'];
             $success = true;
             foreach($aDatas as $aData)
             {
@@ -532,7 +530,7 @@ class Pools extends Model
                     $headers  = 'MIME-Version: 1.0' . "\r\n";
                     $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
                     $headers .= 'To: ' . $email . "\r\n";
-                    $headers .= "From: $myEmail". "\r\n";
+                    $headers .= "From: ".get_option('admin_email'). "\r\n";
                     //$headers .= 'Bcc: ' . $myEmail . "\r\n";
                     $emailInfo = array('league_name' => $aData['league_name'],
                                        'username' => $aUser['user_name'],
@@ -611,9 +609,6 @@ class Pools extends Model
     
     private function sendReverseEmail($user_id, $leagueID)
     {
-        $myUser = $this->payment->getUserData(get_current_user_id());
-        $myEmail = $myUser['email'];
-            
         $aUser = $this->payment->getUserData($user_id);
         $email = $aUser['email'];
         $website = 'http://'.$_SERVER['SERVER_NAME'];
@@ -622,7 +617,7 @@ class Pools extends Model
         $headers  = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
         $headers .= 'To: ' . $email . "\r\n";
-        $headers .= "From: $myEmail". "\r\n";
+        $headers .= "From: ".get_option('admin_email'). "\r\n";
         //$headers .= 'Bcc: ' . $myEmail . "\r\n";
         $emailInfo = array('league_name' => $leagueID);
         include 'emailTemplates/reverseLeague.php';

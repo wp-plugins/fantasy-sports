@@ -120,7 +120,7 @@ jQuery.lobby =
                                             '<div class="f-lobbyitem">\n\
                                                 <div class="f-title" style="width: 34%"><span class="ftMobileTitle">CONTEST</span>\n\
                                                     ' + htmlImage + '\n\
-                                                    <a href="#" class="f-title-link" onclick="return jQuery.playerdraft.ruleScoring(' + aLeague.leagueID + ', \'' + quoteEncoding(aLeague.name) + '\', \'' + aLeague.entry_fee + '\', \'' + aLeague.salary_remaining + '\')">' + aLeague.name + '\n\
+                                                    <a href="#" class="f-title-link" onclick="return jQuery.playerdraft.ruleScoring(' + aLeague.leagueID + ', \'' + quoteEncoding(aLeague.name) + '\', \'' + aLeague.entry_fee + '\', \'' + aLeague.salary_remaining + '\',1, \'' + jQuery('#submitUrl').val() + aLeague.leagueID + '\')">' + aLeague.name + '\n\
                                                         <span class="f-icon1"></span><span class="f-icon2"></span>\n\
                                                         <span class="f-icon3"></span>\n\
                                                     </a>\n\
