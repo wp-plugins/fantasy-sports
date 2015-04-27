@@ -7,7 +7,7 @@ class TableSports extends WP_List_Table
         $this->item_per_page = 10;
         self::$sports = new Sports();
         global $status, $page;
-        $this->data = null;
+        $aResults = null;
         parent::__construct( array(
             'singular'  => __( 'book', 'mylisttable' , FV_DOMAIN),     //singular name of the listed records
             'plural'    => __( 'books', 'mylisttable' , FV_DOMAIN),   //plural name of the listed records
@@ -112,7 +112,7 @@ class TableSports extends WP_List_Table
     function prepare_items() 
     {
         //get data
-        $this->data = self::$sports->getSports();
+        $aResults = self::$sports->getSports();
         $columns  = $this->get_columns();
         $hidden   = array();
         
@@ -120,7 +120,7 @@ class TableSports extends WP_List_Table
         $sortable = array();
         $this->_column_headers = array( $columns, $hidden, $sortable );
 
-        $this->items = $this->data;
+        $this->items = $aResults;
     }
 }
 ?>

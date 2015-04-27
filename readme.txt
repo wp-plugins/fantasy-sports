@@ -1,10 +1,10 @@
-=== Plugin Name ===
+﻿=== Plugin Name ===
 Contributors: quarta77
 Donate link: http://fanvictor.com/
 Tags: fantasy sports, fantasy football, fantasy baseball, fantasy hockey, fantasy basketball
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 2.1.11
+Stable tag: 2.1.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -159,6 +159,10 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 6. Here are all the admin functions available to site admins.
 
 == Changelog ==
+
+= Version 2.1.11 released Apr 27 2015 =
+
+* Support Wordpress version 4.2
 
 = Version 2.1.11 released Apr 17 2015 =
 

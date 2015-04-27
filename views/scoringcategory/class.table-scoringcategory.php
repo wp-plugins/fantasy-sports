@@ -8,7 +8,7 @@ class TableScoringCategory extends WP_List_Table
         self::$scoringcategory = new ScoringCategory();
         self::$sports = new Sports();
         global $status, $page;
-        $this->data = null;
+        $aResults = null;
         parent::__construct( array(
             'singular'  => __( 'book', 'mylisttable' , FV_DOMAIN),     //singular name of the listed records
             'plural'    => __( 'books', 'mylisttable' , FV_DOMAIN),   //plural name of the listed records
@@ -139,16 +139,16 @@ class TableScoringCategory extends WP_List_Table
         }
         
         //get data
-        list($total_items, $this->data) = self::$scoringcategory->getScoringCategoryByFilter($aCond, 'id DESC', ($this->get_pagenum() - 1) * $item_per_page, $item_per_page);
+        list($total_items, $aResults) = self::$scoringcategory->getScoringCategoryByFilter($aCond, 'id DESC', ($this->get_pagenum() - 1) * $item_per_page, $item_per_page);
         
         $columns  = $this->get_columns();
         $hidden   = array();
         
         //sort data
         $sortable = $this->get_sortable_columns();
-        if($this->data != null)
+        if($aResults != null)
         {
-            usort( $this->data, array( &$this, 'usort_reorder' ) );
+            usort( $aResults, array( &$this, 'usort_reorder' ) );
         }
         $this->_column_headers = array( $columns, $hidden, $sortable );
         
@@ -157,7 +157,7 @@ class TableScoringCategory extends WP_List_Table
             'total_items' => $total_items,                 
             'per_page'    => $item_per_page       
         ) );
-        $this->items = $this->data;
+        $this->items = $aResults;
     }
 }
 ?>

@@ -18,9 +18,10 @@ class Fanvictor_Admin
            . '.wp-list-table .column-action { width: 200px; }';
         echo '.wp-list-table .column-balance , '
            . '.wp-list-table .column-startDate { width: 150px; }';
-        echo '.wp-list-table .column-status{ width: 175px; }';
+        echo '.wp-list-table .column-status{ width: 132px; }';
         echo '.wp-list-table .column-result, '
            . '.wp-list-table .column-image, '
+		   . '.wp-list-table .column-requestDate, '
            . '.wp-list-table .column-active, '
            . '.wp-list-table .column-edit, '
            . '.wp-list-table .column-detail { width: 50px; }';

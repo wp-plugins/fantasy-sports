@@ -8,7 +8,7 @@ class TableStatistic extends WP_List_Table
         self::$leagues = new Leagues();
         self::$statistic = new Statistic();
         global $status, $page;
-        $this->data = null;
+        $aResults = null;
         parent::__construct( array(
             'singular'  => __( 'book', 'mylisttable' , FV_DOMAIN),     //singular name of the listed records
             'plural'    => __( 'books', 'mylisttable' , FV_DOMAIN),   //plural name of the listed records
@@ -125,17 +125,17 @@ class TableStatistic extends WP_List_Table
         }
         
         //get data
-        list($total_items, $this->data) = self::$leagues->getLeaguesByFilter($aCond, 'leagueID DESC', ($this->get_pagenum() - 1) * $item_per_page, $item_per_page);
-        $this->data = self::$leagues->parseLeagueData($this->data);
+        list($total_items, $aResults) = self::$leagues->getLeaguesByFilter($aCond, 'leagueID DESC', ($this->get_pagenum() - 1) * $item_per_page, $item_per_page);
+        $aResults = self::$leagues->parseLeagueData($aResults);
                 
         $columns  = $this->get_columns();
         $hidden   = array();
         
         //sort data
         $sortable = $this->get_sortable_columns();
-        if($this->data != null)
+        if($aResults != null)
         {
-            usort( $this->data, array( &$this, 'usort_reorder' ) );
+            usort( $aResults, array( &$this, 'usort_reorder' ) );
         }
         $this->_column_headers = array( $columns, $hidden, $sortable );
         
@@ -144,12 +144,12 @@ class TableStatistic extends WP_List_Table
             'total_items' => $total_items,                 
             'per_page'    => $item_per_page       
         ) );
-        $this->items = $this->data;
+        $this->items = $aResults;
     }
     
     function getData()
     {
-        return self::$statistic->getProfit($this->data);
+        return self::$statistic->getProfit($aResults);
     }
 }
 ?>
