@@ -166,6 +166,8 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 
 * Fix add players
 
+* Sorting scoring category from best to worst
+
 = Version 2.1.12 released Apr 27 2015 =
 
 * Support Wordpress version 4.2
