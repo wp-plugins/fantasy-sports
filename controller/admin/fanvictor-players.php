@@ -88,8 +88,11 @@ class Fanvictor_Players
 
     private static function validData($aVals)
     {
-        $aPlayer = self::$players->getplayers($aVals['id']);
-        if($aPlayer[0]['siteID'] > 0 || $aVals['id'] == '')
+        if((int)$aVals['id'] > 0)
+        {
+            $aPlayer = self::$players->getplayers($aVals['id']);
+        }
+        if(((int)$aVals['id'] > 0 && $aPlayer[0]['siteID'] > 0) || $aVals['id'] == '')
         {
             if(empty($aVals['name']))
             {

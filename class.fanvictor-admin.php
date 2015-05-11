@@ -118,6 +118,10 @@ class Fanvictor_Admin
         add_action("load-$hook", array('Fanvictor_Admin', "players_screen"));
         add_submenu_page('fanvictor_page', __('Add Players', FV_DOMAIN), __('Add Players', FV_DOMAIN), 'manage_options', 'add-players', array('Fanvictor_Players', 'addPlayers'));
     
+        $hook = add_submenu_page('fanvictor_page', __('Manage Player News', FV_DOMAIN), __('Manage Player News', FV_DOMAIN), 'manage_options', 'manage-playernews', array('Fanvictor_PlayerNews', 'managePlayerNews'));
+        add_action("load-$hook", array('Fanvictor_Admin', "playernews_screen"));
+        add_submenu_page('fanvictor_page', __('Add Player News', FV_DOMAIN), __('Add Player News', FV_DOMAIN), 'manage_options', 'add-playernews', array('Fanvictor_PlayerNews', 'addPlayerNews'));
+        
         $hook = add_submenu_page('fanvictor_page', __('Manage Transactions', FV_DOMAIN), __('Manage Transactions', FV_DOMAIN), 'manage_options', 'transactions', array('Fanvictor_Transactions', 'manageTransactions'));
         add_action("load-$hook", array('Fanvictor_Admin', "transactions_screen"));
     }
@@ -229,6 +233,17 @@ class Fanvictor_Admin
             'label' => 'Pages',
             'default' => 15,
             'option' => 'manage_players_per_page'
+        );
+        add_screen_option( $option, $args );
+    }
+    
+    static function playernews_screen() 
+    {
+        $option = 'per_page';
+        $args = array(
+            'label' => 'Pages',
+            'default' => 15,
+            'option' => 'manage_player_news_per_page'
         );
         add_screen_option( $option, $args );
     }

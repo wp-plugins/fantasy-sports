@@ -3,8 +3,8 @@ Contributors: quarta77
 Donate link: http://fanvictor.com/
 Tags: fantasy sports, fantasy football, fantasy baseball, fantasy hockey, fantasy basketball
 Requires at least: 4.0
-Tested up to: 4.1
-Stable tag: 2.1.12
+Tested up to: 4.2
+Stable tag: 2.1.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -160,7 +160,11 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 
 == Changelog ==
 
-= Version 2.1.11 released Apr 27 2015 =
+= Version 2.1.13 released May 11 2015 =
+
+* Support manage player news
+
+= Version 2.1.12 released Apr 27 2015 =
 
 * Support Wordpress version 4.2
 

@@ -961,7 +961,7 @@ jQuery.playerdraft =
                 {
                     if(aPlayerDraftScorings.length > 1)
                     {
-                        for(var i = 0; i < aPlayerDraftScorings.length; i++)
+                        /*for(var i = 0; i < aPlayerDraftScorings.length; i++)
                         {
                             resultScoring += '<div class="f-column-6">' + aPlayerDraftScorings[i].name + ':';
                             for(var j = 0; j < aPlayerDraftScorings[i].scoring_category.length; j++)
@@ -973,8 +973,8 @@ jQuery.playerdraft =
                         }
                     }
                     else
-                    {
-                        aPlayerDraftScorings = aPlayerDraftScorings[0].scoring_category;
+                    {*/
+                        //aPlayerDraftScorings = aPlayerDraftScorings[0].scoring_category;
                         resultScoring += '<div style="margin-left:20px;">';
                         for(var i = 0; i < aPlayerDraftScorings.length; i++)
                         {

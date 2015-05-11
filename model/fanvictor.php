@@ -429,7 +429,6 @@ class Fanvictor extends Model
     public function getPoolInfo($leagueID)
     {
         $aDatas = $this->sendRequest("getPoolInfo", array('leagueID' => $leagueID), false);
-        $aDatas['scoringcats']['playerdraft'] = $this->scoringcategory->groupScoringCategory($aDatas['scoringcats']['playerdraft']);
         $aDatas['entries'] = $this->parseUserData($aDatas['entries']);
         return $aDatas;
     }

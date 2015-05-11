@@ -124,9 +124,7 @@ class Players extends Model
                       'position_id' => $aVals['position_id'],
                       'name' => $aVals['name'],
                       'salary' => str_replace(',', '', $aVals['salary']),
-                      'indicator_id' => $aVals['indicator_id'],
-                      'player_news' => $aVals['player_news'],
-                      'player_news_brief' => $aVals['player_news_brief']);
+                      'indicator_id' => $aVals['indicator_id']);
         if($isUpdate)
         {
             $data['id'] = $aVals['id'];

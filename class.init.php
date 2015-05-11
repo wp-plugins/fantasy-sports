@@ -751,6 +751,7 @@ if (is_admin())
     require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/scoringcategory.php');
     require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/players.php');
     require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/leagues.php');
+    require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/playernews.php');
     
     //controller
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-pools.php');
@@ -765,6 +766,7 @@ if (is_admin())
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-sports.php');
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-scoringcategory.php');
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-players.php');
+    require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-playernews.php');
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-playerposition.php');
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-transactions.php');
     
