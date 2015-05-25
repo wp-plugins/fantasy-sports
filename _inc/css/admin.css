@@ -1,0 +1,72 @@
+#resultMessage{
+    text-align: left !important;
+}
+.fight_container .table{
+    padding: 6px 0;
+}
+.table_left{
+    width: 180px;
+    float: left;
+}
+.table_right{
+    margin-left: 190px;
+}
+.fight_container .table{
+    border-bottom: none;
+}
+.fight_container .title_area{
+    background-color: #F1F1F1;
+    padding: 10px 5px;
+}
+.fight_container .title_area:after{
+    display: block;
+    content: "";
+    clear: both;
+}
+.fight_container table th, .fight_container table tr:nth-child(2) td{
+    text-align: center;
+}
+.fight_number_title{
+    float: left;
+}
+.fight_action{
+    float: right;
+    cursor: pointer;
+}
+.fight_container table{
+    border-bottom: none;
+    width: 100%;
+    border-collapse: collapse;
+}
+.fight_container table tr{
+    background-color: #FFFFFF !important;
+}
+.fight_container table tr:hover{
+    background-color: inherit !important;
+}
+.fight_container table tr th{
+    border-bottom: none;
+}
+.fight_container table tr td{
+    padding: 0 4px;
+    text-align: left;
+}
+.custom-overlay{
+    z-index: 2000 !important;
+}
+.ui-dialog{
+    z-index: 2001 !important;
+    text-align: left;
+}
+.ui-dialog table{
+    background-color: transparent;
+    background-image: none;
+    border-bottom: none;
+}
+.ui-dialog table td{
+    text-align: left;
+    vertical-align: middle;
+}
+.ui-dialog table tr:hover{
+    background-color: transparent;
+}
