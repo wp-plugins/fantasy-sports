@@ -370,7 +370,7 @@ class Payment
         return $aDatas;
     }
     
-    public function addFundhistory($prize = 0, $leagueID = 0, $newBalance = 0, $type, $operation, $user_id = null, $gateway = null, $reason = null, $changeRate = null)
+    public function addFundhistory($prize = 0, $leagueID = 0, $newBalance = 0, $type, $operation, $user_id = null, $gateway = null, $reason = null, $changeRate = null, $status = null)
     {
         global $wpdb;
         if($prize > 0)
@@ -380,6 +380,11 @@ class Payment
             {
                 $userID = $user_id;
             }
+            
+            //site profit
+            $payout_percentage = get_option('fanvictor_winner_percent');
+            $site_profit = $prize * (100 - $payout_percentage) / 100;
+            
             $values = array('userID' => $userID, 
                             'amount' => $prize,
                             'operation' => $operation,
@@ -389,7 +394,12 @@ class Payment
                             'reason' => $reason,
                             'cash_to_credit' => $changeRate,
                             'leagueID' => $leagueID,
-                            'date' => date('Y-m-d H:i:s'));
+                            'date' => date('Y-m-d H:i:s'),
+                            'site_profit' => $site_profit);
+            if($status != null)
+            {
+                $values['status'] = $status;
+            }
             $table_name = $wpdb->prefix.'fundhistory';
             $wpdb->insert($table_name, $values);
             return $wpdb->insert_id;

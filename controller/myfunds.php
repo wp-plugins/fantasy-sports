@@ -4,11 +4,13 @@ class MyFunds
     private static $payment;
     private static $user;
     private static $fanvictor;
+    private static $coupon;
     public function __construct() 
     {
         self::$payment = new Payment();
         self::$user = new User();
         self::$fanvictor = new Fanvictor();
+        self::$coupon = new FV_CouponModel();
     }
 
 	public static function process()
@@ -40,6 +42,7 @@ class MyFunds
         $aUserPayment = self::$payment->getUserPaymentInfo(PAYPAL, get_current_user_id());
         $aUser = self::$payment->getUserData();
         $withdrawPending = self::$user->getWithdrawlsTotal(get_current_user_id());
+        $isHasCoupon = self::$coupon->isHasCoupon(CP_ACTION_ADD_MONEY);
         include FANVICTOR__PLUGIN_DIR_VIEW.'myfunds.php';
     }
 }

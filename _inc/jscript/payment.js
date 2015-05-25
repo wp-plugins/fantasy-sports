@@ -81,4 +81,45 @@ jQuery.payment =
             jQuery(".ui-dialog").find('button:last').prev().find('span').empty().append(wpfs['send']);
         })
     },
+    
+    showDlgCoupon : function(sTitle)
+    {
+        var payment = this;
+        var add = wpfs['add'];
+        var cancel = wpfs['cancel'];
+        var dialog = jQuery("#dlgCoupon").dialog({
+            height: 'auto',
+            width:'300',
+            modal:true,
+            title:sTitle,
+            open:function(){
+                jQuery('#msgCoupon').empty().hide(); 
+                jQuery('#formCoupon')[0].reset();
+            },
+            buttons: {
+                add: function() {
+                    jQuery.payment.addMoneyByCoupon();
+                },
+                cancel: function() {
+                    dialog.dialog( "close" );
+                }
+            },
+        });
+        return false;
+    },
+    
+    addMoneyByCoupon: function()
+    {
+        jQuery.post(ajaxurl, 'action=addMoneyByCoupon&' + jQuery('#formCoupon').serialize(), function(result) {
+            result = jQuery.parseJSON(result);
+            if(result.notice)
+            {
+                jQuery('#msgCoupon').empty().append(result.notice).show(); 
+            }
+            else 
+            {
+                location.reload();
+            }
+        })
+    },
 }

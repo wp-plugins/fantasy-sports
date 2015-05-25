@@ -1,6 +1,7 @@
 <div class="contentPlugin">
     <?php require_once('dlg_account_info.php');?>
     <?php require_once('dlg_request_payment.php');?>
+    <?php require_once('dlg_coupon.php');?>
     <h1><?=__('Account information', FV_DOMAIN);?></h1>
     <div class="table">
         <div class="table_left"><?=__('Gateway', FV_DOMAIN);?></div>
@@ -20,4 +21,10 @@
     </div>
     <a href="<?=FANVICTOR_URL_ADD_FUNDS;?>"><?=__('Add funds', FV_DOMAIN);?></a> | 
     <a href="#" onclick="return jQuery.payment.requestPayment('Request payment')"><?=__('Request payment', FV_DOMAIN);?></a>
+    <?php if($isHasCoupon):?>
+    |
+    <a href="#" onclick="return jQuery.payment.showDlgCoupon('<?=__("Add money", FV_DOMAIN);?>')">
+        <?=__('Add money by coupon code', FV_DOMAIN);?>
+    </a>
+    <?php endif;?>
 </div>

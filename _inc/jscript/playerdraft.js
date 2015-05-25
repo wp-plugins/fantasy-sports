@@ -76,10 +76,17 @@ jQuery.playerdraft =
                             {
                                 positionName = '&nbsp;';
                             }
+							
+							//pitcher for mlb
+                            var htmlPitcher = '';
+                            if(aPlayer.is_pitcher == 1)
+                            {
+                                htmlPitcher = ' <span class="f-player-badge f-player-badge-injured-possible">S</span> ';
+                            }
                             html += '<tr class="f-pR" data-role="player">\n\
                                         <td class="f-player-position">' + positionName + '</td>\n\
                                         <td class="f-player-name">\n\
-                                            <div onclick="jQuery.playerdraft.playerInfo(' + aPlayer.id + ')">' + aPlayer.name + htmlIndicator + '</div>\n\
+                                            <div onclick="jQuery.playerdraft.playerInfo(' + aPlayer.id + ')">' + aPlayer.name + htmlPitcher + htmlIndicator + '</div>\n\
                                         </td>';
                             if(aPool.only_playerdraft == 0)
                             {

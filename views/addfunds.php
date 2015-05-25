@@ -11,6 +11,12 @@
                 <?=__('How many credits do you want to add', FV_DOMAIN);?> (<?=sprintf(__('minimum $%s'), get_option('fanvictor_minimum_deposit'));?>):<br/>
                 <input type="text" name="credits" />
             </p>
+            <?php if($isHasCoupon):?>
+            <p>
+                <?=__('Coupon code', FV_DOMAIN);?>:<br/>
+                <input type="text" name="coupon_code" />
+            </p>
+            <?php endif;?>
             <p>
                 <?=__('Gateway', FV_DOMAIN);?>:<br/>
                 <select name="gateway">

@@ -13,6 +13,7 @@ class Ajax
     private static $scoringcategory;
     private static $playerposition;
     private static $players;
+    private static $coupon;
     
     public function __construct() 
     {
@@ -33,13 +34,14 @@ class Ajax
         self::$scoringcategory = new ScoringCategory();
         self::$playerposition = new PlayerPosition();
         self::$players = new Players();
+        self::$coupon = new FV_CouponModel();
         
         $funcs = array('loadCbOrgs', 'loadCbFighters', 'loadCbTeams', 'viewResult',
                        'updateResult', 'updatePoolComplete', 'activeOrgs', 'sendUserCredits',
                        'sendUserWithdrawls', 'loadPoolsByOrg', 'calculatePrizes', 'loadFights',
                        'LeagueResults', 'userpicks', 'sendInviteFriend', 'getNormalGameResult',
                        'addCredits', 'loadUserBalance', 'requestPayment', 'loadLeagueDetail',
-                       'updateNewContests', 'showPoolStatisticDetail', 'viewPoolFixture',
+                       'updateNewContests', 'showPoolStatisticDetail', 'viewPoolFixture', 'addMoneyByCoupon',
                        'loadUser', 'loadPoolInfo', 'viewPlayerDraftResult', 'updatePlayerDraftResult',
                        'loadUserResult', 'loadLeagueLobby', 'loadLeagueEntries', 'loadLeaguePrizes',
                        'loadLiveEntries', 'liveEntriesResult', 'loadContestScores', 'loadPlayerPoints',
@@ -266,6 +268,10 @@ class Ajax
         {
             $structure = 'winnertakeall';
         }
+		        else if($league['prize_structure'] == 'MULTI_PAYOUT')
+        {
+            $structure = 'multi_payout';
+        }
         else 
         {
             $structure = 'top3';
@@ -380,6 +386,21 @@ class Ajax
             {
                 exit(json_encode(array('notice' => __('Credits must be greater than ').get_option('fanvictor_minimum_deposit', FV_DOMAIN))));
             }
+            else if(!empty($_POST['coupon_code']) && 
+                    !self::$coupon->isCouponCodeExist($_POST['coupon_code'], CP_ACTION_EXTRA_DEPOSIT))
+            {
+                exit(json_encode(array('notice' => __('This code does not exist', FV_DOMAIN))));
+            }
+            else if(!empty($_POST['coupon_code']) && 
+                    self::$coupon->isCouponCodeUsed($_POST['coupon_code'], CP_ACTION_EXTRA_DEPOSIT))
+            {
+                exit(json_encode(array('notice' => __('This code has already used', FV_DOMAIN))));
+            }
+			else if(!empty($_POST['coupon_code']) && 
+					self::$coupon->isCouponCodeLimit($_POST['coupon_code'], CP_ACTION_EXTRA_DEPOSIT))
+            {
+                exit(json_encode(array('notice' => __('This code has reached to limit', FV_DOMAIN))));
+            }
             else if(!self::$payment->isGatewayExist($gateway))
             {
                 exit(json_encode(array('notice' => __('Please select gateway', FV_DOMAIN))));
@@ -387,7 +408,18 @@ class Ajax
             else
             {
                 $money = self::$payment->changeCreditToCash($credits);
-                $iFundHitoryId = self::$payment->addFundhistory($money, 0, 0, 'DEPOSIT', 'ADD', null, $gateway, null, (int)get_option('fanvictor_cash_to_credit'));
+                $reason = '';
+                if(!empty($_POST['coupon_code']))
+                {
+                    $coupon = self::$coupon->getCouponByCode($_POST['coupon_code'], CP_ACTION_EXTRA_DEPOSIT);
+                    if($coupon != null)
+                    {
+                        $money += self::$coupon->getTotalDiscountValue($coupon->discount_type, $coupon->discount_value, $money);
+                        $reason = __("Coupon code: ".$_POST['coupon_code'], FV_DOMAIN);
+                        self::$coupon->addCouponUsed($coupon->id, get_current_user_id());
+                    }
+                }
+                $iFundHitoryId = self::$payment->addFundhistory($money, 0, 0, 'DEPOSIT', 'ADD', null, $gateway, $reason, (int)get_option('fanvictor_cash_to_credit'));
                 if((int)$iFundHitoryId > 0)
                 {
                     $aSettings = array('paypal_email' => get_option('paypal_email_account'),
@@ -1046,6 +1078,42 @@ class Ajax
         ));
         $aScorings['paging'] = $paging;
         exit(json_encode($aScorings));
+    }
+    
+	public static function addMoneyByCoupon()
+    {
+        if(empty($_POST['coupon_code']))
+        {
+            exit(json_encode(array('notice' => __('Please input coupon code', FV_DOMAIN))));
+        }
+        else if(!self::$coupon->isCouponCodeExist($_POST['coupon_code'], CP_ACTION_ADD_MONEY))
+        {
+            exit(json_encode(array('notice' => __('This code does not exist', FV_DOMAIN))));
+        }
+        else if(self::$coupon->isCouponCodeUsed($_POST['coupon_code'], CP_ACTION_ADD_MONEY))
+        {
+            exit(json_encode(array('notice' => __('This code has already used', FV_DOMAIN))));
+        }
+        else if(self::$coupon->isCouponCodeLimit($_POST['coupon_code'], CP_ACTION_ADD_MONEY))
+        {
+            exit(json_encode(array('notice' => __('This code has reached to limit', FV_DOMAIN))));
+        }
+        else 
+        {
+            $coupon = self::$coupon->getCouponByCode($_POST['coupon_code'], CP_ACTION_ADD_MONEY);
+            if(!empty($coupon))
+            {
+                $user = self::$payment->getUserData();
+                $discount_value = self::$coupon->getTotalDiscountValue($coupon->discount_type, $coupon->discount_value, $user['balance']);
+                if(self::$payment->updateUserBalance($discount_value, false, 0, get_current_user_id()))
+                {
+                    self::$payment->addFundhistory($discount_value, 0, ($user['balance'] + $discount_value), "COUPON", "ADD", get_current_user_id(), null, null, null, "completed");
+                    self::$coupon->addCouponUsed($coupon->id, get_current_user_id());
+                    exit(json_encode(array('result' => __('Successfully added', FV_DOMAIN))));
+                }
+            }
+            exit(json_encode(array('notice' => __('Something went wrong, please try again', FV_DOMAIN))));
+        }
     }
 }
 ?>

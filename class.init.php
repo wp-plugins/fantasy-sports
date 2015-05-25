@@ -88,7 +88,7 @@ class FanvictorInit
             foreach($xml->version as $version)
             {
                 $version = (string)$version->number;
-                if($version > $curVersion)
+                if(version_compare($version, $curVersion, '>'))
                 {
 					if(file_exists(FANVICTOR__PLUGIN_DIR.'class.table-credits.php'))
 					{
@@ -732,6 +732,10 @@ function getMessage()
 }
 
 require_once(FANVICTOR__PLUGIN_DIR_MODEL.'model.php');
+define("CP_ACTION_ADD_MONEY", "ADD_MONEY");
+define("CP_ACTION_EXTRA_DEPOSIT", "EXTRA_DEPOSIT");
+define("CP_DISCOUNT_PERCENT", "PERCENT");
+define("CP_DISCOUNT_PRICE", "PRICE");
 if (is_admin()) 
 {
     //model
@@ -752,6 +756,7 @@ if (is_admin())
     require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/players.php');
     require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/leagues.php');
     require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/playernews.php');
+    require_once(FANVICTOR__PLUGIN_DIR_MODEL.'CouponModel.php');
     
     //controller
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-pools.php');
@@ -788,6 +793,7 @@ else
     require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/sports.php');
     require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/scoringcategory.php');
     require_once(FANVICTOR__PLUGIN_DIR_MODEL.'fanvictor.php');
+    require_once(FANVICTOR__PLUGIN_DIR_MODEL.'CouponModel.php');
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER."lobby.php");
     add_action('wp_enqueue_scripts','pluginname_ajaxurl'); 
     

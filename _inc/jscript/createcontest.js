@@ -48,22 +48,33 @@ function setOptions(matchWith)
     {
             return true;
     }
-    switch ( matchWith ) 
+        switch ( matchWith ) 
     {
         case "head2head":
             jQuery('.leagueDiv').hide();
             jQuery('#addPayouts').hide();
+            jQuery('#payoutExample').hide();
             jQuery('#payouts').empty();
             break;
         case "league":
             jQuery('.leagueDiv').show();
+            jQuery('#addPayouts').hide();
+            jQuery('#payoutExample').hide();
+            jQuery('#payouts').empty();
+            break;
+        case "multi_payout":
+            jQuery('#addPayouts').show();
+            jQuery('#payoutExample').show();
             break;
         case "top3":
-            jQuery('#addPayouts').show();
+            jQuery('#addPayouts').hide();
+            jQuery('#payoutExample').hide();
+            jQuery('#payouts').empty();
             break;
         case "winnertakeall":
             jQuery('#addPayouts').hide();
             jQuery('#payouts').empty();
+            jQuery('#payoutExample').hide();
             break;
         case "winnertakeall":
         case "top3":

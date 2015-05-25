@@ -110,10 +110,14 @@ jQuery.lobby =
                                             htmlImage = '<img src="' + aLeague.icon + '" style="width:16px" class="f-nhl">';
                                         }
 
-                                        var htmlMultiEntry = '';
+										var htmlMultiEntry = htmlMultiPayout = '';
                                         if(aLeague.multi_entry == 1)
                                         {
                                             htmlMultiEntry = '<div class="indicator"><div title="Multi entry" class="multi-entry">M</div></div>';
+                                        }
+                                        if(aLeague.multi_payout == 1)
+                                        {
+                                            htmlMultiPayout = '<div class="indicator"><div title="Multi payout" class="multi-entry">P</div></div>';
                                         }
 
                                         html +=   
@@ -125,6 +129,7 @@ jQuery.lobby =
                                                         <span class="f-icon3"></span>\n\
                                                     </a>\n\
                                                     ' + htmlMultiEntry + '\n\
+													' + htmlMultiPayout + '\n\
                                                 </div>\n\
                                                 <div class="f-gametype" style="width: 12%"><span class="ftMobileTitle">TYPE</span>' + aLeague.gameType + '</div>\n\
                                                 <div class="f-entries" style="width: 12%"><span class="ftMobileTitle">ENTRIES</span>\n\

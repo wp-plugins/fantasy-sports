@@ -302,8 +302,8 @@ class Pools extends Model
             $size = 2;
             $structure = "winnertakeall";
         }
-        if((int)$entryFee > 0)
-        {
+		//if((int)$entryFee > 0)
+        //{
             $prize = $size * $entryFee * $winnerPercent / 100;
             switch($structure)
             {
@@ -311,6 +311,12 @@ class Pools extends Model
                     $result[] = round($prize, 2);
                     break;
                 case "top3":
+                    $result["1st"] = $this->addInsufficientZeroToMoneyFormat(round($prize * $firstPercent / 100, 2));//1st
+                    $result["2nd"] = $this->addInsufficientZeroToMoneyFormat(round($prize * $secondPercent / 100, 2));//2nd
+                    $result["3rd"] = $this->addInsufficientZeroToMoneyFormat(round($prize * $thirdPercent / 100, 2));//3th
+                    break;
+                case "multi_payout":
+                    
                     if($payouts != null)
                     {
                         foreach($payouts as $payout)
@@ -329,17 +335,17 @@ class Pools extends Model
                             $result[$pos] = $this->addInsufficientZeroToMoneyFormat(round($prize * $payout['percent'] / 100, 2));
                         }
                     }
-                    else 
-                    {
-                        $result["1st"] = $this->addInsufficientZeroToMoneyFormat(round($prize * $firstPercent / 100, 2));//1st
-                        $result["2nd"] = $this->addInsufficientZeroToMoneyFormat(round($prize * $secondPercent / 100, 2));//2nd
-                        $result["3rd"] = $this->addInsufficientZeroToMoneyFormat(round($prize * $thirdPercent / 100, 2));//3th
-                    }
+ 
+ 
+ 
+ 
+ 
+ 
                     break;
                 /*default :
                     break;*/
             }
-        }
+        //}
         return $result;
     }
     

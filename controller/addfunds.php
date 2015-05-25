@@ -3,10 +3,12 @@ class Addfunds
 {
     private static $payment;
     private static $fanvictor;
+    private static $coupon;
     public function __construct() 
     {
         self::$payment = new Payment();
         self::$fanvictor = new Fanvictor();
+        self::$coupon = new FV_CouponModel();
     }
     
 	public static function process()
@@ -40,6 +42,7 @@ class Addfunds
             $aGateways = self::$payment->viewGateway();
             $canplay = true; 
         }
+        $isHasCoupon = self::$coupon->isHasCoupon(CP_ACTION_EXTRA_DEPOSIT);
         include FANVICTOR__PLUGIN_DIR_VIEW.'addfunds.php';
     }
 }

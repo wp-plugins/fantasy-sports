@@ -24,7 +24,7 @@
                     <div><span><?=__('Operation', FV_DOMAIN);?></span><?=$aFundHistory['operation'];?></div>
                     <div><span><?=__('Type', FV_DOMAIN);?></span><?=$aFundHistory['type'];?></div>
                     <div><span><?=__('Gateway', FV_DOMAIN);?></span><?=!empty($aFundHistory['gateway']) ? $aFundHistory['gateway'] : '&nbsp;';?></div>
-                    <div><span><?=__('Status', FV_DOMAIN);?></span><?php !empty($aFundHistory['gateway']) ? $aFundHistory['status'] : '&nbsp;';?></div>
+                    <div><span><?=__('Status', FV_DOMAIN);?></span><?=!empty($aFundHistory['status']) ? $aFundHistory['status'] : '&nbsp;';?></div>
                     <div><span><?=__('Leagueid', FV_DOMAIN);?></span><?php if($aFundHistory['leagueID'] > 0):?><?=$aFundHistory['leagueID'];?><?php endif;?></div>
                     <div><span><?=__('Transactionid', FV_DOMAIN);?></span><?=!empty($aFundHistory['transactionID']) ? $aFundHistory['transactionID'] : '&nbsp;';?></div>
                     <div><span><?=__('Amount', FV_DOMAIN);?></span><?=$aFundHistory['amount'];?></div>

@@ -175,6 +175,9 @@
                                 case 'NA':
                                     $indicatorClass = 'f-player-badge f-player-badge-injured-out';
                                     break;
+								case 'S':
+                                    $indicatorClass = 'f-player-badge f-player-badge-injured-possible';
+                                    break;
                             }
                         ?>
                         <li>
