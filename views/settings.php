@@ -26,20 +26,6 @@
             </td>
         </tr>
         <tr valign="top">
-            <th scope="row"><?=__('Fantasy Image Dir', FV_DOMAIN);?></th>
-            <td>
-                <input type="text" name="fanvictor_image_dir" class="regular-text ltr" value="<?php echo esc_attr(get_option('fanvictor_image_dir'));?>" />
-                <p class="description"><?=__('This is the directory where your images will be uploaded to. We recommend not to modify this.', FV_DOMAIN);?></p>
-            </td>
-        </tr>
-        <tr valign="top">
-            <th scope="row"><?=__('Fantasy Image Thumb Size', FV_DOMAIN);?></th>
-            <td>
-                <input type="text" name="fanvictor_image_thumb_size" class="regular-text ltr" value="<?php echo esc_attr(get_option('fanvictor_image_thumb_size'));?>" />
-                <p class="description"><?=__('This is the size of the thumbnail for your images.', FV_DOMAIN);?></p>
-            </td>
-        </tr>
-        <tr valign="top">
             <th scope="row"><?=__('Entry Fee', FV_DOMAIN);?></th>
             <td class="array-holder">
                 <?php $aEntrys = get_option('fanvictor_entry_fee');?>

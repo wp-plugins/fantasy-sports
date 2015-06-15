@@ -738,6 +738,22 @@ define("CP_DISCOUNT_PERCENT", "PERCENT");
 define("CP_DISCOUNT_PRICE", "PRICE");
 if (is_admin()) 
 {
+    $menu = array('manage-sports', 'add-sports', 'manage-pools', 'add-pools',
+                  'manage-contests', 'add-contests', 'manage-fighters', 'add-fighters',
+                  'manage-teams', 'add-teams', 'statistic', 'credits',
+                  'withdrawls', 'manage-playerposition', 'add-playerposition', 'manage-scoringcategory',
+                  'add-scoringcategory', 'manage-players', 'add-players', 'manage-playernews',
+                  'add-playernews', 'transactions');
+    //admin page
+    require_once(FANVICTOR__PLUGIN_DIR.'class.fanvictor-admin.php');
+	$fanvictor = new Fanvictor_Admin();
+    $fanvictor->init();
+    
+    if((empty($_GET['page']) || !in_array($_GET['page'], $menu)) && pageSegment(2) != 'admin-ajax.php')
+    {
+        return;
+    }
+    
     //model
     require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/pools.php');
     require_once(FANVICTOR__PLUGIN_DIR_MODEL.'admin/fighters.php');
@@ -774,11 +790,6 @@ if (is_admin())
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-playernews.php');
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-playerposition.php');
     require_once(FANVICTOR__PLUGIN_DIR_CONTROLLER.'admin/fanvictor-transactions.php');
-    
-    //admin page
-    require_once(FANVICTOR__PLUGIN_DIR.'class.fanvictor-admin.php');
-	$fanvictor = new Fanvictor_Admin();
-    $fanvictor->init();
     
     //ajax page
     require_once(FANVICTOR__PLUGIN_DIR.'class.ajax.php');

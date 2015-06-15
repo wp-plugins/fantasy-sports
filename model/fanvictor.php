@@ -421,9 +421,9 @@ class Fanvictor extends Model
         return $this->sendRequest("getPlayerPicksResult", array('leagueID' => $leagueID, 'userID' => $userID, 'entry_number' => $entry_number), false);
     }
     
-    public function getPlayerStatistics($orgID, $playerID)
+    public function getPlayerStatistics($orgID, $playerID, $poolID)
     {
-        return $this->sendRequest("getPlayerStatistics", array("orgID" => $orgID, "playerID" => $playerID), false);
+        return $this->sendRequest("getPlayerStatistics", array("orgID" => $orgID, "playerID" => $playerID, "poolID" => $poolID), false);
     }
 
     public function getPoolInfo($leagueID)
@@ -483,11 +483,6 @@ class Fanvictor extends Model
     public function getContestResult($leagueID)
     {
         return $this->sendRequest("getContestResult", array("leagueID" => $leagueID), false);
-    }
-    
-    public function getPlayerNews($playerID)
-    {
-        return $this->sendRequest("getPlayerNews", array("playerID" => $playerID), false);
     }
 }
 ?>

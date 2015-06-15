@@ -45,7 +45,7 @@ class Ajax
                        'loadUser', 'loadPoolInfo', 'viewPlayerDraftResult', 'updatePlayerDraftResult',
                        'loadUserResult', 'loadLeagueLobby', 'loadLeagueEntries', 'loadLeaguePrizes',
                        'loadLiveEntries', 'liveEntriesResult', 'loadContestScores', 'loadPlayerPoints',
-                       'loadPlayerStatistics', 'loadPlayerNews', 'activeScoringCategory', 'reverseResult');
+                       'loadPlayerStatistics', 'activeScoringCategory', 'reverseResult', 'createContest');
         foreach($funcs as $func)
         {
             add_action("wp_ajax_$func", array('Ajax', $func));
@@ -268,7 +268,7 @@ class Ajax
         {
             $structure = 'winnertakeall';
         }
-		        else if($league['prize_structure'] == 'MULTI_PAYOUT')
+        else if($league['prize_structure'] == 'MULTI_PAYOUT')
         {
             $structure = 'multi_payout';
         }
@@ -358,14 +358,8 @@ class Ajax
     
     public static function loadPlayerStatistics()
     {
-        $aStatistics = self::$fanvictor->getPlayerStatistics($_POST['orgID'], $_POST['playerID']);
+        $aStatistics = self::$fanvictor->getPlayerStatistics($_POST['orgID'], $_POST['playerID'], $_POST['poolID']);
         exit(json_encode($aStatistics));
-    }
-    
-    public static function loadPlayerNews()
-    {
-        $news = self::$fanvictor->getPlayerNews($_POST['playerID']);
-        exit(json_encode($news));
     }
 
     //////////////////
@@ -396,8 +390,8 @@ class Ajax
             {
                 exit(json_encode(array('notice' => __('This code has already used', FV_DOMAIN))));
             }
-			else if(!empty($_POST['coupon_code']) && 
-					self::$coupon->isCouponCodeLimit($_POST['coupon_code'], CP_ACTION_EXTRA_DEPOSIT))
+            else if(!empty($_POST['coupon_code']) && 
+                    self::$coupon->isCouponCodeLimit($_POST['coupon_code'], CP_ACTION_EXTRA_DEPOSIT))
             {
                 exit(json_encode(array('notice' => __('This code has reached to limit', FV_DOMAIN))));
             }
@@ -1080,7 +1074,7 @@ class Ajax
         exit(json_encode($aScorings));
     }
     
-	public static function addMoneyByCoupon()
+    public static function addMoneyByCoupon()
     {
         if(empty($_POST['coupon_code']))
         {
@@ -1113,6 +1107,103 @@ class Ajax
                 }
             }
             exit(json_encode(array('notice' => __('Something went wrong, please try again', FV_DOMAIN))));
+        }
+    }
+    
+    public static function createContest()
+    {
+        //check valid
+        self::validCreateContestData();
+        
+        //add
+        $leagueID = self::$fanvictor->createLeague($_POST);
+
+        if((int)$leagueID < 1)
+        {
+            echo json_encode(array(
+                'result' => 1,
+                'msg' =>  __("Something went wrong! Please try again", FV_DOMAIN)
+            )); 
+            exit;
+        }
+        else if($_POST['game_type'] == 'playerdraft')
+        {
+            echo json_encode(array(
+                'result' => 1,
+                'url' => FANVICTOR_URL_GAME.$leagueID
+            )); 
+            exit;
+        }
+        else 
+        {
+            echo json_encode(array(
+                'result' => 1,
+                'msg' => FANVICTOR_URL_SUBMIT_PICKS.$leagueID
+            )); 
+            exit;
+        }
+    }
+    
+    private static function validCreateContestData()
+    {
+        $valid = self::$fanvictor->validCreateLeague($_POST['organizationID'], $_POST['poolID'], 
+                                                     $_POST['game_type'], $_POST['leaguename'], 
+                                                     isset($_POST['fightID']) ? $_POST['fightID'] : null, 
+                                                     isset($_POST['roundID']) ? $_POST['roundID'] : null, 
+                                                     isset($_POST['payouts_from']) ? $_POST['payouts_from'] : null,
+                                                     isset($_POST['payouts_to']) ? $_POST['payouts_to'] : null,
+                                                     isset($_POST['percentage']) ? $_POST['percentage'] : null);
+        $msg = '';
+        switch($valid)
+        {
+            case 2;
+                $msg = __('Sport does not exist. Please try again.', FV_DOMAIN);
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Sport does not exist. Please try again.', FV_DOMAIN), true);
+                break;
+            case 3;
+                $msg = __('Date does not exist. Please try again.', FV_DOMAIN);
+                break;
+            case 4;
+                $msg = __('Fixture does not exist. Please try again.', FV_DOMAIN);
+                break;
+            case 5;
+                $msg = __('Please select at least a fixture.', FV_DOMAIN);
+                break;
+            case 6;
+                $msg = __('This game type does not exist.', FV_DOMAIN);
+                break;
+            case 7;
+                $msg = __('This sport does not support playerdraft type.', FV_DOMAIN);
+                break;
+            case 8;
+                $msg = __('Please enter league name', FV_DOMAIN);
+                break;
+            case 9;
+                $msg = __('Round does not exist. Please try again', FV_DOMAIN);
+                break;
+            case 10;
+                $msg = __('Please select at least two rounds', FV_DOMAIN);
+                break;
+            case 11;
+                $msg = __('Invalid payouts', FV_DOMAIN);
+                break;
+        }
+
+        if(!in_array($_POST['leagueSize'], get_option('fanvictor_league_size')))
+        {
+            $msg = __('League size does not exist', FV_DOMAIN);
+        }
+        else if($_POST['entry_fee'] > 0 && !in_array($_POST['entry_fee'], get_option('fanvictor_entry_fee')))
+        {
+            $msg = __('Entry fee does not exist', FV_DOMAIN);
+        }
+        if($msg != '')
+        {
+            echo json_encode(array(
+                'result' => 0,
+                'msg' => $msg
+            )); 
+            exit;
         }
     }
 }

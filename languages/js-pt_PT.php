@@ -93,6 +93,7 @@ function js_lang()
             "updating" : "'.__("Updating", "fantasy-sports").'",
             "no_news" : "'.__("No news", "fantasy-sports").'",
             "here" : "'.__("here", "fantasy-sports").'",
+            "opposing_pitcher" : "'.__("Opposing Pitcher", "fantasy-sports").'",
         }
     </script>';
 }

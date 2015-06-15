@@ -132,7 +132,7 @@
                         <select data-name="rounds">
                             <option value="">--</option>
                             <?php foreach($aRounds as $aRound):?>
-                            <option value="{$aRound}" <?=isset($aFight['rounds']) && $aFight['rounds'] == $aRound ? 'selected="true"' : '';?>><?=$aRound;?></option>
+                            <option value="<?=$aRound;?>" <?=isset($aFight['rounds']) && $aFight['rounds'] == $aRound ? 'selected="true"' : '';?>><?=$aRound;?></option>
                             <?php endforeach;?>
                         </select>
                     </div>

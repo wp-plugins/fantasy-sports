@@ -62,42 +62,38 @@ class Game
         //league
         $league = self::$fanvictor->getLeagueDetail($leagueId);
         
-        //pool
-        self::$pools->selectField(array('status'));
-        $aPool = self::$pools->getPools($league[0]['poolID'], null, false, true);
-        
-        if(!self::$fanvictor->isPlayerDraftLeagueExist($leagueId))
+        //load game data
+        $data = self::$fanvictor->getEnterGameData($leagueId, $entry_number);
+        switch($data)
         {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Contest does not exist', FV_DOMAIN), true);
+            case 2:
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Contest does not exist', FV_DOMAIN), true);
+                break;
+            case 3:
+                redirect(FANVICTOR_URL_CONTEST.$leagueId, null, true);
+                break;
+            case 4:
+                redirect(FANVICTOR_URL_CREATE_CONTEST, __('Sorry! This contest was full', FV_DOMAIN), true);
+                break;
         }
-        else if(!self::$payment->isUserEnoughMoneyToJoin($league[0]['entry_fee'], $leagueId))
+        if(!self::$payment->isUserEnoughMoneyToJoin($league[0]['entry_fee'], $leagueId))
         {
             redirect(FANVICTOR_URL_ADD_FUNDS, __('You do not have enough funds to enter. Please add funds', FV_DOMAIN), true);
         }
-        else if($aPool['status'] != 'NEW')//check league completed
-        {
-            redirect(FANVICTOR_URL_CONTEST.$leagueId, null, true);
-        }
-        else if(self::$fanvictor->isPlayerDraftLeagueFull($leagueId, $entry_number))
-        {
-            redirect(FANVICTOR_URL_CREATE_CONTEST, __('Sorry! This contest was full', FV_DOMAIN), true);
-        }
         else 
         {
-            //load game data
-            $game = self::$fanvictor->getEnterGameData($leagueId, $entry_number);
-            $league = $game['league'];
+            $league = $data['league'];
             $league = self::$fanvictor->parseLeagueData(array($league));
             $league = $league[0];
-            $aPool = $game['pool'];
-            $aFights = $game['fights'];
-            $aRounds = $game['rounds'];
-            $aPositions = $game['positions'];
-            $aLineups = $game['lineup'];
-            $aTeams = $game['teams'];
-            $aIndicators = $game['indicators'];
-            $playerIdPicks = $game['playerIdPicks'];
-            $aPlayers = $game['players'];
+            $aPool = $data['pool'];
+            $aFights = $data['fights'];
+            $aRounds = $data['rounds'];
+            $aPositions = $data['positions'];
+            $aLineups = $data['lineup'];
+            $aTeams = $data['teams'];
+            $aIndicators = $data['indicators'];
+            $playerIdPicks = $data['playerIdPicks'];
+            $aPlayers = $data['players'];
             $aPlayers = self::$players->parsePlayersData($aPlayers);
 
             include FANVICTOR__PLUGIN_DIR_VIEW.'game.php';

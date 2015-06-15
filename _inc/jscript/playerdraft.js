@@ -76,8 +76,8 @@ jQuery.playerdraft =
                             {
                                 positionName = '&nbsp;';
                             }
-							
-							//pitcher for mlb
+                            
+                            //pitcher for mlb
                             var htmlPitcher = '';
                             if(aPlayer.is_pitcher == 1)
                             {
@@ -736,11 +736,13 @@ jQuery.playerdraft =
         jQuery(".f-player-stats-lightbox").tabs({active : 0});
         
         //statistic
-        var htmlStatistic = totalPlayed = '';
+        var htmlStatistic = htmlOpponentStatistic = totalPlayed = '';
         var orgID = jQuery.parseJSON(this.aPool).organization;
-        jQuery.post(ajaxurl, "action=loadPlayerStatistics&orgID=" + orgID + '&playerID=' + player_id, function(result) {
+        jQuery.post(ajaxurl, "action=loadPlayerStatistics&orgID=" + orgID + '&playerID=' + player_id + '&poolID=' + pool.poolID, function(result) {
             result = jQuery.parseJSON(result);
+            var player_news = result.news;
             var aStatistics = result.scoring_category;
+            var aOpponentStatistics = result.opponent_scoring_category;
             totalPlayed = result.played;
             var aStatistic = '';
             htmlStatistic += '<div class="f-stat">\n\
@@ -755,6 +757,24 @@ jQuery.playerdraft =
                 }
             }
             jQuery('#playerStatistic').empty().append(htmlStatistic);
+            
+            //opponent statistic
+            if(aOpponentStatistics != '')
+            {
+                htmlOpponentStatistic += 
+                    '<h1>' + wpfs['opposing_pitcher'] + ' - ' + result.opponent_name +'</h1>\n\
+                    <div id="playerStatistic" class="f-well f-clearfix">\n\
+                        <div class="f-stat">\n\
+                        <b>' + result.opponent_played + '</b>Games</div>';
+                for(var i in aOpponentStatistics)
+                {
+                    aOpponentStatistic = aOpponentStatistics[i];
+                    htmlOpponentStatistic += '<div class="f-stat">\n\
+                            <b>' + aOpponentStatistic.points + '</b> ' + aOpponentStatistic.name + ' </div>';
+                }
+            }
+            htmlOpponentStatistic += '</div>';
+            jQuery('#playerStatistic').after(htmlOpponentStatistic);
             
             //full statistic
             var aStats = result.stats;
@@ -781,26 +801,23 @@ jQuery.playerdraft =
                 htmlPlayerStatistic += '</tbody></table>';
             }
             jQuery('#gameLog').empty().append(htmlPlayerStatistic);
-        })
-        
-        //player news brief
-        var htmlNewsBrief = '';
-        var htmlNews = '';
-        jQuery.post(ajaxurl, 'action=loadPlayerNews&playerID=' + player_id + '&brief=1', function(result) {
-            result = jQuery.parseJSON(result);
-            if(result != null)
+            
+            //player news
+            var htmlNewsBrief = '';
+            var htmlNews = '';
+            if(player_news != null)
             {
                 var style = 'style="padding-bottom:5px;margin-bottom:5px;border-bottom:solid 1px #8b8b8b"';
-                for(var i in result)
+                for(var i in player_news)
                 {
-                    if(result.length == (parseInt(i)+1))
+                    if(player_news.length == (parseInt(i)+1))
                     {
                         style = '';
                     }
-                    htmlNews += '<div ' + style + '>' + result[i].updated + '<br/>' + result[i].title + '<br/>' + result[i].content + '</div>';
+                    htmlNews += '<div ' + style + '>' + player_news[i].updated + '<br/>' + player_news[i].title + '<br/>' + player_news[i].content + '</div>';
                     if(i == 0)
                     {
-                        htmlNewsBrief = result[i].title + '<br/>' + result[i].content;
+                        htmlNewsBrief = player_news[i].title + '<br/>' + player_news[i].content;
                     }
                 }
             }

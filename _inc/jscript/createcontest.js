@@ -48,7 +48,7 @@ function setOptions(matchWith)
     {
             return true;
     }
-        switch ( matchWith ) 
+    switch ( matchWith ) 
     {
         case "head2head":
             jQuery('.leagueDiv').hide();
@@ -164,6 +164,7 @@ jQuery.createcontest =
         else 
         {
             jQuery('#wrapFixtures').hide();
+            jQuery('#game_type #playerdraftType').show();
             jQuery('#game_type option:not(#playerdraftType)').hide();
         }
         jQuery('#game_type option:first:visible').attr("selected", "true");
@@ -298,6 +299,14 @@ jQuery.createcontest =
                     prizes.push(prize.toFixed(2));
                     break;
                 case "top3":
+                    prizes.push((prize * firstPercent / 100).toFixed(2));//1st
+                    prizes.push((prize * secondPercent / 100).toFixed(2));//2nd
+                    prizes.push((prize * thirdPercent / 100).toFixed(2));//3th
+                    poss.push("1st");
+                    poss.push("2nd");
+                    poss.push("3rd");
+                    break;
+                case 'multi_payout':
                     if(jQuery("#payouts input[name='percentage[]']").length > 0)
                     {
                         var index = -1;
@@ -305,14 +314,17 @@ jQuery.createcontest =
                             index++;
                             var from = parseInt(jQuery(this).val());
                             var to = parseInt(jQuery("#payouts input[name='payouts_to[]']:eq(" + index + ")").val());
-                            from = jQuery.createcontest.parsePosition(from);
-                            to = jQuery.createcontest.parsePosition(to);
-                            pos = from + " - " + to;
-                            if(from == to)
-                            {
-                                pos = from;
+                            if(from > 0 && to > 0)
+                                {
+                                from = jQuery.createcontest.parsePosition(from);
+                                to = jQuery.createcontest.parsePosition(to);
+                                pos = from + " - " + to;
+                                if(from == to)
+                                {
+                                    pos = from;
+                                }
+                                poss.push(pos);
                             }
-                            poss.push(pos);
                         })
                         jQuery("#payouts input[name='percentage[]']").each(function(){
                             var percentage = jQuery(this).val();
@@ -326,15 +338,6 @@ jQuery.createcontest =
                             }
                             prizes.push((prize * percentage / 100).toFixed(2));//1st
                         })
-                    }
-                    else 
-                    {
-                        prizes.push((prize * firstPercent / 100).toFixed(2));//1st
-                        prizes.push((prize * secondPercent / 100).toFixed(2));//2nd
-                        prizes.push((prize * thirdPercent / 100).toFixed(2));//3th
-                        poss.push("1st");
-                        poss.push("2nd");
-                        poss.push("3rd");
                     }
                     break;
                 /*default :
@@ -511,6 +514,23 @@ jQuery.createcontest =
         item.remove();
         this.calculatePrizes();
         return false;
+    },
+    
+    create: function()
+    {
+        jQuery('#btn_create_contest').attr('disabled', 'true');
+        jQuery.post(ajaxurl, 'action=createContest&' + jQuery('#formCreateContest').serialize(), function(result) {
+            result = jQuery.parseJSON(result);
+            if(result.result == 0)
+            {
+                jQuery('.public_message').empty().append(result.msg).show();
+            }
+            else 
+            {
+                window.location = result.url;
+            }
+            jQuery('#btn_create_contest').removeAttr('disabled');
+        })
     }
 }
 
@@ -530,3 +550,8 @@ jQuery(window).load(function(){
 jQuery(document).on('click', '.radio input', function(event){
     setOptions(this.value);
 });
+
+jQuery(document).on('submit', '#formCreateContest', function(e){
+    e.preventDefault();
+    jQuery.createcontest.create();
+})
