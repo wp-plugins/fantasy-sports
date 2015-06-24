@@ -160,7 +160,7 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 
 == Changelog ==
 
-= Version 2.1.16 released June 24 2015 =
+= Version 2.1.17 released June 24 2015 =
 
 * Fix show player list
 
