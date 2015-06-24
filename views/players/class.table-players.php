@@ -29,22 +29,9 @@ class TablePlayers extends WP_List_Table
             case 'salary':
                 return number_format($item[ $column_name ]);
             case 'team':
-                $data = self::$teams->getTeams($item['team_id'], null, true);
-                if($data != null)
-                {
-                    $data = $data['name'];
-                }
-                return $data;
+                return $item['team_name'];
             case 'position':
-                if((int)$item['position_id'] > 0)
-                {
-                    $data = self::$playerposition->getPlayerPosition($item['position_id']);
-                    if($data != null)
-                    {
-                        return $data['name'];
-                    }
-                }
-                return '';
+                return $item['position_name'];
             case 'edit':
                 return sprintf('<a href="?page=%s&action=%s&id=%s">Edit</a>', 'add-players','edit',$item['id']);
             default:
