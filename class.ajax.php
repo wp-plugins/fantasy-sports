@@ -36,7 +36,7 @@ class Ajax
         self::$players = new Players();
         self::$coupon = new FV_CouponModel();
         
-        $funcs = array('loadCbOrgs', 'loadCbFighters', 'loadCbTeams', 'viewResult',
+        $funcs = array('loadCbOrgs', 'loadCbFighters', 'loadCbTeams', 'viewResult', 'reversePointOrgs',
                        'updateResult', 'updatePoolComplete', 'activeOrgs', 'sendUserCredits',
                        'sendUserWithdrawls', 'loadPoolsByOrg', 'calculatePrizes', 'loadFights',
                        'LeagueResults', 'userpicks', 'sendInviteFriend', 'getNormalGameResult',
@@ -45,7 +45,7 @@ class Ajax
                        'loadUser', 'loadPoolInfo', 'viewPlayerDraftResult', 'updatePlayerDraftResult',
                        'loadUserResult', 'loadLeagueLobby', 'loadLeagueEntries', 'loadLeaguePrizes',
                        'loadLiveEntries', 'liveEntriesResult', 'loadContestScores', 'loadPlayerPoints',
-                       'loadPlayerStatistics', 'activeScoringCategory', 'reverseResult', 'createContest');
+                       'loadPlayerStatistics', 'activeScoringCategory', 'reverseResult', 'createContest', 'getStat');
         foreach($funcs as $func)
         {
             add_action("wp_ajax_$func", array('Ajax', $func));
@@ -563,6 +563,17 @@ class Ajax
         $orgID = $_POST['id'];
         $active = $_POST['active'];
         if(self::$orgs->updateOrgsActive($orgID, $active))
+        {
+            exit(json_encode(array('result' => 'true')));
+        }
+        exit(json_encode(array('notice' => __('Something went wrong! Please try again.', FV_DOMAIN))));
+    }
+	
+	public static function reversePointOrgs()
+    {
+        $orgID = $_POST['id'];
+        $active = $_POST['active'];
+        if(self::$orgs->updateOrgsReversePoint($orgID, $active))
         {
             exit(json_encode(array('result' => 'true')));
         }
@@ -1142,6 +1153,84 @@ class Ajax
             )); 
             exit;
         }
+    }
+	
+	public static function getStat()
+    {
+        $dat=$_POST;
+        if(empty($dat['sid']))
+        {
+            echo json_encode(array(
+                'result' => 0,
+                'msg' =>  __("No sport selected", FV_DOMAIN)
+            )); 
+            exit;
+        }
+        $dat['sid']+=0;
+        
+        if(empty($dat['pid']))
+        {
+            echo json_encode(array(
+                'result' => 0,
+                'msg' =>  __("No pool selected", FV_DOMAIN)
+            )); 
+            exit;
+        }
+        $dat['pid']+=0;
+       
+       $filters=array("pg"=>$dat['pg'], "posID" => $dat['posid']);
+       $item_per_page=20;
+        
+        //fetch data
+        $data = self::$fanvictor->getStatJS($dat['sid'], $dat['pid'], $filters, $item_per_page);
+        
+        if($data){
+        /*$paging = paginate_links( array(
+            'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+            'format' => '#',
+            'current' => max($page, get_query_var('paged') ),
+            'total' => ceil($aScorings['total'] / $item_per_page)
+        ));
+        $aScorings['paging'] = $paging;*/
+        exit(json_encode(array(
+                'result' => 1,
+                'data' =>  $data
+            )
+        ));
+		}
+        
+        
+        
+        
+        /*if((int)$leagueID < 1)
+        {
+            echo json_encode(array(
+                'result' => 1,
+                'msg' =>  __("Something went wrong! Please try again", FV_DOMAIN)
+            )); 
+            exit;
+        }
+        else if($_POST['game_type'] == 'playerdraft')
+        {
+            echo json_encode(array(
+                'result' => 1,
+                'url' => FANVICTOR_URL_GAME.$leagueID
+            )); 
+            exit;
+        }
+        else 
+        {
+            echo json_encode(array(
+                'result' => 1,
+                'msg' => FANVICTOR_URL_SUBMIT_PICKS.$leagueID
+            )); 
+            exit;
+        }*/
+        exit(json_encode(array(
+                'result' => 0,
+                'msg' =>  __("No data", FV_DOMAIN)
+            )
+        ));
     }
     
     private static function validCreateContestData()

@@ -125,5 +125,13 @@ Class Organizations extends Model
         $this->sendRequest("updateOrgsActive", $data);
         return true;
     }
+	
+	public function updateOrgsReversePoint($orgID, $reverse_points)
+    {
+        $data = array('organizationID' => $orgID,
+                      'reverse_points' => $reverse_points);
+        $this->sendRequest("updateOrgsReversePoint", $data);
+        return true;
+    }
 }
 ?>

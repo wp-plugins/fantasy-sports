@@ -129,6 +129,36 @@ jQuery.admin =
             }
 	});
     },
+	
+	reversePointOrgsSetting: function(id, active)
+    {
+        var data = {
+            action: 'reversePointOrgs',
+            id : id,
+            active: active
+        };
+        jQuery.post(ajaxurl, data, function(result) {
+            result = JSON.parse(result);
+            if(result.notice)
+            {
+                alert(result.notice);
+            }
+            else
+            {
+                var item = jQuery('#rv_setting' + id);
+                if(item.find('.active').is(':visible'))
+                {
+                    item.find('.unactive').show();
+                    item.find('.active').hide();
+                }
+                else
+                {
+                    item.find('.active').show();
+                    item.find('.unactive').hide();
+                }
+            }
+	});
+    },
     
     activeScoringCategorySetting: function(id, active)
     {

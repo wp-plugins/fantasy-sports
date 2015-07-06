@@ -88,13 +88,14 @@ function setOptions(matchWith)
 
 jQuery.createcontest =
 {
-    setData : function(aPools, aFights, aRounds, aPositions, lineup)
+    setData : function(aPools, aFights, aRounds, aPositions, lineup, lineup_no_position)
     {
         this.aPools = aPools;
         this.aFights = aFights;
         this.aRounds = aRounds;
         this.aPositions = aPositions;
         this.lineup = lineup;
+		this.lineup_no_position = lineup_no_position;
         jQuery.parseJSON(this.aPools);
     },
     
@@ -476,11 +477,14 @@ jQuery.createcontest =
             var type = jQuery('#optionType').val();
             if(type == 'salary')
             {
-                jQuery('.for_group').hide();
+                //jQuery('.for_group').hide();
+                var html = '<input type="text" value="' + this.lineup_no_position + '" name="lineup_no_position">';
+                jQuery('#lineupResult').empty().append(html);
             }
             else
             {
-                jQuery('.for_group').show();
+                //jQuery('.for_group').show();
+                this.loadPosition();
             }
         }
         else 
@@ -535,7 +539,13 @@ jQuery.createcontest =
 }
 
 jQuery(window).load(function(){
-    jQuery.createcontest.setData(jQuery("#poolData").val(), jQuery("#fightData").val(), jQuery("#roundData").val(), jQuery("#positionData").val(), jQuery("#lineupData").val());
+	jQuery.createcontest.setData(
+        jQuery("#poolData").val(), 
+        jQuery("#fightData").val(), 
+        jQuery("#roundData").val(), 
+        jQuery("#positionData").val(), 
+        jQuery("#lineupData").val(),
+        jQuery("#lineupNoPositionData").val());
     jQuery.createcontest.init();
     jQuery.createcontest.loadPools(jQuery("#sports").val(), jQuery('#sports option:selected').attr('playerdraft'), jQuery('#sports option:selected').attr('only_playerdraft'), jQuery('#sports option:selected').attr('is_round'), jQuery('#sports option:selected').attr('is_team'));
     jQuery.createcontest.gameTypeAttr();

@@ -26,6 +26,7 @@ class TableSports extends WP_List_Table
             'cb' => '<input type="checkbox" />',
             'name' => __('Name', FV_DOMAIN),
             'active' => __('Active', FV_DOMAIN),
+			'reverse_points' => __('Reverse Point', FV_DOMAIN),
             'edit'    => '',
         );
         return $columns;
@@ -56,6 +57,7 @@ class TableSports extends WP_List_Table
                             '.$itemSport['name'].'
                         </td>
                         <td></td>
+						<td></td>
                         <td class="edit column-edit">
                             '.$editHtml.'
                         </td>
@@ -75,6 +77,7 @@ class TableSports extends WP_List_Table
                     $editHtml = '<a href="?page=add-sports&amp;action=edit&amp;id='.$item['id'].'">Edit</a>';
                 }
         
+				//active
                 $active_display = $unactive_display = 'style="display:none"';
                 if($item['is_active'] == 1)
                 {
@@ -83,6 +86,17 @@ class TableSports extends WP_List_Table
                 else 
                 {
                     $unactive_display = '';
+                }
+				
+				//reverse point
+                $rv_active_display = $rv_unactive_display = 'style="display:none"';
+                if($item['reverse_points'] == 1)
+                {
+                    $rv_active_display = '';
+                }
+                else 
+                {
+                    $rv_unactive_display = '';
                 }
 
                 $result .= '<tr class="alternate">
@@ -97,6 +111,14 @@ class TableSports extends WP_List_Table
                                         <img class="active" src="'.FANVICTOR__PLUGIN_URL_IMAGE.'bullet_green.png" alt="Unactive" style="cursor:pointer" />
                                     </a>
                                     <a class="unactive" '.$unactive_display.' title="Activate" onclick="jQuery.admin.activeOrgsSetting('.$item['id'].', 1)">
+                                        <img src="'.FANVICTOR__PLUGIN_URL_IMAGE.'bullet_red.png" alt="Active" style="cursor:pointer" />
+                                    </a>
+                                </td>
+								<td class="rv_active column-active" id="rv_setting'.$item['id'].'">
+                                    <a class="active" '.$rv_active_display.' title="Unactive" onclick="jQuery.admin.reversePointOrgsSetting('.$item['id'].', 0)">
+                                        <img class="active" src="'.FANVICTOR__PLUGIN_URL_IMAGE.'bullet_green.png" alt="Unactive" style="cursor:pointer" />
+                                    </a>
+                                    <a class="unactive" '.$rv_unactive_display.' title="Activate" onclick="jQuery.admin.reversePointOrgsSetting('.$item['id'].', 1)">
                                         <img src="'.FANVICTOR__PLUGIN_URL_IMAGE.'bullet_red.png" alt="Active" style="cursor:pointer" />
                                     </a>
                                 </td>

@@ -53,8 +53,8 @@ class FV_CouponModel
     {
         global $wpdb;
         $table_name = $wpdb->prefix.'coupon';
-        $sCond = "WHERE UNIX_TIMESTAMP(NOW()) >= UNIX_TIMESTAMP(start_date) AND "
-                     . "UNIX_TIMESTAMP(NOW()) <= UNIX_TIMESTAMP(expiry_date) AND "
+        $sCond = "WHERE ((UNIX_TIMESTAMP(NOW()) >= UNIX_TIMESTAMP(start_date) AND "
+                     . "UNIX_TIMESTAMP(NOW()) <= UNIX_TIMESTAMP(expiry_date)) OR no_expiry = 1) AND "
                      . "coupon_code = '$coupon_code' AND "
                      . "action_type = '$action_type' ";
         $sql = "SELECT COUNT(*) "
@@ -191,8 +191,8 @@ class FV_CouponModel
     {
         global $wpdb;
         $table_name = $wpdb->prefix.'coupon';
-        $sCond = "WHERE UNIX_TIMESTAMP(NOW()) >= UNIX_TIMESTAMP(start_date) AND "
-                     . "UNIX_TIMESTAMP(NOW()) <= UNIX_TIMESTAMP(expiry_date) AND "
+        $sCond = "WHERE ((UNIX_TIMESTAMP(NOW()) >= UNIX_TIMESTAMP(start_date) AND "
+                     . "UNIX_TIMESTAMP(NOW()) <= UNIX_TIMESTAMP(expiry_date)) OR no_expiry = 1) AND "
                      . "coupon_code = '$coupon_code' AND "
                      . "action_type = '$action_type'";
         $sql = "SELECT * "

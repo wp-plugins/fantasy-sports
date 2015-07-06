@@ -28,6 +28,7 @@ class Fanvictor_Admin
         echo '.wp-list-table .column-new_balance, '
            . '.wp-list-table .column-amount, '
            . '.wp-list-table .column-playerdraft_result, '
+		   . '.wp-list-table .column-reverse_points, '
            . '.wp-list-table .column-real_amount { width: 90px; } ';
         echo '</style>';
     }
