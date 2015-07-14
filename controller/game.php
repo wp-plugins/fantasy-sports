@@ -125,6 +125,7 @@ class Game
                 self::$payment->addFundhistory($league['entry_fee'], $league['leagueID'], $aUser['balance'], 'MAKE_BET', 'DEDUCT');
             }
             $_SESSION['showInviteFriends'.$league['leagueID']] = true;
+			$_SESSION['userPicksInfo'] = array($_POST['leagueID'], get_current_user_id(), $entry_number);
             redirect(FANVICTOR_URL_ENTRY.$_POST['leagueID']."/?num=".$entry_number, null, true);
         }
         redirect(FANVICTOR_URL_GAME.$_POST['leagueID'], __('Something went wrong! Please try again.', FV_DOMAIN), true);

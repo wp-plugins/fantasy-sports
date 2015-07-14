@@ -127,4 +127,10 @@
     {
         jQuery.ranking.inviteFriends();
     }
+    
+    <?php if($allow_pick_email):?>
+    jQuery(window).load(function(){
+        jQuery.playerdraft.sendUserPickEmail('<?=$aLeague['leagueID'];?>');
+    })
+    <?php endif;?>
 </script>

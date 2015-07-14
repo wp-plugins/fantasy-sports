@@ -71,6 +71,7 @@ class Entry
             $aPool = $data['pool'];
             $aFights = $data['fights'];
             $aPlayers = $data['players'];
+            $allow_pick_email = $data['allow_pick_email'];
 
             //cur user
             $current_user = wp_get_current_user();

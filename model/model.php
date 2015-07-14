@@ -51,7 +51,7 @@ class Model
     
     public static function parseImageSuffix($image = null, $suf = null)
     {
-        $suffix = '_'.get_option('fanvictor_image_thumb_size');
+        $suffix = '_80';
         if($suf != null)
         {
             $suffix = $suf;
@@ -70,7 +70,7 @@ class Model
     
     public static function replaceSuffix($image = null, $suf = 'suf')
     {
-        $suffix = '_'.get_option('fanvictor_image_thumb_size');
+        $suffix = '_80';
         if($suf != 'suf')
         {
             $suffix = $suf;
@@ -120,7 +120,7 @@ class Model
                 $img = wp_get_image_editor($movefile['file']);
                 if (!is_wp_error($img)) 
                 {
-                    $img->resize( get_option('fanvictor_image_thumb_size'), get_option('fanvictor_image_thumb_size'), true );
+                    $img->resize(80,80, true );
                     $img->save($this->parseImageSuffix($movefile['file'], '_80'));
                 }
             }

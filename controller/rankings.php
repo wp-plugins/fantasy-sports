@@ -28,6 +28,7 @@ class Rankings
     {
        // wp_enqueue_script('leagues.class.js', FANVICTOR__PLUGIN_URL_JS.'leagues.class.js');
         wp_enqueue_script('rankings.js', FANVICTOR__PLUGIN_URL_JS.'rankings.js');
+        wp_enqueue_script('playerdraft.js', FANVICTOR__PLUGIN_URL_JS.'playerdraft.js', 5);
         wp_enqueue_script('ui.js', FANVICTOR__PLUGIN_URL_JS.'ui.js');
         wp_enqueue_style('style.css', FANVICTOR__PLUGIN_URL_CSS.'style.css');
         wp_enqueue_style('ui.css', FANVICTOR__PLUGIN_URL_CSS.'ui/ui.css');
@@ -55,6 +56,7 @@ class Rankings
             $aLeague = $aDatas['league'];
             $aPool = $aDatas['pool'];
             $creator = get_user_by("id", $aLeague['creator_userID']);
+            $allow_pick_email = $aDatas['allow_pick_email'];
             
             //friend
             $aFriends = self::$fanvictor->getAllPlayerInfo();

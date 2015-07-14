@@ -94,6 +94,8 @@ function js_lang()
             "no_news" : "'.__("No news", "fantasy-sports").'",
             "here" : "'.__("here", "fantasy-sports").'",
             "opposing_pitcher" : "'.__("Opposing Pitcher", "fantasy-sports").'",
+            "create_contest" : "'.__("Create Contest", "fantasy-sports").'",
+            "working" : "'.__("Working", "fantasy-sports").'",
         }
     </script>';
 }

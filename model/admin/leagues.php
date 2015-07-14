@@ -14,7 +14,7 @@ class Leagues extends Model
     {
         $params = array('aConds' => $aConds, 'sSort' => $sSort, 'iPage' => $iPage, 'iLimit' => $iLimit);
         $data = $this->sendRequest("leaguesByFilter", $params);
-        return array($data['iCnt'], $data['aRows']);
+        return array($data['iCnt'], $data['aRows'], $data['allow_export_pick']);
     }
     
     public function parseLeagueData($datas = null)

@@ -457,7 +457,20 @@ class Fanvictor extends Model
         $data['first_percent'] = get_option('fanvictor_first_place_percent');
         $data['second_percent'] = get_option('fanvictor_second_place_percent');
         $data['third_percent'] = get_option('fanvictor_third_place_percent');
+        if(!isset($data['is_refund']))
+        {
+            $data['is_refund'] = 0;
+        }
+        if(!isset($data['is_payouts']))
+        {
+            $data['is_refund'] = 0;
+        }
         return $this->sendRequest("createLeague", $data, false, false);
+    }
+	
+	public function loadCreateLeagueForm($leagueID = null)
+    {
+        return $this->sendRequest("loadCreateLeagueForm", array("leagueID" => $leagueID), false);
     }
     
     public function getEnterGameData($leagueID, $entry_number)
@@ -490,13 +503,59 @@ class Fanvictor extends Model
         return $this->sendRequest("getStatData", null, false);//, false);die;
     }
     
-	public function getStatJS($a, $b, $c, $d)
+	public function getStatJS($a, $b, $c, $d, $sort_name, $sort_value)
 	{
-		//*
-		return $this->sendRequest("getStatJS", array("sid"=> $a, "pid"=> $b, "filters" => $c, "lim"=> $d), false);
-		/*/
-		echo $this->sendRequest("getStatJS", array("sid" => $a, "pid" => $b, "filters" => $c, "lim" => $d), false, false);die;
-		//*/
+		return $this->sendRequest("getStatJS", array(
+            "sid"=> $a, 
+            "pid"=> $b, 
+            "filters" => $c, 
+            "lim"=> $d, 
+            "sort_name" => $sort_name, 
+            "sort_value" => $sort_value), false);
 	}
+	
+	public function showUserPicks($leagueID)
+    {
+        $data = $this->sendRequest("showUserPicks", array('leagueID' => $leagueID), false);
+        if(!empty($data['picks']))
+        {
+            foreach($data['picks'] as $k1 => $pick)
+            {
+                $user = get_userdata($pick['userID']);
+                if($user != null)
+                {
+                    $data['picks'][$k1]['user_login'] = $user->user_login;
+                }
+            }
+        }
+        return $data;
+    }
+    
+    public function sendUserPickEmail($leagueID, $user_id, $entry_number)
+    {
+        $data = $this->sendRequest("showUserPicks", array(
+            'leagueID' => $leagueID, 
+            'userID' => $user_id,
+            'entry_number' => $entry_number), false);
+        $aUser = wp_get_current_user();
+        if($data != null && $aUser != null)
+        {
+            $headers  = 'MIME-Version: 1.0' . "\r\n";
+            $headers .= 'Content-type: text/html; charset=utf-8' . "\r\n";
+            $headers .= 'To: ' . $aUser->user_email . "\r\n";
+            $headers .= "From: ".get_option('admin_email'). "\r\n";
+            $league = $data['league'];
+            $picks = $data['picks'][0]['entries'][0]['pick_items'];
+            include 'admin/emailTemplates/picks.php';
+            try 
+            {
+                mail($aUser->user_email, $message_subject, $message_body, $headers);
+            } 
+            catch (Exception $ex) 
+            {
+
+            }
+        }
+    }
 }
 ?>

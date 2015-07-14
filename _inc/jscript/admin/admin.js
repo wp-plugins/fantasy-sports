@@ -129,8 +129,8 @@ jQuery.admin =
             }
 	});
     },
-	
-	reversePointOrgsSetting: function(id, active)
+    
+    reversePointOrgsSetting: function(id, active)
     {
         var data = {
             action: 'reversePointOrgs',
@@ -285,5 +285,102 @@ jQuery.admin =
         })
         return false;
     },
+    
+    showUserPicks: function(leagueID)
+    {
+        jQuery('#dlgPicks').empty().append('<center>' + wpfs['pleasewait'] + '</center>');
+        var dialog = jQuery("#dlgPicks").dialog({
+            width:'800',
+            modal:true,
+			title:wpfs['pleasewait'],
+            buttons: {
+                'Close': function() {
+                    dialog.dialog( "close" );
+                }
+            }
+        });
+        var data = {
+            action: 'showUserPicks',
+            leagueID : leagueID
+        };
+        jQuery.post(ajaxurl, data, function(data) {
+            jQuery("#dlgPicks").empty().append(data);
+            jQuery.admin.showPicksDetail();
+            var league = jQuery.parseJSON(jQuery("#leagueInfo").val()); 
+			var sTitle = ' ';
+			if(league)
+			{
+				sTitle = league.name;
+			}
+            jQuery("#dlgPicks").dialog({
+                height: 'auto',
+                width:'800',
+                modal:true,
+                title:sTitle,
+                buttons: {
+                    'Close': function() {
+                        dialog.dialog( "close" );
+                    }
+                }
+            });
+        })
+        return false;
+    },
+    
+    showPicksDetail: function()
+    {
+        var user_id = jQuery("#cbUsers").val();
+        jQuery('.cbEntry').hide();
+        jQuery('#cbEntry' + user_id).show();
+        var entry_number = jQuery('#cbEntry' + user_id + ':visible').val();
+        if(typeof entry_number == 'undefined')
+        {
+            entry_number = 1;
+        }
+        var pick_items = ''; 
+        var picks = jQuery.parseJSON(jQuery("#pickData").val()); 
+        var league = jQuery.parseJSON(jQuery("#leagueInfo").val()); 
+        var entries = '';
+        
+        //find players list
+        for(var i in picks)
+        {
+            if(picks[i].userID == user_id)
+            {
+                for(var j in picks[i].entries)
+                {
+                    var entries = picks[i].entries;
+                    if(entries[j].entry_number == entry_number)
+                    {
+                        pick_items = entries[j].pick_items;
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        //show players
+        var html = '';
+        for(var i in pick_items)
+        {
+            var html_fight_name = '';
+            if(league.gameType == 'PLAYERDRAFT' && league.is_team == 1)
+            {
+                html_fight_name = '<td>' + pick_items[i].team_name + '</td>';
+            }
+            else if(league.gameType != 'PLAYERDRAFT') 
+            {
+                html_fight_name = '<td>' + pick_items[i].fight_name + '</td>';
+            }
+            html += 
+                '<tr>\n\
+                    <td>' + pick_items[i].id + '</td>\n\
+                    ' + html_fight_name + '\n\
+                    <td>' + pick_items[i].name + '</td>\n\
+                </tr>';
+        }
+        jQuery('#tbPickDetail tbody').empty().append(html);
+    }
 }
 

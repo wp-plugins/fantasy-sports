@@ -95,7 +95,7 @@ jQuery.createcontest =
         this.aRounds = aRounds;
         this.aPositions = aPositions;
         this.lineup = lineup;
-		this.lineup_no_position = lineup_no_position;
+        this.lineup_no_position = lineup_no_position;
         jQuery.parseJSON(this.aPools);
     },
     
@@ -177,7 +177,7 @@ jQuery.createcontest =
         {
             jQuery('#wrapRounds').show();
         }
-        if(is_team == 1)
+        if(is_team == 1 || (is_team == 0 && is_playerdraft == 0))
         {
             jQuery('.for_team').show();
         }
@@ -258,6 +258,39 @@ jQuery.createcontest =
         jQuery('#roundDiv').empty().append(result);
     },
     
+    loadSpreadPoint: function()
+    {
+        if(jQuery('#game_type').val() == 'pickspread')
+        {
+            jQuery('#spreadpoint').show();
+            var poolID = jQuery('#poolDates select').val();
+            var aFights = jQuery.parseJSON(this.aFights);
+            var html = '';
+            if(aFights != null)
+            {
+                for(var i in aFights)
+                {
+                    var aFight = aFights[i];
+                    if(aFight.poolID == poolID)
+                    {
+                        html += 
+                            '<tr>\n\
+                                <td>' + aFight.name + '</td>\n\
+                                <td><input type="text" name="team1_spread_points[' + aFight.fightID + ']" value="' + aFight.team1_spread_points + '" /></td>\n\
+                                <td><input type="text" name="team2_spread_points[' + aFight.fightID + ']" value="' + aFight.team2_spread_points + '" /></td>\n\
+                            </tr>';
+                    }
+                }
+            }
+            jQuery('#spreadpoint table tbody').empty().append(html);
+        }
+        else 
+        {
+            jQuery('#spreadpoint').hide();
+            jQuery('#spreadpoint table tbody').empty();
+        }
+    },
+    
     gameTypeAttr: function()
     {
         var gametype = jQuery('#game_type').val();
@@ -269,6 +302,7 @@ jQuery.createcontest =
             default :
                 jQuery('.for_playerdraft').hide();
         }
+        this.loadSpreadPoint();
     },
     
     calculatePrizes: function()
@@ -491,6 +525,7 @@ jQuery.createcontest =
         {
             jQuery('.for_playerdraft.for_group').show();
         }
+        this.gameTypeAttr();
     },
     
     addPayouts: function()
@@ -522,24 +557,24 @@ jQuery.createcontest =
     
     create: function()
     {
-        jQuery('#btn_create_contest').attr('disabled', 'true');
+        jQuery('#btn_create_contest').attr('disabled', 'true').text(wpfs['working'] + '...');
         jQuery.post(ajaxurl, 'action=createContest&' + jQuery('#formCreateContest').serialize(), function(result) {
             result = jQuery.parseJSON(result);
             if(result.result == 0)
             {
                 jQuery('.public_message').empty().append(result.msg).show();
+                jQuery('#btn_create_contest').removeAttr('disabled').text(wpfs['create_contest']);
             }
             else 
             {
                 window.location = result.url;
             }
-            jQuery('#btn_create_contest').removeAttr('disabled');
         })
     }
 }
 
 jQuery(window).load(function(){
-	jQuery.createcontest.setData(
+    jQuery.createcontest.setData(
         jQuery("#poolData").val(), 
         jQuery("#fightData").val(), 
         jQuery("#roundData").val(), 
@@ -549,9 +584,10 @@ jQuery(window).load(function(){
     jQuery.createcontest.init();
     jQuery.createcontest.loadPools(jQuery("#sports").val(), jQuery('#sports option:selected').attr('playerdraft'), jQuery('#sports option:selected').attr('only_playerdraft'), jQuery('#sports option:selected').attr('is_round'), jQuery('#sports option:selected').attr('is_team'));
     jQuery.createcontest.gameTypeAttr();
-    if(jQuery("#leagueID").val != '')
+    if(typeof jQuery("#leagueIDData").val() != 'undefined' && jQuery("#leagueIDData").val() != '')
     {
         jQuery.createcontest.calculatePrizes();
+        jQuery('#game_type').val(jQuery('#gameTypeData').val());
     }
     jQuery.createcontest.loadPosition();
     jQuery.createcontest.optionType();

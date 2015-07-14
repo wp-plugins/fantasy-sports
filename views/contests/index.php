@@ -14,4 +14,4 @@
         <input type="button" value="<?=__("Delete Selected");?>" class="button button-primary"  onclick="return jQuery.admin.action('', 'delete');">
     </form>
 </div>
-<div id="resultDialog" title="" style="display: none"></div>
+<div id="dlgPicks" style="display: none"></div>

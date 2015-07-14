@@ -1108,6 +1108,15 @@ jQuery.playerdraft =
             })
         }
     },
+	
+	sendUserPickEmail : function(leagueID)
+    {
+        var data = {
+            action: 'sendUserPickEmail',
+            leagueID : leagueID
+        };
+        jQuery.post(ajaxurl, data, function(result) {})
+    },
     
     loading: function()
     {

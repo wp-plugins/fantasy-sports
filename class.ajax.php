@@ -40,10 +40,10 @@ class Ajax
                        'updateResult', 'updatePoolComplete', 'activeOrgs', 'sendUserCredits',
                        'sendUserWithdrawls', 'loadPoolsByOrg', 'calculatePrizes', 'loadFights',
                        'LeagueResults', 'userpicks', 'sendInviteFriend', 'getNormalGameResult',
-                       'addCredits', 'loadUserBalance', 'requestPayment', 'loadLeagueDetail',
+                       'addCredits', 'loadUserBalance', 'requestPayment', 'loadLeagueDetail', 'showUserPicks',
                        'updateNewContests', 'showPoolStatisticDetail', 'viewPoolFixture', 'addMoneyByCoupon',
                        'loadUser', 'loadPoolInfo', 'viewPlayerDraftResult', 'updatePlayerDraftResult',
-                       'loadUserResult', 'loadLeagueLobby', 'loadLeagueEntries', 'loadLeaguePrizes',
+                       'loadUserResult', 'loadLeagueLobby', 'loadLeagueEntries', 'loadLeaguePrizes', 'sendUserPickEmail',
                        'loadLiveEntries', 'liveEntriesResult', 'loadContestScores', 'loadPlayerPoints',
                        'loadPlayerStatistics', 'activeScoringCategory', 'reverseResult', 'createContest', 'getStat');
         foreach($funcs as $func)
@@ -1048,13 +1048,6 @@ class Ajax
     }
     /////////////////////////////////end update complete/////////////////////////////////
     
-    public static function showPoolStatisticDetail()
-    {
-        $leagueID = $_POST['leagueID'];
-        $aLeagues = self::$statistic->eventStatistic($leagueID);
-        exit(json_encode($aLeagues));
-    }
-    
     /////////////////////////////////v2/////////////////////////////////
     public static function viewPlayerDraftResult()
     {
@@ -1149,7 +1142,7 @@ class Ajax
         {
             echo json_encode(array(
                 'result' => 1,
-                'msg' => FANVICTOR_URL_SUBMIT_PICKS.$leagueID
+                'url' => FANVICTOR_URL_SUBMIT_PICKS.$leagueID
             )); 
             exit;
         }
@@ -1182,50 +1175,16 @@ class Ajax
        $item_per_page=20;
         
         //fetch data
-        $data = self::$fanvictor->getStatJS($dat['sid'], $dat['pid'], $filters, $item_per_page);
+        $data = self::$fanvictor->getStatJS($dat['sid'], $dat['pid'], $filters, $item_per_page, $dat['sort_name'], $dat['sort_value']);
         
         if($data){
-        /*$paging = paginate_links( array(
-            'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-            'format' => '#',
-            'current' => max($page, get_query_var('paged') ),
-            'total' => ceil($aScorings['total'] / $item_per_page)
-        ));
-        $aScorings['paging'] = $paging;*/
-        exit(json_encode(array(
-                'result' => 1,
-                'data' =>  $data
-            )
-        ));
+            exit(json_encode(array(
+                    'result' => 1,
+                    'data' =>  $data
+                )
+            ));
 		}
-        
-        
-        
-        
-        /*if((int)$leagueID < 1)
-        {
-            echo json_encode(array(
-                'result' => 1,
-                'msg' =>  __("Something went wrong! Please try again", FV_DOMAIN)
-            )); 
-            exit;
-        }
-        else if($_POST['game_type'] == 'playerdraft')
-        {
-            echo json_encode(array(
-                'result' => 1,
-                'url' => FANVICTOR_URL_GAME.$leagueID
-            )); 
-            exit;
-        }
-        else 
-        {
-            echo json_encode(array(
-                'result' => 1,
-                'msg' => FANVICTOR_URL_SUBMIT_PICKS.$leagueID
-            )); 
-            exit;
-        }*/
+
         exit(json_encode(array(
                 'result' => 0,
                 'msg' =>  __("No data", FV_DOMAIN)
@@ -1294,6 +1253,43 @@ class Ajax
             )); 
             exit;
         }
+    }
+	
+	public static function showPoolStatisticDetail()
+    {
+        $leagueID = $_POST['leagueID'];
+        $aLeagues = self::$statistic->eventStatistic($leagueID);
+        exit(json_encode($aLeagues));
+    }
+    
+    public static function showUserPicks()
+    {
+        $leagueID = $_POST['leagueID'];
+        $data = self::$fanvictor->showUserPicks($leagueID);
+        if($data['result'] == 0)
+        {
+            echo __("This league does not exist", FV_DOMAIN);
+            exit;
+        }
+        $users = $data['picks'];
+        $league = $data['league'];
+        
+        require_once(FANVICTOR__PLUGIN_DIR_VIEW."/Elements/contest_picks.php");
+        exit();
+    }
+    
+    public static function sendUserPickEmail()
+    {
+        if(!empty($_SESSION['userPicksInfo']))
+        {
+            $info = $_SESSION['userPicksInfo'];
+            if($info[0] == $_POST['leagueID'])
+            {
+                self::$fanvictor->sendUserPickEmail($info[0], $info[1], $info[2]);
+            }
+            unset($_SESSION['userPicksInfo']);
+        }
+        exit;
     }
 }
 ?>

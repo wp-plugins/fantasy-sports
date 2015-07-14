@@ -24,6 +24,11 @@ class Fanvictor_Contests
     
     public static function manageContests()
     {
+        if(!empty($_GET['leagueID']))
+        {
+            self::exportUserPicks($_GET['leagueID']);
+        }
+        
         //must check that the user has the required capability 
         if (!current_user_can('manage_options'))
         {
@@ -32,6 +37,8 @@ class Fanvictor_Contests
 
         //load css js
         wp_enqueue_script('admin.js', FANVICTOR__PLUGIN_URL_JS.'admin/admin.js');
+        wp_enqueue_style('ui.css', FANVICTOR__PLUGIN_URL_CSS.'ui/ui.css');
+        wp_enqueue_script('ui.js', FANVICTOR__PLUGIN_URL_JS.'ui.js');
         
         //task action delete
         if(isset($_POST["task"]) && $task = $_POST["task"])
@@ -50,6 +57,91 @@ class Fanvictor_Contests
         include FANVICTOR__PLUGIN_DIR_VIEW.'contests/index.php';
     }
     
+    private static function exportUserPicks($leagueID)
+    {
+        if($leagueID > 0)
+        {
+            $data = self::$fanvictor->showUserPicks($leagueID);
+            $users = $data['picks'];
+            $league = $data['league'];
+            if($data['result'] == 0)
+            {
+                redirect(self::$url, __('This league does not exist.', FV_DOMAIN));
+            }
+            else 
+            {
+                ob_clean();
+                header('Pragma: public');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                header('Cache-Control: private', false);
+                header('Content-Type: text/csv');
+                header('Content-Disposition: attachment; filename=data.csv');
+                $file = fopen('php://output', 'w');
+                
+                fputcsv($file, array('League Name: '.$league['name']));
+                fputcsv($file, array('Game Type: '.$league['gameType']));
+                
+                if($users != null)
+                {
+                    if($league['gameType'] == 'PLAYERDRAFT' && $league['is_team'] == 1)
+                    {
+                        fputcsv($file, array('Num', 'User', 'Entry Number', 'ID', 'Team Name', 'Pick Name'));
+                    }
+                    else if($league['gameType'] != 'PLAYERDRAFT') 
+                    {
+                        fputcsv($file, array('Num', 'User', 'Entry Number', 'ID', 'Fight Name', 'Pick Name'));
+                    }
+                    else 
+                    {
+                        fputcsv($file, array('Num', 'User', 'Entry Number', 'ID', 'Pick Name'));
+                    }
+                    foreach ($users as $ku => $user)
+                    {
+                        if($user['entries'] != null)
+                        {
+                            foreach ($user['entries'] as $entry)
+                            {
+                                if($entry['pick_items'] != null)
+                                {
+                                    foreach ($entry['pick_items'] as $k => $pick)
+                                    {
+                                        $num = $login_name = $entry_number = '';
+                                        if($k == 0)
+                                        {
+                                            $num = $ku + 1;
+                                            $login_name = $user['user_login'];
+                                            $entry_number = $entry['entry_number'];
+                                        }
+                                        if($league['gameType'] == 'PLAYERDRAFT' && $league['is_team'] == 1)
+                                        {
+                                            fputcsv($file, array($num, $login_name, $entry_number, $pick['id'], $pick['team_name'], $pick['name']));
+                                        }
+                                        else if($league['gameType'] != 'PLAYERDRAFT') 
+                                        {
+                                            fputcsv($file, array($num, $login_name, $entry_number, $pick['id'], $pick['fight_name'], $pick['name']));
+                                        }
+                                        else 
+                                        {
+                                            fputcsv($file, array($num, $login_name, $entry_number, $pick['id'], $pick['name']));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else 
+                {
+                    fputcsv($file, array("No picks"));
+                }
+
+                fclose($file);
+                exit;
+            }
+        }
+    }
+    
     public static function addContests()
     {
         //must check that the user has the required capability 
@@ -65,70 +157,22 @@ class Fanvictor_Contests
         wp_enqueue_script('accounting.js', FANVICTOR__PLUGIN_URL_JS.'accounting.js');
         
         //edit data
-        $bIsEdit = false;
-		if (isset($_GET['id']) && $iEditId = $_GET['id'])
-		{
-            $bIsEdit = true;
-            $aForms = self::$fanvictor->getLeagueDetail($iEditId);
-            $aForms = $aForms[0];
-		}
-        else
-        {
-            $aForms = null;
-        }
+        $iEditId = isset($_GET['id']) ? $_GET['id'] : null;
+        $bIsEdit = $iEditId > 0 ? true : false;
 
         //add or update
 		self::modify($bIsEdit);
 
         //pools and fights
-        $aDatas = self::$pools->getNewPools();
+        $aDatas = self::$fanvictor->loadCreateLeagueForm($iEditId);
         $aPools = htmlentities(json_encode($aDatas['pools']), ENT_QUOTES);
         $aFights = htmlentities(json_encode($aDatas['fights']), ENT_QUOTES);
         $aRounds = htmlentities(json_encode($aDatas['rounds']), ENT_QUOTES);
-        
-        //sports
-        $aSports = self::$fanvictor->getListSports();
-        if($aSports != null)
-        {
-            foreach($aSports as $k => $aSport)
-            {
-                if(!empty($aSport['child']))
-                {
-                    foreach($aSport['child'] as $k2 => $org)
-                    {
-                        $total = 0;
-                        if($aDatas['pools'] != null)
-                        {
-                            foreach($aDatas['pools'] as $aPool)
-                            {
-                                if($aPool['organization'] == $org['id'])
-                                {
-                                    $total++;
-                                    break;
-                                }
-                            }
-                        }
-                        if($total == 0)
-                        {
-                            unset($aSport['child'][$k2]);
-                        }
-                    }
-                    $aSports[$k]['child'] = array_values($aSport['child']);
-                    if($aSports[$k]['child'] == null)
-                    {
-                        unset($aSports[$k]);
-                    }
-                }
-            }
-            $aSports = array_values($aSports);
-        }
-
-        //game type
-        $aGameTypes = self::$orgs->getGameType();
-        
-        //position
-        $aPositions = self::$playerposition->getPlayerPosition();
-        $aPositions = json_encode($aPositions);
+        $aSports = $aDatas['sports'];
+        $aGameTypes = $aDatas['game_type'];
+        $aPositions = json_encode($aDatas['player_positions']);
+        $aForms = $aDatas['league'];
+        $allowCustomSpread = $aDatas['allow_custom_spread'];
         
         $aLeagueSizes = get_option('fanvictor_league_size');
         $aEntryFees = get_option('fanvictor_entry_fee');

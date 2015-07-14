@@ -217,6 +217,7 @@ class Submitpicks
                     $errorMessage = __('Error occured. Your picks have NOT been submitted.', FV_DOMAIN);
                 }
             }
+            $_SESSION['userPicksInfo'] = array($leagueID, get_current_user_id(), 1);
             $_SESSION['showInviteFriends'.$leagueID] = true;
             redirect(FANVICTOR_URL_RANKINGS.$leagueID, null, true);
         }

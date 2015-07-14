@@ -103,7 +103,7 @@
     display: none;
 }
 .ui-rangeSlider-leftLabel {
-    left: 50px !important;
+    left: 36px !important;
     right: auto !important;
     text-align: right;
     width: 40px;
@@ -111,7 +111,7 @@
 .ui-rangeSlider-leftLabel:before {
     content: "Entry:";
     display: block;
-    left: -35px;
+    left: -37px;
     position: absolute;
 }
 .ui-rangeSlider-leftLabel:after {
@@ -122,7 +122,7 @@
     top: 5px;
 }
 .ui-rangeSlider-rightLabel {
-    left: 100px !important;
+    left: 90px !important;
     right: auto !important;
     text-align: left;
 }

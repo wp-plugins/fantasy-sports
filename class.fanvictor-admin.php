@@ -18,17 +18,18 @@ class Fanvictor_Admin
            . '.wp-list-table .column-action { width: 200px; }';
         echo '.wp-list-table .column-balance , '
            . '.wp-list-table .column-startDate { width: 150px; }';
-        echo '.wp-list-table .column-status{ width: 132px; }';
+        echo '.wp-list-table .column-status, '
+           . '.wp-list-table .column-action2 { width: 132px; }';
         echo '.wp-list-table .column-result, '
            . '.wp-list-table .column-image, '
 		   . '.wp-list-table .column-requestDate, '
            . '.wp-list-table .column-active, '
            . '.wp-list-table .column-edit, '
-           . '.wp-list-table .column-detail { width: 50px; }';
+           . '.wp-list-table .column-detail { width: 70px; }';
         echo '.wp-list-table .column-new_balance, '
            . '.wp-list-table .column-amount, '
            . '.wp-list-table .column-playerdraft_result, '
-		   . '.wp-list-table .column-reverse_points, '
+           . '.wp-list-table .column-reverse_points, '
            . '.wp-list-table .column-real_amount { width: 90px; } ';
         echo '</style>';
     }

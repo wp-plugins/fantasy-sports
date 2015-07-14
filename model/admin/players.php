@@ -45,6 +45,11 @@ class Players extends Model
         return array($data['iCnt'], $data['aRows']);
     }
     
+    public function getAddPlayer($player_id)
+    {
+        return $this->sendRequest("addPlayerFormData", array("player_id" => $player_id));
+    }
+    
     public function getPlayersName($id, $all = false)
     {
         $data = $this->getPlayers($id, null, $all);
@@ -56,9 +61,9 @@ class Players extends Model
         return $this->sendRequest("indicator");
     }
 
-    public function parsePlayersData($data = null)
+    public function parsePlayersData($data = null, $is_arr = true)
     {
-        if($data != null)
+        if($data != null && $is_arr)
         {
             foreach($data as $k => $v)
             {
@@ -74,44 +79,45 @@ class Players extends Model
                 }
             }
         }
+        else if($data != null && !$is_arr)
+        {
+            if($data['siteID'] > 0)
+            {
+                $data['full_image_path'] = FANVICTOR_IMAGE_URL.$this->replaceSuffix($data['image']);
+                $data['full_image_path_org'] = FANVICTOR_IMAGE_URL.$this->replaceSuffix($data['image'], '');
+            }
+            else 
+            {
+                $data['full_image_path'] = $this->replaceSuffix($data['image']);
+                $data['full_image_path_org'] = $this->replaceSuffix($data['image'], '');
+            }
+        }
         return $data;
     }
 
     //////////////////////////////////////////add, update, delete//////////////////////////////////////////
     public function add($aVals)
     {
-        $id = $this->sendRequest("addPlayers", $this->parsePlayersDataForModify($aVals));
+        $id = $this->sendRequest("addPlayer", $aVals, true ,false);
+        if(!is_numeric($id) && $id != 'u1')
+        {
+            return $id;
+        }
 
         //upload new image
         $image = $this->uploadImage();
-        $this->updatePlayersImage($id, $image);
-        
-        if($id > 0)
+        if($id == 'u1')
         {
-            return true;
+            $id = $aVals['id'];
         }
-        return false;
+        if($id > 0 && $image != null)
+        {
+            $this->updatePlayersImage($id, $image);
+        }
+        
+        return $id;
     }
 
-    public function update($aVals)
-    {
-        $result = $this->sendRequest("updatePlayers", $this->parsePlayersDataForModify($aVals, true));
-        
-        if (isset($_FILES['image']['name']) && ($_FILES['image']['name'] != ''))
-        {
-            //get current image name
-            $sFileName = $this->getPlayersImageName($aVals['id']);
-
-            //delete old image
-            $this->deleteImage($sFileName);
-            
-            //upload new image
-            $image = $this->uploadImage();
-            $this->updatePlayersImage($aVals['id'], $image);
-        }
-        return $result;
-    }
-    
     public function updatePlayersImage($id, $image)
     {
         return $this->sendRequest("updatePlayers", array('id' => (int)$id, 'image' => $image));

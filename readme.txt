@@ -4,7 +4,7 @@ Donate link: http://fanvictor.com/
 Tags: fantasy sports, fantasy football, fantasy baseball, fantasy hockey, fantasy basketball
 Requires at least: 4.0
 Tested up to: 4.2
-Stable tag: 2.1.18
+Stable tag: 2.1.19
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -160,7 +160,17 @@ Absolutely. Please contact support@fanvictor.com and be part of a very cool and 
 
 == Changelog ==
 
-= Version 2.1.18 released June 24 2015 =
+= Version 2.1.19 released July 14 2015 =
+
+* Allow add custom spread points at "add contest" page
+
+* Show complete list of each user and their picks at manage contests page
+
+* Send an email to users to show them what they picked
+
+* Fixed some bugs
+
+= Version 2.1.18 released July 6 2015 =
 
 * Add 2 setting "Refund on No Fill" and "PayOut Winners" on create contest 
 

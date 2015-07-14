@@ -1,10 +1,11 @@
 <?php
 class TableContests extends WP_List_Table
 {
-    private static $leagues;
+    private static $leagues, $allow_export_pick;
     function __construct()
     {
         self::$leagues = new Leagues();
+        self::$allow_export_pick = false;
         global $status, $page;
         $aResults = null;
         parent::__construct( array(
@@ -32,7 +33,13 @@ class TableContests extends WP_List_Table
                 return $item[ $column_name ];
             case 'status':
                 return $item[ $column_name ];
-            case 'edit':
+            case 'action2':
+                if(self::$allow_export_pick)
+                {
+                    echo '<a target="_blank" href="'.admin_url().'admin.php?page=manage-contests&leagueID='.$item['leagueID'].'">'.__('Export', FV_DOMAIN).'</a>';
+                    echo " | ".'<a onclick="return jQuery.admin.showUserPicks('.$item['leagueID'].')" href="#">'.__('Picks', FV_DOMAIN).'</a>';
+                    echo " | ";
+                }
                 if(strtolower($item['status']) == "new")
                 {
                     return sprintf('<a href="?page=%s&action=%s&id=%s">Edit</a>', 'add-contests','edit',$item['leagueID']);
@@ -57,7 +64,7 @@ class TableContests extends WP_List_Table
             'startDate' => __('Start Date', FV_DOMAIN),
             'creator' => __('Creator', FV_DOMAIN),
             'status' => __('Status', FV_DOMAIN),
-            'edit'    => '',
+            'action2'    => '',
         );
         return $columns;
     }
@@ -141,7 +148,7 @@ class TableContests extends WP_List_Table
         }
 
         //get data
-        list($total_items, $aResults) = self::$leagues->getLeaguesByFilter($aCond, 'leagueID DESC', ($this->get_pagenum() - 1) * $item_per_page, $item_per_page);
+        list($total_items, $aResults, self::$allow_export_pick) = self::$leagues->getLeaguesByFilter($aCond, 'leagueID DESC', ($this->get_pagenum() - 1) * $item_per_page, $item_per_page);
         $aResults = self::$leagues->parseLeagueData($aResults);
                 
         $columns  = $this->get_columns();

@@ -61,73 +61,55 @@ class Fanvictor_Players
         wp_enqueue_script('players.js', FANVICTOR__PLUGIN_URL_JS.'admin/players.js');
         wp_enqueue_script('accounting.js', FANVICTOR__PLUGIN_URL_JS.'accounting.js');
         
-        //edit data
-        $bIsEdit = false;
-		if (isset($_GET['id']) && $iEditId = $_GET['id'])
-		{
-            $bIsEdit = true;
-            $aForms = self::$players->getplayers($iEditId);
-            $aForms = self::$players->parsePlayersData($aForms);
-            $aForms = $aForms[0];
-		}
-        else
-        {
-            $aForms = null;
-            $aFights = array(null);
-        }
-
+        
+        $bIsEdit = !empty($_GET['id']) ? true : false;
+        $iEditId = !empty($_GET['id']) ? $_GET['id'] : 0;
+        
         //add or update
-		self::modify($bIsEdit);
+		self::modify();
 
-        $aSports = self::$fanvictor->getListSports();
-        $aTeams = self::$teams->getTeams(null, null, true, true);
-        $aPositions = self::$playerposition->getPlayerPosition(null, null, true);
+        //data
+        $data = self::$players->getAddPlayer($iEditId);
+        $aForms = $data['player'];
+        $aForms = self::$players->parsePlayersData($aForms, false);
+        $aSports = $data['sports'];
+        $aTeams = $data['teams'];
+        $aPositions = $data['player_positions'];
         $aIndicators = self::$players->getIndicator();
         include FANVICTOR__PLUGIN_DIR_VIEW.'players/add.php';
-    }
-
-    private static function validData($aVals)
-    {
-        if((int)$aVals['id'] > 0)
-        {
-            $aPlayer = self::$players->getplayers($aVals['id']);
-        }
-        if(((int)$aVals['id'] > 0 && $aPlayer[0]['siteID'] > 0) || $aVals['id'] == '')
-        {
-            if(empty($aVals['name']))
-            {
-                redirect(self::$urladd, 'Provide a name');
-            }
-            else if(empty($aVals['salary']))
-            {
-                redirect(self::$urladd, 'Provide salary');
-            }
-        }
-        return true;
     }
     
     private static function modify()
     {
         if (isset($_POST['val']) && $aVals = $_POST['val'])
 		{
-			if (self::validData($aVals))
-			{
-                if(self::$players->isPlayersExist($aVals['id'])) //update
-                {
-                    if (self::$players->update($aVals))
-                    {
-                        redirect(self::$urladd, 'Succesfully updated');
-                    }
-                }
-                else //add
-                {
-                    if (self::$players->add($aVals))
-                    {
-                        redirect(self::$urladd, 'Succesfully added');
-                    }
-                }
-                redirect(self::$urladd, 'Something went wrong! Please try again.');
-			}
+            $valid = self::$players->add($aVals);
+            switch ($valid)
+            {
+                case 'v1':
+                    var_dump($valid);exit;
+                    redirect(self::$urladd, __('Please select an organization ', FV_DOMAIN));
+                    break;
+                case 'v2':
+                    redirect(self::$urladd, __('Please select a team', FV_DOMAIN));
+                    break;
+                case 'v3':
+                    redirect(self::$urladd, __('Please select a position ', FV_DOMAIN));
+                    break;
+                case 'v4':
+                    redirect(self::$urladd, __('Provide name', FV_DOMAIN));
+                    break;
+                case 'v5':
+                    redirect(self::$urladd, __('Provide salary', FV_DOMAIN));
+                    break;
+                case 'u1':
+                    redirect(self::$urladd, __('Succesfully updated', FV_DOMAIN));
+                    break;
+                case 'u1':
+                    redirect(self::$urladd, __('Something went wrong! Please try again.', FV_DOMAIN));
+                    break;
+            }
+            redirect(self::$urladd, 'Succesfully added');
 		}
     }
     
