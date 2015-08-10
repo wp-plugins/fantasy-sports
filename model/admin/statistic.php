@@ -10,32 +10,39 @@ class Statistic extends Model
     
     public function getProfit($aLeagues = null)
     {
+        global $wpdb;
         $result = null;
         $accumProfit = 0;
         $accumPayOut = 0;
         $accumCash = 0;
-        if($aLeagues != null)
+        $sql = "SELECT * "
+             . "FROM $this->_sTableFundhistory ";
+        $aFundhistorys = $wpdb->get_results($sql);
+        if($aFundhistorys != null)
         {
-            foreach($aLeagues as $k2 => $aLeague)
+            $leagueWinId = array();
+            foreach($aFundhistorys as $aFundhistory)
             {
-                $tc = $aLeague["entry_fee"] * $aLeague["size"];
-                $profit = 0;
-                $payout = 0;		
-                $cash = 0;
-
-                if ( "YES" == $aLeague["awarded"] )
+                if($aFundhistory->type == 'WIN' && (!in_array($aFundhistory->leagueID, $leagueWinId) || $leagueWinId == null))
                 {
-                    $profit = $tc * (100 - $aLeague["winner_percent"]) / 100;
-                    $payout = $tc * $aLeague["winner_percent"] / 100;
-                    $cash = $tc;
+                    $leagueWinId[] = $aFundhistory->leagueID;
                 }
-
-                $aLeagues[$k2]['total_cash'] = '$'.$tc;
-                $aLeagues[$k2]['profit'] = '$'.$profit;
-
-                $accumProfit += $profit;
-                $accumPayOut += $payout;
-                $accumCash += $cash;
+            }
+            foreach($aFundhistorys as $aFundhistory)
+            {
+                if($aFundhistory->type == "MAKE_BET")
+                {
+                    $accumCash += $aFundhistory->amount;
+                }
+                if($aFundhistory->type == "MAKE_BET" && $leagueWinId != null && 
+                   in_array($aFundhistory->leagueID, $leagueWinId))
+                {
+                    $accumProfit += $aFundhistory->site_profit;
+                }
+                if($aFundhistory->type == "WIN")
+                {
+                    $accumPayOut += $aFundhistory->amount;
+                }
             }
         }
         return array('accumProfit' => '$'.$accumProfit, 

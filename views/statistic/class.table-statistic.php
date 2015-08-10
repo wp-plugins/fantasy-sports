@@ -149,7 +149,7 @@ class TableStatistic extends WP_List_Table
     
     function getData()
     {
-        return self::$statistic->getProfit($aResults);
+        return self::$statistic->getProfit();
     }
 }
 ?>

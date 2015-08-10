@@ -1120,6 +1120,8 @@ class Ajax
         self::validCreateContestData();
         
         //add
+		$_POST['is_refund'] = 1;
+        $_POST['is_payouts'] = 1;
         $leagueID = self::$fanvictor->createLeague($_POST);
 
         if((int)$leagueID < 1)
@@ -1175,7 +1177,7 @@ class Ajax
        $item_per_page=20;
         
         //fetch data
-        $data = self::$fanvictor->getStatJS($dat['sid'], $dat['pid'], $filters, $item_per_page, $dat['sort_name'], $dat['sort_value']);
+        $data = self::$fanvictor->getStatJS($dat['sid'], $dat['pid'], $filters, $item_per_page, $dat['sort_name'], $dat['sort_value'], $dat['team_id'], $dat['position_id']);
         
         if($data){
             exit(json_encode(array(

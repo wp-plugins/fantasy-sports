@@ -453,17 +453,17 @@ class Fanvictor extends Model
     
     public function createLeague($data)
     {
-        $data['winner_percent'] = get_option('fanvictor_winner_percent');
+        /*$data['winner_percent'] = get_option('fanvictor_winner_percent');
         $data['first_percent'] = get_option('fanvictor_first_place_percent');
         $data['second_percent'] = get_option('fanvictor_second_place_percent');
-        $data['third_percent'] = get_option('fanvictor_third_place_percent');
+        $data['third_percent'] = get_option('fanvictor_third_place_percent');*/
         if(!isset($data['is_refund']))
         {
             $data['is_refund'] = 0;
         }
         if(!isset($data['is_payouts']))
         {
-            $data['is_refund'] = 0;
+            $data['is_payouts'] = 0;
         }
         return $this->sendRequest("createLeague", $data, false, false);
     }
@@ -503,7 +503,7 @@ class Fanvictor extends Model
         return $this->sendRequest("getStatData", null, false);//, false);die;
     }
     
-	public function getStatJS($a, $b, $c, $d, $sort_name, $sort_value)
+	public function getStatJS($a, $b, $c, $d, $sort_name, $sort_value, $team_id, $position_id)
 	{
 		return $this->sendRequest("getStatJS", array(
             "sid"=> $a, 
@@ -511,7 +511,9 @@ class Fanvictor extends Model
             "filters" => $c, 
             "lim"=> $d, 
             "sort_name" => $sort_name, 
-            "sort_value" => $sort_value), false);
+            "sort_value" => $sort_value,
+            "team_id" => $team_id,
+            "position_id" => $position_id), false);
 	}
 	
 	public function showUserPicks($leagueID)

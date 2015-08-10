@@ -43,7 +43,7 @@ class Createcontest
         }
         
         $aDatas = self::$fanvictor->loadCreateLeagueForm();
-        $aPools = htmlentities(json_encode($aDatas['pools']), ENT_QUOTES);
+        $aPools = $aDatas['pools'] != null ? htmlentities(json_encode($aDatas['pools']), ENT_QUOTES) : "";
         $aFights = htmlentities(json_encode($aDatas['fights']), ENT_QUOTES);
         $aRounds = htmlentities(json_encode($aDatas['rounds']), ENT_QUOTES);
         $aSports = $aDatas['sports'];

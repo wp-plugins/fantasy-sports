@@ -55,26 +55,31 @@ function setOptions(matchWith)
             jQuery('#addPayouts').hide();
             jQuery('#payoutExample').hide();
             jQuery('#payouts').empty();
+            jQuery('#top3Percent').hide();
             break;
         case "league":
             jQuery('.leagueDiv').show();
             jQuery('#addPayouts').hide();
             jQuery('#payoutExample').hide();
             jQuery('#payouts').empty();
+            jQuery('#top3Percent').hide();
             break;
         case "multi_payout":
             jQuery('#addPayouts').show();
             jQuery('#payoutExample').show();
+            jQuery('#top3Percent').hide();
             break;
         case "top3":
             jQuery('#addPayouts').hide();
             jQuery('#payoutExample').hide();
             jQuery('#payouts').empty();
+            jQuery('#top3Percent').show();
             break;
         case "winnertakeall":
             jQuery('#addPayouts').hide();
             jQuery('#payouts').empty();
             jQuery('#payoutExample').hide();
+            jQuery('#top3Percent').hide();
             break;
         case "winnertakeall":
         case "top3":
